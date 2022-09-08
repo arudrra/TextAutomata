@@ -1,0 +1,38 @@
+html{
+    font-size: 100%;
+}
+
+body{
+    background-color: #eeebe2;
+    font-family: 'Roboto', sans-serif;
+}
+.main-input{
+    font-family: "Roboto Mono";
+    background-color: #eeebe2;
+    padding-left: 30px;
+    padding-right: 30px;
+    color: #99947f;
+    font-size: 1rem;
+    border-width: 0rem;
+    width: 100%;
+    outline: none;
+    resize: none;
+}
+button{
+    color: #eeebe2;
+    font-size: 1rem;
+    background-color: black;
+    height: 50px;
+    width: 50px;
+    border-width: 0px;
+    transition: background-color 0.15s, color 0.15s;
+}
+button:hover{
+    background-color: #eeebe2;
+    color: #99947f;
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: 2fr 30px 1fr;
+  }
+  
