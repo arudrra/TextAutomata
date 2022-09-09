@@ -6,9 +6,14 @@ body{
     background-color: #eeebe2;
     font-family: 'Roboto', sans-serif;
 }
+.main-input-wrapper{
+    width:100%;
+    box-sizing: border-box;
+}
 .main-input{
     font-family: "Roboto Mono";
     background-color: #eeebe2;
+    /* background-color: green; */
     padding-left: 30px;
     padding-right: 30px;
     color: #99947f;
@@ -18,12 +23,26 @@ body{
     outline: none;
     resize: none;
 }
+.control-panel-buttons{
+    display: flex;
+    flex-direction: row;
+    border-color: black;
+}
+#custom-control-button{
+    flex:1;
+    border-radius: 1rem;
+}
+#toggle-control-button{
+    flex:1;
+    border-radius: 1rem;
+}
 button{
+    font-family: "Roboto Mono";
     color: #eeebe2;
-    font-size: 1rem;
+    font-size: 0.8rem;
     background-color: black;
-    height: 50px;
-    width: 50px;
+    height: 2rem;
+    width: 10rem;
     border-width: 0px;
     transition: background-color 0.15s, color 0.15s;
 }
@@ -33,6 +52,6 @@ button:hover{
 }
 .grid-container {
     display: grid;
-    grid-template-columns: 2fr 30px 1fr;
+    grid-template-columns: 2fr 1fr;
   }
   
