@@ -1,21 +1,29 @@
+:root {
+    --fullwidth: 75vw;
+}
+
 html{
     font-size: 100%;
 }
 
+h1 {
+    text-align: center;
+}
 body{
     background-color: #eeebe2;
     font-family: 'Roboto', sans-serif;
 }
+hr {
+    color: #99947f;
+    width: var(--fullwidth);
+}
 .main-input-wrapper{
-    width:100%;
-    box-sizing: border-box;
+    display: grid;
+    /* grid-template-rows: 10rem; */
 }
 .main-input{
     font-family: "Roboto Mono";
     background-color: #eeebe2;
-    /* background-color: green; */
-    padding-left: 30px;
-    padding-right: 30px;
     color: #99947f;
     font-size: 1rem;
     border-width: 0rem;
@@ -23,18 +31,20 @@ body{
     outline: none;
     resize: none;
 }
-.control-panel-buttons{
-    display: flex;
-    flex-direction: row;
-    border-color: black;
+#control-buttons{
+    margin: 0 auto;
+    width: 50vw;
+    display: grid;
+    grid-template-columns: 10rem 10rem;
+    gap: 5px;
 }
 #custom-control-button{
-    flex:1;
-    border-radius: 1rem;
+    flex:0.5;
+    border-radius: 0.2rem;
 }
 #toggle-control-button{
-    flex:1;
-    border-radius: 1rem;
+    flex:0.5;
+    border-radius: 0.2rem;
 }
 button{
     font-family: "Roboto Mono";
@@ -50,8 +60,12 @@ button:hover{
     background-color: #eeebe2;
     color: #99947f;
 }
-.grid-container {
+.content-container {
+    margin: 0 auto;
     display: grid;
-    grid-template-columns: 2fr 1fr;
-  }
+    width: var(--fullwidth);
+    grid-template-rows: 20rem 40rem;
+    min-height: 100vh;
+    /* background-color: green; */
+}
   

@@ -6,7 +6,7 @@ const input = document.getElementById("main-input");
 const toggleButton = document.getElementById("toggle-control-button");
 toggleButton.addEventListener("click", createToggleSyntax);
 const customButton = document.getElementById("custom-control-button");
-customButton.addEventListener("click", createCustomSyntax());
+customButton.addEventListener("click", createCustomSyntax);
 
 function generate() {
     console.log(input.selectionStart +" " + input.selectionEnd);
@@ -31,8 +31,11 @@ function splitOnSelection(text, start, end){
 }
 
 function createToggleSyntax(){
+    const start = input.selectionStart;
+    const end = input.selectionEnd;
+    const text = input.value.substring();
     if (input.selectionStart != input.selectionEnd) {
-        const sections = splitOnSelection(input.value.substring(), input.selectionStart, input.selectionEnd);
+        const sections = splitOnSelection(text, input.selectionStart, input.selectionEnd);
         input.value = sections[0] + "<t>" + sections[1] + "</t>" + sections[2];
     } else {
         console.log("invalid toggle creation");
@@ -40,16 +43,19 @@ function createToggleSyntax(){
 }
 
 function createCustomSyntax(){
+    console.log("registered")
     const start = input.selectionStart;
     const end = input.selectionEnd;
+    const text = input.value.substring();
     if (start != end) {
         if (end - start <= FIELDLENGTH) {
-            const sections = splitOnSelection(input.value.substring(), start, end);
-            input.value = sections[0] + "<c id=" +sections[1] + ">" + sections[1] + "</c>" + sections[2];
+            const sections = splitOnSelection(text, start, end);
+            input.value = sections[0] + "<c id=" +sections[1] + ">" + sections[2];
         } else {
             console.log("invalid custom creation");
         }
     } else {
-
+        input.value = text.slice(0, start) + "<c>" + text.slice(start)
     }
+    
 }
