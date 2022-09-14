@@ -1,5 +1,6 @@
 :root {
     --fullwidth: 75vw;
+    --mainbarheight: 2.5rem
 }
 
 html{
@@ -8,6 +9,7 @@ html{
 
 h1 {
     text-align: center;
+    margin-bottom: 10px;
 }
 body{
     background-color: #eeebe2;
@@ -30,9 +32,7 @@ body{
     resize: none;
 }
 #control-panel{
-    width: 40vw;    
-    padding-top: 1vw;
-    padding-bottom: 1vw;
+    width: 50vw;    
     margin: 0 auto;
 }
 #name-input{
@@ -46,7 +46,7 @@ body{
     border-width: 0rem;
     border-top-right-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
-    height: 2.5rem;
+    height: var(--mainbarheight);
     background-color: #99947f;
     font-size: 0.8rem;
     text-align: center;
@@ -59,31 +59,27 @@ body{
 }
 #control-buttons{
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    /* gap: 1px; */
-    /* background-color: #99947f; */
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    gap: 0px;
 }
 #tutorial-button{
     border-bottom-left-radius: 0.5rem;
     border-top-left-radius: 0.5rem;
 }
-/* #custom-control-button{
-    border-bottom-left-radius: 0.5rem;
-    border-top-left-radius: 0.5rem;
-} */
-/* #toggle-control-button{
-    border-radius: 0.2rem;
-} */
-button{
+.main-bar-button{
     font-family: "Roboto Mono";
     color: #eeebe2;
     font-size: 0.8rem;
     background-color: #99947f;
-    height: 2.5rem;
+    height: var(--mainbarheight);
     border-width: 0px;
     transition: background-color 0.15s, color 0.15s;
+    text-align: center;
 }
-button:hover{
+label {
+    line-height: var(--mainbarheight);
+}
+.main-bar-button:hover{
     background-color: #eeebe2;
     color: #99947f;
 }
@@ -91,7 +87,7 @@ button:hover{
     margin: 0 auto;
     display: grid;
     width: var(--fullwidth);
-    grid-template-rows: 10vh 15vh 60vh   ;
+    grid-template-rows: 10vh 5rem 60vh   ;
     max-height: 100vh;
     /* background-color: green; */
 }

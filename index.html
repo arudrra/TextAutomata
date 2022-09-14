@@ -11,21 +11,26 @@
 
     <body>
         <div class="content-container">
-            <h1>text automata</h1>
+            <div id="header-region">
+                <h1>text automata</h1>
+            </div>
             <div id="control-panel">
                 <div id=control-buttons>
-                    <button id="tutorial-button">tutorial</button>
-                    <button id="custom-control-button">new custom</button>
-                    <button id="toggle-control-button">new toggle</button>
-                    <input maxlength=15, id="name-input", placeholder="Enter name">
+                    <button id="tutorial-button" class="main-bar-button">tutorial</button>
+                    <input type="file" id="upload" id="import-button" accept=".txt" hidden/>
+                    <button type="button" class="main-bar-button" onclick="document.getElementById('upload').click()">import</button>
+                    <button id="custom-control-button" class="main-bar-button">new custom</button>
+                    <button id="toggle-control-button" class="main-bar-button">new toggle</button>
+                    <input maxlength=15 id="name-input" class="main-bar-button" placeholder="enter name">
                 </div>
             </div>
             <div class="main-input-wrapper">
                 <textarea placeholder="Enter or paste text here" class="main-input" id="main-input"></textarea>
             </div>
-            <div id="bottom">
-                <button id="generate-text-button">generate text ></button>
-            </div>
         </div>
+
+
+
+
     </body>
 </html>

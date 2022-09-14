@@ -5,13 +5,13 @@ toggleButton.addEventListener("click", createToggleSyntax);
 const customButton = document.getElementById("custom-control-button");
 customButton.addEventListener("click", createCustomSyntax);
 const nameInputBox = document.getElementById("name-input");
-const generateTextButton = document.getElementById("generate-text-button")
-generateTextButton.addEventListener("click", parse)
 
-function generate() {
-    console.log(input.selectionStart +" " + input.selectionEnd);
-    console.log(input.value.substring());
-    input.value = "YEET";
+
+const importButton = document.getElementById('upload');
+importButton.addEventListener('change', importTemplate);
+
+async function importTemplate() {
+    input.value = await this.files[0].text();
 }
 
 // var heightLimit = 200; /* Maximum height: 200px */
