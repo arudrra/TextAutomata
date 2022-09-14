@@ -55,11 +55,12 @@ body{
     font-size: 0.8rem;
     color: #eeebe2;
     text-align: center;
+    opacity: 1;
 }
 #control-buttons{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 1px;
+    /* gap: 1px; */
     /* background-color: #99947f; */
 }
 #tutorial-button{
