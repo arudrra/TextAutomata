@@ -22,15 +22,14 @@ body{
     background-color: #eeebe2;
     color: #99947f;
     font-size: 1rem;
-    border-width: 0rem;
+    border-width: 2px;
+    border-color: black;
     width: 100%;
     outline: none;
     resize: none;
 }
 #control-panel{
-    width: 25vw;
-    border-top: 1px solid #99947f;
-    border-bottom: 1px solid #99947f;
+    width: 25vw;    
     padding-top: 1vw;
     padding-bottom: 1vw;
     margin: 0 auto;
@@ -41,7 +40,6 @@ body{
     color: #99947f;
     width: 100%;
     box-sizing: border-box;
-    border-top-width: 0rem;
     outline: none;
     resize: none;
     margin-top: 0.3vw;
@@ -76,7 +74,7 @@ button:hover{
     margin: 0 auto;
     display: grid;
     width: var(--fullwidth);
-    grid-template-rows: 5 rem 20rem 40rem;
+    grid-template-rows: 10vh 15vh 60vh   ;
     max-height: 100vh;
     /* background-color: green; */
 }
