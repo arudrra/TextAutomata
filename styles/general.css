@@ -23,45 +23,61 @@ body{
     color: #99947f;
     font-size: 1rem;
     border-width: 2px;
+    border-radius: 0.2rem;
     border-color: black;
     width: 100%;
     outline: none;
     resize: none;
 }
 #control-panel{
-    width: 25vw;    
+    width: 40vw;    
     padding-top: 1vw;
     padding-bottom: 1vw;
     margin: 0 auto;
 }
 #name-input{
     font-family: "Roboto Mono";
-    background-color: #eeebe2;
-    color: #99947f;
+    background-color: #99947f;
+    color: #eeebe2;
     width: 100%;
     box-sizing: border-box;
     outline: none;
     resize: none;
-    margin-top: 0.3vw;
-    border-radius: 0.2rem;
+    border-width: 0rem;
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
     height: 2.5rem;
+    background-color: #99947f;
+    font-size: 0.8rem;
+    text-align: center;
+}
+#name-input::placeholder{
+    font-size: 0.8rem;
+    color: #eeebe2;
+    text-align: center;
 }
 #control-buttons{
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1vw;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1px;
+    /* background-color: #99947f; */
 }
-#custom-control-button{
+#tutorial-button{
+    border-bottom-left-radius: 0.5rem;
+    border-top-left-radius: 0.5rem;
+}
+/* #custom-control-button{
+    border-bottom-left-radius: 0.5rem;
+    border-top-left-radius: 0.5rem;
+} */
+/* #toggle-control-button{
     border-radius: 0.2rem;
-}
-#toggle-control-button{
-    border-radius: 0.2rem;
-}
+} */
 button{
     font-family: "Roboto Mono";
     color: #eeebe2;
     font-size: 0.8rem;
-    background-color: black;
+    background-color: #99947f;
     height: 2.5rem;
     border-width: 0px;
     transition: background-color 0.15s, color 0.15s;
