@@ -13,10 +13,6 @@ body{
     background-color: #eeebe2;
     font-family: 'Roboto', sans-serif;
 }
-hr {
-    color: #99947f;
-    width: var(--fullwidth);
-}
 .main-input-wrapper{
     display: grid;
     /* grid-template-rows: 10rem; */
@@ -31,19 +27,36 @@ hr {
     outline: none;
     resize: none;
 }
-#control-buttons{
+#control-panel{
+    width: 25vw;
+    border-top: 1px solid #99947f;
+    border-bottom: 1px solid #99947f;
+    padding-top: 1vw;
+    padding-bottom: 1vw;
     margin: 0 auto;
-    width: 50vw;
+}
+#name-input{
+    font-family: "Roboto Mono";
+    background-color: #eeebe2;
+    color: #99947f;
+    width: 100%;
+    box-sizing: border-box;
+    border-top-width: 0rem;
+    outline: none;
+    resize: none;
+    margin-top: 0.3vw;
+    border-radius: 0.2rem;
+    height: 2.5rem;
+}
+#control-buttons{
     display: grid;
-    grid-template-columns: 10rem 10rem;
-    gap: 5px;
+    grid-template-columns: 1fr 1fr;
+    gap: 1vw;
 }
 #custom-control-button{
-    flex:0.5;
     border-radius: 0.2rem;
 }
 #toggle-control-button{
-    flex:0.5;
     border-radius: 0.2rem;
 }
 button{
@@ -51,8 +64,7 @@ button{
     color: #eeebe2;
     font-size: 0.8rem;
     background-color: black;
-    height: 2rem;
-    width: 10rem;
+    height: 2.5rem;
     border-width: 0px;
     transition: background-color 0.15s, color 0.15s;
 }
@@ -64,8 +76,8 @@ button:hover{
     margin: 0 auto;
     display: grid;
     width: var(--fullwidth);
-    grid-template-rows: 20rem 40rem;
-    min-height: 100vh;
+    grid-template-rows: 5 rem 20rem 40rem;
+    max-height: 100vh;
     /* background-color: green; */
 }
   
