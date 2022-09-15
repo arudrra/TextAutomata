@@ -6,12 +6,27 @@ const customButton = document.getElementById("custom-control-button");
 customButton.addEventListener("click", createCustomSyntax);
 const nameInputBox = document.getElementById("name-input");
 
-
+//Import template functionality
 const importButton = document.getElementById('upload');
-importButton.addEventListener('change', importTemplate);
-
+importButton.addEventListener("change", importTemplate);
 async function importTemplate() {
     input.value = await this.files[0].text();
+}
+
+//Download template functionality
+const downloadTemplateButton = document.getElementById('download-template-button');
+downloadTemplateButton.addEventListener("click", downloadTemplate);
+function downloadTemplate() {
+    console.log("yeet")
+    var file = new Blob([input.value.substring()], {type: 'text/plain'});
+    saveAs(file,"template.txt")
+    // var template = document.createElement('template');
+    // template.download = "template.txt";
+    // template.href = window.URL.createObjectURL(file);
+    // template.click();
+    // // URL.revokeObjectURL(template.href);
+    // template.remove();
+    
 }
 
 // var heightLimit = 200; /* Maximum height: 200px */
@@ -67,7 +82,6 @@ function createCustomSyntax(){
 }
 
 function parse(){
-    print
     const text = input.value.substring();
     console.log(text.split("<"))
 }
