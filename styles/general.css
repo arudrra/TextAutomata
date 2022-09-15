@@ -31,10 +31,6 @@ body{
     outline: none;
     resize: none;
 }
-#control-panel{
-    width: 50vw;    
-    margin: 0 auto;
-}
 #name-input{
     font-family: "Roboto Mono";
     background-color: #99947f;
@@ -58,6 +54,8 @@ body{
     opacity: 1;
 }
 #control-buttons{
+    width: 50vw;    
+    margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     gap: 0px;
