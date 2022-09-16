@@ -22,12 +22,29 @@ function load() {
 
 //Automatically adds text that does not require user decisions until it reaches a user decision
 function advanceToNextDecision() {
-    index = 0;
-    while (index < remainingSegments.length && remainingSegments[index].type == 0) {
+    while (remainingSegments.length > 0 && remainingSegments[0].type == 0) {
         //sometimes, blank characters get appended
-        generatedTextArea.innerHTML = remainingSegments[index].text;
-        index += 1;
+        const currentSegment = remainingSegments.shift();
+        generatedTextArea.innerHTML = currentSegment.text;
+        previousActions.push(currentSegment);
     }
+    if (remainingSegments.length == 0) {
+        console.log("DONE");
+    } else if (remainingSegments[0].type == 1) {
+        customDecision();
+    } else if (remainingSegments[0].type == 2){
+        toggleDecision();
+    } else {
+        console.log("Template Formatting Error")
+    }
+}
+
+function toggleDecision() {
+    
+}
+
+function customDecision() {
+
 }
 
 const startButton = document.getElementById("start-button");
