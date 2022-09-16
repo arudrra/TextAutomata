@@ -22,7 +22,6 @@ async function importTemplate() {
 const downloadTemplateButton = document.getElementById('download-template-button');
 downloadTemplateButton.addEventListener("click", downloadTemplate);
 function downloadTemplate() {
-    console.log("yeet")
     var file = new Blob([input.value.substring()], {type: 'text/plain'});
     saveAs(file,"template.txt")
     // var template = document.createElement('template');
@@ -107,13 +106,14 @@ function createNewSegment(type){
 
 function parse(){
     const text = input.value.substring();
+    localStorage.setItem("rawTemplate", text);
     let i = 0;
     toggleActive = false;
     customActive = false;
-    segments = []
+    segments = [];
     currentSegment = createNewSegment(0);
     while (i < text.length) {
-        currentChar = text.charAt(i)
+        currentChar = text.charAt(i);
         //Check for  the escape character
         if (currentChar == "\\") {
             i += 1;
@@ -131,11 +131,11 @@ function parse(){
                 currentSegment = createNewSegment(2);
             } else if (currentChar == CUSTOMEND && customActive) {
                 customActive = false;
-                segments.push(currentSegment)
+                segments.push(currentSegment);
                 currentSegment = createNewSegment(0);
             } else if (currentChar == TOGGLEEND && toggleActive) {
                 toggleActive = false;
-                segments.push(currentSegment)
+                segments.push(currentSegment);
                 currentSegment = createNewSegment(0);
             } else {
                 currentSegment.text += currentChar;
@@ -144,6 +144,7 @@ function parse(){
         i += 1
     }
     segments.push(currentSegment);
-    console.log(segments);
-    return segments;
+    console.log(JSON.stringify(segments));
+    localStorage.setItem("parsedTemplate", JSON.stringify(segments));
+    window.open("generate.html", "_self");
 }
