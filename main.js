@@ -1,4 +1,9 @@
-const FIELDLENGTH = 15
+const FIELDLENGTH = 15;
+
+const CUSTOMSTART= '{';
+const CUSTOMEND= '}';
+const TOGGLESTART = '[';
+const TOGGLEEND = ']';
 const input = document.getElementById("main-input");
 const toggleButton = document.getElementById("toggle-control-button");
 toggleButton.addEventListener("click", createToggleSyntax);
@@ -53,9 +58,10 @@ function createToggleSyntax(){
     if (input.selectionStart != input.selectionEnd) {
         const sections = splitOnSelection(text, input.selectionStart, input.selectionEnd);
         if (name.length > 0) {
-            input.value = sections[0] + "<t id=" + name + ">" + sections[1] + "</t>" + sections[2];
+            input.value = sections[0] + TOGGLESTART + name + sections[1] + TOGGLEEND + sections[2];
         } else {
-            input.value = sections[0] + "<t>" + sections[1] + "</t>" + sections[2];
+            input.value = sections[0] + TOGGLESTART +  sections[1] + TOGGLEEND + sections[2];
+            console.log(JSON.stringify(input.value))
         }
     } else {
         console.log("invalid toggle creation");
@@ -68,20 +74,76 @@ function createCustomSyntax(){
     const text = input.value.substring();
     const name = nameInputBox.value.substring()
     if (name.length > 0) {
-        input.value = text.slice(0, start) + "<c id=" +name + ">" + text.slice(start);
-    }else if (start != end) {
+        input.value = text.slice(0, start) +  CUSTOMSTART +name + CUSTOMEND + text.slice(start);
+    } else if (start != end) {
         if (end - start <= FIELDLENGTH) {
             const sections = splitOnSelection(text, start, end);
-            input.value = sections[0] + "<c id=" +sections[1] + ">" + sections[2];
+            input.value = sections[0] + CUSTOMSTART +sections[1] + CUSTOMEND + sections[2];
         } else {
             console.log("invalid custom creation");
         }
     } else {
-        input.value = text.slice(0, start) + "<c>" + text.slice(start);
+        input.value = text.slice(0, start) + CUSTOMSTART + CUSTOMEND + text.slice(start);
     }   
+}
+
+const parseButton = document.getElementById("parse-button");
+parseButton.addEventListener("click", parse);
+
+function charInRange(index, end){
+    if (index < end && index >= 0) {} 
+}
+
+//There are 3 types of segments
+//Type 0: normal text (does not need to be evaluated)
+//Type 1: custom text (user will enter custom input later)
+//Type 2: toggle text (user can toggle the text later)
+function createNewSegment(type){
+    segment = new Object();
+    segment.text = "";
+    segment.type = type;
+    return segment
 }
 
 function parse(){
     const text = input.value.substring();
-    console.log(text.split("<"))
+    let i = 0;
+    toggleActive = false;
+    customActive = false;
+    segments = []
+    currentSegment = createNewSegment(0);
+    while (i < text.length) {
+        currentChar = text.charAt(i)
+        //Check for  the escape character
+        if (currentChar == "\\") {
+            i += 1;
+            if (i < text.length) {
+                currentSegment.text += text.charAt(i);
+            }
+        } else {
+            if (currentChar == CUSTOMSTART && !toggleActive && !customActive) {
+                customActive = true;
+                segments.push(currentSegment);
+                currentSegment = createNewSegment(1);
+            } else if (currentChar == TOGGLESTART && !toggleActive && !customActive) {
+                toggleActive = true;
+                segments.push(currentSegment);
+                currentSegment = createNewSegment(2);
+            } else if (currentChar == CUSTOMEND && customActive) {
+                customActive = false;
+                segments.push(currentSegment)
+                currentSegment = createNewSegment(0);
+            } else if (currentChar == TOGGLEEND && toggleActive) {
+                toggleActive = false;
+                segments.push(currentSegment)
+                currentSegment = createNewSegment(0);
+            } else {
+                currentSegment.text += currentChar;
+            }
+        }
+        i += 1
+    }
+    segments.push(currentSegment);
+    console.log(segments);
+    return segments;
 }
