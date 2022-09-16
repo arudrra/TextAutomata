@@ -9,6 +9,7 @@
     --yellowcolor: rgb(247, 251, 161);
     --beigecolor: #eeebe2;
     --lightgreycolor: #99947f;
+    --bluecolor: rgb(181, 248, 255);
 }
 
 html{
@@ -19,7 +20,7 @@ html{
 }
 
 h1 {
-    color: var(--beigecolor);
+    color: var(--purplecolor);
     text-align: center;
 }
 body{
@@ -33,12 +34,12 @@ body{
 }
 .main-input{
     font-family: "Roboto Mono";
-    background-color: #eeebe2;
-    color: #99947f;
+    background-color: var(--greycolor);
+    color: var(--beigecolor);
     font-size: 1rem;
     border-width: 2px;
     border-radius: 0.2rem;
-    border-color: black;
+    border-color: var(--beigecolor);
     width: var(--fullwidth);
     height: 60vh;
     outline: none;
@@ -47,7 +48,7 @@ body{
 #name-input{
     font-family: "Roboto Mono";
     background-color: #99947f;
-    color: #eeebe2;
+    color: var(--greycolor);
     width: 100%;
     box-sizing: border-box;
     outline: none;
@@ -55,13 +56,13 @@ body{
     border-width: 0rem;
     border-top-right-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
-    background-color: #99947f;
+    background-color: var(--beigecolor);
     font-size: 0.8rem;
     text-align: center;
 }
 #name-input::placeholder{
     font-size: 0.8rem;
-    color: #eeebe2;
+    color: var(--greycolor);
     text-align: center;
     opacity: 1;
 }
@@ -105,4 +106,20 @@ label {
     align-items: flex-start;
     /* background-color: green; */
 }
-  
+
+#generated-text{
+    font-size: 1.5rem;
+    color: beige;
+}
+
+.plain-text{
+    color: beige;
+}
+
+.toggle-text{
+    color: var(--purplecolor);
+}
+
+.custom-text{
+    color: var(--bluecolor);
+}
