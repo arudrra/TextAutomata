@@ -1,6 +1,6 @@
 :root {
     --fullwidth: 75vw;
-    --mainbarheight: 2.5rem;
+    --barheight: 2.5rem;
     --flexboxverticalgap: 2rem;
     --greencolor: rgb(138,252,152);
     --redcolor: rgb(236, 139, 131);
@@ -56,7 +56,7 @@ body{
     background-color: var(--beigecolor);
     font-size: 0.8rem;
     text-align: center;
-    height: var(--mainbarheight);
+    height: var(--barheight);
 }
 #name-input::placeholder{
     font-size: 0.8rem;
@@ -86,20 +86,20 @@ body{
     border-bottom-right-radius: 0.5rem;
     border-top-right-radius: 0.5rem;
 }
-.main-bar-button{
+.bar-button{
     font-family: "Roboto Mono";
     color: var(--greycolor);
     font-size: 0.8rem;
     background-color: var(--beigecolor);
-    height: var(--mainbarheight);
+    height: var(--barheight);
     border-width: 0px;
     transition: background-color 0.15s, color 0.15s;
     text-align: center;
 }
 label {
-    line-height: var(--mainbarheight);
+    line-height: var(--barheight);
 }
-.main-bar-button:hover{
+.bar-button:hover{
     background-color: var(--greycolor);
     color: var(--greencolor);
 }
@@ -112,9 +112,20 @@ label {
     /* background-color: green; */
 }
 
+#generated-text-container{
+    margin: 0 auto;
+    display: flex;
+    width: var(--fullwidth);
+    flex-direction: column;
+    align-items: flex-start;
+    border:1px solid black;
+    border-radius: 0.2rem;
+    /* border-color: var(--beigecolor); */
+}
 #generated-text{
-    font-size: 1.5rem;
-    color: beige;
+    color: var(--beigecolor);
+    font-size: 1rem;
+    width: var(--fullwidth);
 }
 
 .plain-text{

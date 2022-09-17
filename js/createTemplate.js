@@ -100,7 +100,7 @@ function createCustomSyntax(){
         customControlPanel.setAttribute("id", "control-custom-buttons");
         //Make the back button
         const customBackButton = document.createElement('button');
-        customBackButton.className = "main-bar-button left-control-button";
+        customBackButton.className = "bar-button left-control-button";
         customBackButton.innerText = "go back";
         customBackButton.addEventListener("click", function(){
             customControlPanel.replaceWith(originalControlPanel);
@@ -114,7 +114,7 @@ function createCustomSyntax(){
         customNameInput.setAttribute("placeholder","enter name");
         //Make the finish button
         const customFinishInputButton = document.createElement('button');
-        customFinishInputButton.className = "main-bar-button right-control-button";
+        customFinishInputButton.className = "bar-button right-control-button";
         customFinishInputButton.innerText = "finish";
         customFinishInputButton.addEventListener("click", function() {
             input.value = text.slice(0, start) +  CUSTOMSTART + customNameInput.value.substring() + CUSTOMEND + text.slice(start);
@@ -197,7 +197,6 @@ function parse(){
         i += 1
     }
     if (currentSegment.text.length > 0) segments.push(currentSegment);
-    console.log(segments);
     localStorage.setItem("parsedTemplate", JSON.stringify(segments));
-    // window.open("generate.html", "_self");
+    window.open("generate.html", "_self");
 }
