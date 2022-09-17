@@ -154,15 +154,49 @@ function createCustomSyntax(){
 
 
 
-//There are 3 types of segments
+//There are 4 types of segments
 //Type 0: normal text (does not need to be evaluated)
 //Type 1: custom text (user will enter custom input later)
 //Type 2: toggle text (user can toggle the text later)
+//Type 3: toggle with 1 level of nested customs
 function createNewSegment(type){
     segment = new Object();
     segment.text = "";
     segment.type = type;
     return segment
+}
+
+function handleNestedToggles(segment) {
+    let i = 0;
+    let customActive = false;
+    let segments = [];
+    let text = segment.text;
+    let currentSegment = createNewSegment(0);
+    while (i < segment.text.length) {
+        currentChar = text.charAt(i);
+        if (currentChar == "\\") {
+            i += 1;
+            if (i < text.length) {
+                currentSegment.text += text.charAt(i);
+            }
+        } else {
+            if (currentChar == CUSTOMSTART && !customActive) {
+                customActive = true;
+                if (currentSegment.text.length > 0) segments.push(currentSegment);
+                currentSegment = createNewSegment(1);
+            } else if (currentChar == CUSTOMEND && customActive) {
+                customActive = false;
+                segments.push(currentSegment);
+                currentSegment = createNewSegment(0);
+            } else {
+                currentSegment.text += currentChar;
+            }
+        }
+        i += 1;
+    }
+    if (currentSegment.text.length > 0) segments.push(currentSegment);
+    segment.parsedNesting = segments;
+    console.log(segment)
 }
 
 //Parses the markdown and stores the markdown + raw input in local storage
@@ -173,10 +207,10 @@ function parse(){
     const text = input.value.substring();
     localStorage.setItem("rawTemplate", JSON.stringify(text));
     let i = 0;
-    toggleActive = false;
-    customActive = false;
-    segments = [];
-    currentSegment = createNewSegment(0);
+    let toggleActive = false;
+    let customActive = false;
+    let segments = [];
+    let currentSegment = createNewSegment(0);
     while (i < text.length) {
         currentChar = text.charAt(i);
         //Check for  the escape character
@@ -194,9 +228,10 @@ function parse(){
                 toggleActive = true;
                 if (currentSegment.text.length > 0) segments.push(currentSegment);
                 currentSegment = createNewSegment(2);
-            // } else if (currentChar == CUSTOMSTART && toggleActive && !customActive) {
-            //     alert("Hello\nHow are you?");
-            // }
+            } else if (currentChar == CUSTOMSTART && toggleActive && !customActive) {
+                //Set as nested toggle (nested syntax is handled later)
+                currentSegment.text += currentChar;
+                currentSegment.type = 3;
             } else if (currentChar == CUSTOMEND && customActive) {
                 customActive = false;
                 segments.push(currentSegment);
@@ -209,9 +244,15 @@ function parse(){
                 currentSegment.text += currentChar;
             }
         }
-        i += 1
+        i += 1;
     }
+    //Nested toggles are evaluated (similar to the parsing above)
     if (currentSegment.text.length > 0) segments.push(currentSegment);
+    for (i = 0; i < segments.length; i++) {
+        if (segments[i].type == 3) {
+            handleNestedToggles(segments[i]);
+        } 
+    }
     localStorage.setItem("parsedTemplate", JSON.stringify(segments));
     window.open("generate.html", "_self");
 }
