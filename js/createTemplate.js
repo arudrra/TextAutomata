@@ -22,8 +22,18 @@ async function importTemplate() {
 const downloadTemplateButton = document.getElementById('download-template-button');
 downloadTemplateButton.addEventListener("click", downloadTemplate);
 function downloadTemplate() {
-    var file = new Blob([input.value.substring()], {type: 'text/plain'});
-    saveAs(file,"template.txt")
+    const templateText = input.value.substring();
+    const downloadTemplate = document.createElement('a');
+    downloadTemplate.href = "data:text/plain," + templateText;
+    downloadTemplate.download = "textAutomataTemplate";
+    document.body.appendChild(downloadTemplate);
+    downloadTemplate.click();
+    document.body.removeChild(downloadTemplate);
+
+    // document.body.removeChild(downloadElement);
+
+    // var file = new Blob([input.value.substring()], {type: 'text/plain'});
+    // saveAs(file,"template.txt")
     // var template = document.createElement('template');
     // template.download = "template.txt";
     // template.href = window.URL.createObjectURL(file);
@@ -94,6 +104,8 @@ function createCustomSyntax(){
         customBackButton.innerText = "go back";
         customBackButton.addEventListener("click", function(){
             customControlPanel.replaceWith(originalControlPanel);
+            input.removeAttribute("readonly");
+            input.focus();
         });
         //Make the textbox for the name of the custom (the user will be prompted with later)
         const customNameInput = document.createElement('input');
@@ -164,11 +176,11 @@ function parse(){
         } else {
             if (currentChar == CUSTOMSTART && !toggleActive && !customActive) {
                 customActive = true;
-                segments.push(currentSegment);
+                if (currentSegment.text.length > 0) segments.push(currentSegment);
                 currentSegment = createNewSegment(1);
             } else if (currentChar == TOGGLESTART && !toggleActive && !customActive) {
                 toggleActive = true;
-                segments.push(currentSegment);
+                if (currentSegment.text.length > 0) segments.push(currentSegment);
                 currentSegment = createNewSegment(2);
             } else if (currentChar == CUSTOMEND && customActive) {
                 customActive = false;
@@ -184,8 +196,8 @@ function parse(){
         }
         i += 1
     }
-    segments.push(currentSegment);
-    console.log(JSON.stringify(segments));
+    if (currentSegment.text.length > 0) segments.push(currentSegment);
+    console.log(segments);
     localStorage.setItem("parsedTemplate", JSON.stringify(segments));
-    window.open("generate.html", "_self");
+    // window.open("generate.html", "_self");
 }
