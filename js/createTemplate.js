@@ -9,7 +9,19 @@ const TOGGLEEND = ']';
 const input = document.getElementById("main-input");
 // const nameInputBox = document.getElementById("name-input");
 const originalControlPanel = document.getElementById("control-buttons");
-//
+
+// //Loads template from session storage (doesn't work)
+// document.addEventListener("DOMContentLoaded", function() {
+//     rawTemplate = JSON.parse(localStorage.rawTemplate);
+//     input.value = rawTemplate;
+//   });
+
+// //Saves template to session storage in event of accidental refresh
+// document.addEventListener("beforeunload", function(){
+//     localStorage.setItem("rawTemplate", JSON.stringify(text));
+//     sessionStorage.setItem("reloading", "true");
+// });
+
 
 //Import template functionality
 const importButton = document.getElementById('upload');
@@ -159,7 +171,7 @@ const parseButton = document.getElementById("parse-button");
 parseButton.addEventListener("click", parse);
 function parse(){
     const text = input.value.substring();
-    localStorage.setItem("rawTemplate", text);
+    localStorage.setItem("rawTemplate", JSON.stringify(text));
     let i = 0;
     toggleActive = false;
     customActive = false;
@@ -182,6 +194,9 @@ function parse(){
                 toggleActive = true;
                 if (currentSegment.text.length > 0) segments.push(currentSegment);
                 currentSegment = createNewSegment(2);
+            // } else if (currentChar == CUSTOMSTART && toggleActive && !customActive) {
+            //     alert("Hello\nHow are you?");
+            // }
             } else if (currentChar == CUSTOMEND && customActive) {
                 customActive = false;
                 segments.push(currentSegment);
