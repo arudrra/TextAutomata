@@ -65,29 +65,7 @@ function createToggleSyntax(){
     }
 }
 
-//Control panel for custom input
-//Make div for control panel
-const customControlPanel = document.createElement('div');
-customControlPanel.setAttribute("id", "control-custom-buttons");
-//Make the back button
-const customBackButton = document.createElement('button');
-customBackButton.className = "main-bar-button left-control-button";
-customBackButton.innerText = "go back";
-customBackButton.addEventListener("click", restoreOriginalControlPanel);
-//Make the textbox for the name of the custom (the user will be prompted with later)
-const customNameInput = document.createElement('input');
-customNameInput.setAttribute("id", "name-input");
-customNameInput.setAttribute("maxlength",15);
-customNameInput.setAttribute("placeholder","enter name");
-//Make the finish button
-const customFinishInputButton = document.createElement('button');
-customFinishInputButton.className = "main-bar-button right-control-button";
-customFinishInputButton.innerText = "finish";
-customFinishInputButton.addEventListener("click", convert);
-//Append all the buttons to the main div
-customControlPanel.appendChild(customBackButton);
-customControlPanel.appendChild(customNameInput);
-customControlPanel.appendChild(customFinishInputButton);
+
 
 //Custom Button, navigation bar swapper, and syntax insertion
 const customButton = document.getElementById("custom-control-button");
@@ -104,8 +82,42 @@ function createCustomSyntax(){
             console.log("invalid custom creation");
         }
     } else {
+        const originalControlPanel = document.getElementById("control-buttons");
+
+        //Control panel for custom input
+        //Make div for control panel
+        const customControlPanel = document.createElement('div');
+        customControlPanel.setAttribute("id", "control-custom-buttons");
+        //Make the back button
+        const customBackButton = document.createElement('button');
+        customBackButton.className = "main-bar-button left-control-button";
+        customBackButton.innerText = "go back";
+        customBackButton.addEventListener("click", function(){
+            customControlPanel.replaceWith(originalControlPanel);
+        });
+        //Make the textbox for the name of the custom (the user will be prompted with later)
+        const customNameInput = document.createElement('input');
+        customNameInput.setAttribute("id", "name-input");
+        customNameInput.setAttribute("maxlength",15);
+        customNameInput.setAttribute("placeholder","enter name");
+        //Make the finish button
+        const customFinishInputButton = document.createElement('button');
+        customFinishInputButton.className = "main-bar-button right-control-button";
+        customFinishInputButton.innerText = "finish";
+        customFinishInputButton.addEventListener("click", function() {
+            input.value = text.slice(0, start) +  CUSTOMSTART + customNameInput.value.substring() + CUSTOMEND + text.slice(start);
+            customControlPanel.replaceWith(originalControlPanel);
+            input.removeAttribute("readonly");
+            input.focus();
+        });
+        //Append all the buttons to the main div
+        customControlPanel.appendChild(customBackButton);
+        customControlPanel.appendChild(customNameInput);
+        customControlPanel.appendChild(customFinishInputButton);
+
         originalControlPanel.replaceWith(customControlPanel);
         input.focus();
+        input.setAttribute("readonly", true);
         
     }
         // if (name.length > 0) {
@@ -114,18 +126,6 @@ function createCustomSyntax(){
     // } else {
     //     input.value = text.slice(0, start) + CUSTOMSTART + CUSTOMEND + text.slice(start);
     // }   
-}
-
-function convert(){
-    console.log("YEET")
-    index = input.focus();
-    console.log(index);
-    input.value = text.slice(0, index) +  CUSTOMSTART + customNameInput.value.substring() + CUSTOMEND + text.slice(index);
-    restoreOriginalControlPanel();
-}
-
-function restoreOriginalControlPanel() {
-    customControlPanel.replaceWith(originalControlPanel);
 }
 
 
