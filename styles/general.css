@@ -20,7 +20,7 @@ html{
 }
 
 h1 {
-    color: var(--purplecolor);
+    color: var(--beigecolor);
     text-align: center;
 }
 body{
@@ -47,18 +47,16 @@ body{
 }
 #name-input{
     font-family: "Roboto Mono";
-    background-color: #99947f;
+    background-color: var(--beigecolor);
     color: var(--greycolor);
-    width: 100%;
     box-sizing: border-box;
     outline: none;
     resize: none;
     border-width: 0rem;
-    border-top-right-radius: 0.5rem;
-    border-bottom-right-radius: 0.5rem;
     background-color: var(--beigecolor);
     font-size: 0.8rem;
     text-align: center;
+    height: var(--mainbarheight);
 }
 #name-input::placeholder{
     font-size: 0.8rem;
@@ -70,16 +68,23 @@ body{
     width: 50vw;    
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     gap: 0px;
 }
-#tutorial-button{
+#control-custom-buttons{
+    width: 40;    
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 0px;
+}
+.left-control-button{
     border-bottom-left-radius: 0.5rem;
     border-top-left-radius: 0.5rem;
 }
-#return-to-template{
-    border-bottom-left-radius: 0.5rem;
-    border-top-left-radius: 0.5rem;
+.right-control-button{
+    border-bottom-right-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
 }
 .main-bar-button{
     font-family: "Roboto Mono";

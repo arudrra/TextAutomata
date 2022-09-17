@@ -1,15 +1,15 @@
+//Constants for markdown and custom prompt length
 const FIELDLENGTH = 15;
-
 const CUSTOMSTART= '{';
 const CUSTOMEND= '}';
 const TOGGLESTART = '[';
 const TOGGLEEND = ']';
+
+//Input box contains template (used by most functions)
 const input = document.getElementById("main-input");
-const toggleButton = document.getElementById("toggle-control-button");
-toggleButton.addEventListener("click", createToggleSyntax);
-const customButton = document.getElementById("custom-control-button");
-customButton.addEventListener("click", createCustomSyntax);
-const nameInputBox = document.getElementById("name-input");
+// const nameInputBox = document.getElementById("name-input");
+const originalControlPanel = document.getElementById("control-buttons");
+//
 
 //Import template functionality
 const importButton = document.getElementById('upload');
@@ -49,32 +49,54 @@ function splitOnSelection(text, start, end){
     return [prefix, middle, suffix];
 }
 
+//Toggle Button and syntax insertion
+const toggleButton = document.getElementById("toggle-control-button");
+toggleButton.addEventListener("click", createToggleSyntax);
 function createToggleSyntax(){
     const start = input.selectionStart;
     const end = input.selectionEnd;
     const text = input.value.substring();
-    const name = nameInputBox.value.substring()
     if (input.selectionStart != input.selectionEnd) {
         const sections = splitOnSelection(text, input.selectionStart, input.selectionEnd);
-        if (name.length > 0) {
-            input.value = sections[0] + TOGGLESTART + name + sections[1] + TOGGLEEND + sections[2];
-        } else {
-            input.value = sections[0] + TOGGLESTART +  sections[1] + TOGGLEEND + sections[2];
-            console.log(JSON.stringify(input.value))
-        }
+        input.value = sections[0] + TOGGLESTART +  sections[1] + TOGGLEEND + sections[2];
+        console.log(JSON.stringify(input.value));
     } else {
         console.log("invalid toggle creation");
     }
 }
 
+//Control panel for custom input
+//Make div for control panel
+const customControlPanel = document.createElement('div');
+customControlPanel.setAttribute("id", "control-custom-buttons");
+//Make the back button
+const customBackButton = document.createElement('button');
+customBackButton.className = "main-bar-button left-control-button";
+customBackButton.innerText = "go back";
+customBackButton.addEventListener("click", restoreOriginalControlPanel);
+//Make the textbox for the name of the custom (the user will be prompted with later)
+const customNameInput = document.createElement('input');
+customNameInput.setAttribute("id", "name-input");
+customNameInput.setAttribute("maxlength",15);
+customNameInput.setAttribute("placeholder","enter name");
+//Make the finish button
+const customFinishInputButton = document.createElement('button');
+customFinishInputButton.className = "main-bar-button right-control-button";
+customFinishInputButton.innerText = "finish";
+customFinishInputButton.addEventListener("click", convert);
+//Append all the buttons to the main div
+customControlPanel.appendChild(customBackButton);
+customControlPanel.appendChild(customNameInput);
+customControlPanel.appendChild(customFinishInputButton);
+
+//Custom Button, navigation bar swapper, and syntax insertion
+const customButton = document.getElementById("custom-control-button");
+customButton.addEventListener("click", createCustomSyntax);
 function createCustomSyntax(){
     const start = input.selectionStart;
     const end = input.selectionEnd;
     const text = input.value.substring();
-    const name = nameInputBox.value.substring()
-    if (name.length > 0) {
-        input.value = text.slice(0, start) +  CUSTOMSTART +name + CUSTOMEND + text.slice(start);
-    } else if (start != end) {
+    if (start != end) {
         if (end - start <= FIELDLENGTH) {
             const sections = splitOnSelection(text, start, end);
             input.value = sections[0] + CUSTOMSTART +sections[1] + CUSTOMEND + sections[2];
@@ -82,16 +104,31 @@ function createCustomSyntax(){
             console.log("invalid custom creation");
         }
     } else {
-        input.value = text.slice(0, start) + CUSTOMSTART + CUSTOMEND + text.slice(start);
-    }   
+        originalControlPanel.replaceWith(customControlPanel);
+        input.focus();
+        
+    }
+        // if (name.length > 0) {
+        //     input.value = text.slice(0, start) +  CUSTOMSTART +name + CUSTOMEND + text.slice(start);
+        // }
+    // } else {
+    //     input.value = text.slice(0, start) + CUSTOMSTART + CUSTOMEND + text.slice(start);
+    // }   
 }
 
-const parseButton = document.getElementById("parse-button");
-parseButton.addEventListener("click", parse);
-
-function charInRange(index, end){
-    if (index < end && index >= 0) {} 
+function convert(){
+    console.log("YEET")
+    index = input.focus();
+    console.log(index);
+    input.value = text.slice(0, index) +  CUSTOMSTART + customNameInput.value.substring() + CUSTOMEND + text.slice(index);
+    restoreOriginalControlPanel();
 }
+
+function restoreOriginalControlPanel() {
+    customControlPanel.replaceWith(originalControlPanel);
+}
+
+
 
 //There are 3 types of segments
 //Type 0: normal text (does not need to be evaluated)
@@ -104,6 +141,10 @@ function createNewSegment(type){
     return segment
 }
 
+//Parses the markdown and stores the markdown + raw input in local storage
+//Also switches to the generator page
+const parseButton = document.getElementById("parse-button");
+parseButton.addEventListener("click", parse);
 function parse(){
     const text = input.value.substring();
     localStorage.setItem("rawTemplate", text);
