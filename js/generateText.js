@@ -47,6 +47,10 @@ function customDecision() {
 
 }
 
+function nestedToggleDecision() {
+    
+}
+
 const startButton = document.getElementById("start-button");
 startButton.addEventListener("click", startGenerator);
 

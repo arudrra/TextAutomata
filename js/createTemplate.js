@@ -34,24 +34,66 @@ async function importTemplate() {
 const downloadTemplateButton = document.getElementById('download-template-button');
 downloadTemplateButton.addEventListener("click", downloadTemplate);
 function downloadTemplate() {
-    const templateText = input.value.substring();
-    const downloadTemplate = document.createElement('a');
-    downloadTemplate.href = "data:text/plain," + templateText;
-    downloadTemplate.download = "textAutomataTemplate";
-    document.body.appendChild(downloadTemplate);
-    downloadTemplate.click();
-    document.body.removeChild(downloadTemplate);
 
-    // document.body.removeChild(downloadElement);
+    const originalControlPanel = document.getElementById("control-buttons");
+    //Control panel for custom input
+    //Make div for control panel
+    const customControlPanel = document.createElement('div');
+    customControlPanel.setAttribute("id", "control-custom-buttons");
+    //Make the back button
+    const customBackButton = document.createElement('button');
+    customBackButton.className = "bar-button left-control-button";
+    customBackButton.innerText = "go back";
+    customBackButton.addEventListener("click", function(){
+        customControlPanel.replaceWith(originalControlPanel);
+        input.removeAttribute("readonly");
+        input.focus();
+    });
+    //Make the textbox for the name of the custom (the user will be prompted with later)
+    const customNameInput = document.createElement('input');
+    customNameInput.setAttribute("id", "name-input");
+    customNameInput.setAttribute("maxlength",30);
+    customNameInput.setAttribute("placeholder","enter name");
+    //Make the finish button
+    const customFinishInputButton = document.createElement('button');
+    customFinishInputButton.className = "bar-button right-control-button";
+    customFinishInputButton.innerText = "finish";
+    customFinishInputButton.addEventListener("click", function() {
+        //Download functionality
+        const templateText = input.value.substring();
+        const downloadTemplate = document.createElement('a');
+        downloadTemplate.href = "data:text/plain," + templateText;
+        downloadTemplate.download = customNameInput.value.substring();
+        document.body.appendChild(downloadTemplate);
+        downloadTemplate.click();
+        downloadTemplate.remove();
 
-    // var file = new Blob([input.value.substring()], {type: 'text/plain'});
-    // saveAs(file,"template.txt")
-    // var template = document.createElement('template');
-    // template.download = "template.txt";
-    // template.href = window.URL.createObjectURL(file);
-    // template.click();
-    // // URL.revokeObjectURL(template.href);
-    // template.remove();
+        //Swap navigation bar back
+        customControlPanel.replaceWith(originalControlPanel);
+        customBackButton.remove();
+        customNameInput.remove();
+        customFinishInputButton.remove();
+        customControlPanel.remove();
+        input.removeAttribute("readonly");
+        input.focus();
+    });
+    //Append all the buttons to the main div
+    customControlPanel.appendChild(customBackButton);
+    customControlPanel.appendChild(customNameInput);
+    customControlPanel.appendChild(customFinishInputButton);
+
+    originalControlPanel.replaceWith(customControlPanel);
+    input.focus();
+    input.setAttribute("readonly", true);
+
+
+    // const templateText = input.value.substring();
+    // const downloadTemplate = document.createElement('a');
+    // downloadTemplate.href = "data:text/plain," + templateText;
+    // downloadTemplate.download = "textAutomataTemplate";
+    // document.body.appendChild(downloadTemplate);
+    // downloadTemplate.click();
+    // document.body.removeChild(downloadTemplate);
     
 }
 
@@ -122,7 +164,7 @@ function createCustomSyntax(){
         //Make the textbox for the name of the custom (the user will be prompted with later)
         const customNameInput = document.createElement('input');
         customNameInput.setAttribute("id", "name-input");
-        customNameInput.setAttribute("maxlength",15);
+        customNameInput.setAttribute("maxlength",30);
         customNameInput.setAttribute("placeholder","enter name");
         //Make the finish button
         const customFinishInputButton = document.createElement('button');
@@ -131,6 +173,10 @@ function createCustomSyntax(){
         customFinishInputButton.addEventListener("click", function() {
             input.value = text.slice(0, start) +  CUSTOMSTART + customNameInput.value.substring() + CUSTOMEND + text.slice(start);
             customControlPanel.replaceWith(originalControlPanel);
+            customBackButton.remove();
+            customNameInput.remove();
+            customFinishInputButton.remove();
+            customControlPanel.remove();
             input.removeAttribute("readonly");
             input.focus();
         });
