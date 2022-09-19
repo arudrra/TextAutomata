@@ -252,7 +252,7 @@ const parseButton = document.getElementById("parse-button");
 parseButton.addEventListener("click", parse);
 function parse(){
     const text = input.value.substring();
-    localStorage.setItem("rawTemplate", JSON.stringify(text));
+    sessionStorage.setItem("rawTemplate", JSON.stringify(text));
     let i = 0;
     let toggleActive = false;
     let customActive = false;
@@ -300,6 +300,6 @@ function parse(){
             handleNestedToggles(segments[i]);
         } 
     }
-    localStorage.setItem("parsedTemplate", JSON.stringify(segments));
+    sessionStorage.setItem("parsedTemplate", JSON.stringify(segments));
     window.open("generate.html", "_self");
 }

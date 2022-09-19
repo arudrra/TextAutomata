@@ -10,6 +10,7 @@
     --beigecolor: #eeebe2;
     --lightgreycolor: #99947f;
     --bluecolor: rgb(181, 248, 255);
+    --universalborderradius: 0.2rem;
 }
 
 html{
@@ -31,7 +32,6 @@ body{
     margin: 0 auto;
     margin-top: var(--flexboxverticalgap);
     width: var(--fullwidth);
-    padding-right: 0px;
 }
 .main-input{
     font-family: "Roboto Mono";
@@ -39,7 +39,7 @@ body{
     color: var(--beigecolor);
     font-size: 1rem;
     border-width: 2px;
-    border-radius: 0.2rem;
+    border-radius: 0.5rem;
     border-color: var(--beigecolor);
     width: 100%;
     box-sizing: border-box;
@@ -47,6 +47,7 @@ body{
     outline: none;
     display: block;
     resize: none;
+    padding: 1rem;
 }
 .main-input::placeholder{
     color: var(--beigecolor);
@@ -80,10 +81,17 @@ body{
     gap: 0px;
 }
 #control-custom-buttons{
-    width: 30rem;    
+    width: 20rem;    
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
+    gap: 0px;
+}
+#generate-control-buttons{
+    width: 20rem;    
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 0px;
 }
 .left-control-button{
@@ -119,7 +127,7 @@ label {
 }
 #parse-button{
     width: 5rem;
-    border-radius: 0.5rem;
+    border-radius: var(--universalborderradius);
     align-items: right;
     justify-content: flex-end;
 }
@@ -141,10 +149,20 @@ label {
     width: var(--fullwidth);
     flex-direction: column;
     align-items: flex-start;
-    border:1px solid black;
-    border-radius: 0.2rem;
+    font-size: 1rem;
+    border: solid;
+    border-width: 2px;
+    border-radius: 0.5rem;
+    border-color: var(--beigecolor);
+    width: 100%;
+    box-sizing: border-box;
     white-space:pre-wrap;
+    margin-top: var(--flexboxverticalgap);
+    padding: 1rem;
     /* border-color: var(--beigecolor); */
+}
+#return-to-template:hover{
+    color: var(--redcolor);
 }
 #generated-text{
     color: var(--beigecolor);

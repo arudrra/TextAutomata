@@ -14,14 +14,19 @@ function returnToTemplate() {
 //Loads template from storage
 function load() {
     ParsedText = new Object();
-    ParsedText.segments = JSON.parse(localStorage.parsedTemplate);
+    //String.raw necessary for firefox since \n is evaluated otherwise
+    ParsedText.segments = JSON.parse(String.raw`${sessionStorage.parsedTemplate}`);
     ParsedText.index = 0;
 }
 
 
 function toggleDecision() {
     const generatedTextArea = document.getElementById("generated-text");
-    generatedTextArea.innerHTML += '<span class="toggle-text">' + ParsedText.segments[ParsedText.index].text + '<span>';
+    span = document.createElement("span");
+    span.className = "toggle-text";
+    span.textContent = ParsedText.segments[ParsedText.index].text;
+    generatedTextArea.appendChild(span);
+    ParsedText.index += 1;
     advanceToNextDecision();
 }
 
