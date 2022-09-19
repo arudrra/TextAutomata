@@ -114,14 +114,13 @@ label {
 
 #bottom-row-buttons{
     width: var(--fullwidth);
+    height: var(--barheight);
     margin-top: var(--flexboxverticalgap);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
 }
 #parse-button{
     width: 5rem;
     border-radius: 0.5rem;
+    align-items: right;
     justify-content: flex-end;
 }
 #parse-button:hover {
