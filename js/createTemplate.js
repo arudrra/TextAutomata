@@ -209,6 +209,7 @@ function createNewSegment(type){
     segment = new Object();
     segment.text = "";
     segment.type = type;
+    segment.generatedHTML = "";
     return segment
 }
 

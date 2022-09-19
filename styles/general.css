@@ -143,6 +143,7 @@ label {
     align-items: flex-start;
     border:1px solid black;
     border-radius: 0.2rem;
+    white-space:pre-wrap;
     /* border-color: var(--beigecolor); */
 }
 #generated-text{

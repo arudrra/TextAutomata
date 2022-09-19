@@ -1,10 +1,8 @@
 //Globals
-let currentText;
-let previousActions;
-let remainingSegments;
-
-//Useful Elements
-const generatedTextArea = document.getElementById("generated-text");
+let ParsedText;
+// let currentText;
+// let previousActions;
+// let remainingSegments;
 
 //Return to Template page (go back button)
 const returnToTemplateButton = document.getElementById("return-to-template");
@@ -15,39 +13,65 @@ function returnToTemplate() {
 
 //Loads template from storage
 function load() {
-    currentText = [];
-    previousActions = [];
-    remainingSegments = JSON.parse(localStorage.parsedTemplate);
+    ParsedText = new Object();
+    ParsedText.segments = JSON.parse(localStorage.parsedTemplate);
+    ParsedText.index = 0;
 }
 
-//Automatically adds text that does not require user decisions until it reaches a user decision
-function advanceToNextDecision() {
-    while (remainingSegments.length > 0 && remainingSegments[0].type == 0) {
-        //sometimes, blank characters get appended
-        const currentSegment = remainingSegments.shift();
-        generatedTextArea.innerHTML = currentSegment.text;
-        previousActions.push(currentSegment);
-    }
-    if (remainingSegments.length == 0) {
-        console.log("DONE");
-    } else if (remainingSegments[0].type == 1) {
-        customDecision();
-    } else if (remainingSegments[0].type == 2){
-        toggleDecision();
-    } else {
-        console.log("Template Formatting Error")
-    }
-}
 
 function toggleDecision() {
-    
+    const generatedTextArea = document.getElementById("generated-text");
+    generatedTextArea.innerHTML += '<span class="toggle-text">' + ParsedText.segments[ParsedText.index].text + '<span>';
+    advanceToNextDecision();
 }
 
 function customDecision() {
+    const generatedTextArea = document.getElementById("generated-text");
+    // generatedTextArea.append('<span class="custom-text">' + ParsedText.segments[ParsedText.index].text + '<span>');
+    span = document.createElement("span");
+    span.className = "custom-text";
+    span.textContent = ParsedText.segments[ParsedText.index].text;
+    generatedTextArea.appendChild(span);
+    ParsedText.index += 1;
+    advanceToNextDecision();
 
 }
 
 function nestedToggleDecision() {
+    const generatedTextArea = document.getElementById("generated-text");
+
+    ParsedText.index += 1;
+    // advanceToNextDecision();
+
+}
+
+function advanceToNextDecision() {
+    const generatedTextArea = document.getElementById("generated-text");
+    while (ParsedText.index < ParsedText.segments.length && ParsedText.segments[ParsedText.index].type == 0) {
+        plainText = document.createTextNode(ParsedText.segments[ParsedText.index].text);
+        generatedTextArea.appendChild(plainText);
+        ParsedText.index += 1
+    }
+    if (ParsedText.index >= ParsedText.segments) {
+        console.log("DONE")
+    } else if (ParsedText.segments[ParsedText.index].type == 1) {
+        customDecision();
+    } else if (ParsedText.segments[ParsedText.index].type == 2) {
+        toggleDecision();
+    }
+    //     switch (ParsedText.segments[ParsedText.index].type) {
+    //         case 1:
+    //             customDecision();
+    //             break;
+    //         case 2:
+    //             toggleDecision();
+    //             break;
+    //         case 3:
+    //             nestedToggleDecision();
+    //             break;
+    //         default:
+    //             console.log("Template Formatting Error")
+    //     }
     
 }
 
@@ -56,5 +80,6 @@ startButton.addEventListener("click", startGenerator);
 
 function startGenerator() {
     load();
+    // document.getElementById("generated-text").innerHTML = 'Hello <span class="custom-text">Arudrra</span>';
     advanceToNextDecision();
 }
