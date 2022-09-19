@@ -16,6 +16,7 @@ function load() {
     ParsedText = new Object();
     //String.raw necessary for firefox since \n is evaluated otherwise
     ParsedText.segments = JSON.parse(String.raw`${sessionStorage.parsedTemplate}`);
+    console.log(ParsedText);
     ParsedText.index = 0;
 }
 
@@ -57,34 +58,19 @@ function advanceToNextDecision() {
         generatedTextArea.appendChild(plainText);
         ParsedText.index += 1
     }
-    if (ParsedText.index >= ParsedText.segments) {
+    if (ParsedText.index >= ParsedText.segments.length) {
         console.log("DONE")
     } else if (ParsedText.segments[ParsedText.index].type == 1) {
         customDecision();
     } else if (ParsedText.segments[ParsedText.index].type == 2) {
         toggleDecision();
     }
-    //     switch (ParsedText.segments[ParsedText.index].type) {
-    //         case 1:
-    //             customDecision();
-    //             break;
-    //         case 2:
-    //             toggleDecision();
-    //             break;
-    //         case 3:
-    //             nestedToggleDecision();
-    //             break;
-    //         default:
-    //             console.log("Template Formatting Error")
-    //     }
-    
 }
 
-const startButton = document.getElementById("start-button");
+const startButton = document.getElementById("restart-button");
 startButton.addEventListener("click", startGenerator);
 
 function startGenerator() {
     load();
-    // document.getElementById("generated-text").innerHTML = 'Hello <span class="custom-text">Arudrra</span>';
     advanceToNextDecision();
 }

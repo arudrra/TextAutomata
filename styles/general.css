@@ -6,6 +6,7 @@
     --redcolor: rgb(236, 139, 131);
     --greycolor: rgb(41,42,54);
     --purplecolor: rgb(220, 191, 251);
+    --deepblue: #02101a;
     --yellowcolor: rgb(247, 251, 161);
     --beigecolor: #eeebe2;
     --lightgreycolor: #99947f;
@@ -25,7 +26,8 @@ h1 {
     text-align: center;
 }
 body{
-    background-color: var(--greycolor);
+    /* background-color: var(--greycolor); */
+    background-color: black;
     font-family: 'Roboto', sans-serif;
 }
 .main-input-wrapper{ 
@@ -35,10 +37,10 @@ body{
 }
 .main-input{
     font-family: "Roboto Mono";
-    background-color: var(--greycolor);
+    background-color: var(--deepblue);
     color: var(--beigecolor);
     font-size: 1rem;
-    border-width: 2px;
+    border-width: 1px;
     border-radius: 0.5rem;
     border-color: var(--beigecolor);
     width: 100%;
@@ -116,7 +118,7 @@ label {
     line-height: var(--barheight);
 }
 .bar-button:hover{
-    background-color: var(--greycolor);
+    background-color: black;
     color: var(--beigecolor);
 }
 
@@ -133,7 +135,7 @@ label {
 }
 #parse-button:hover {
     color: var(--greencolor);
-    background-color: var(--greycolor);
+    background-color: black;
 }
 
 .content-container {
@@ -167,9 +169,15 @@ label {
 #generated-text{
     color: var(--beigecolor);
     font-size: 1rem;
-    width: var(--fullwidth);
+    width: 100%;
 }
 
+#toggle-control-button:hover{
+    color: var(--purplecolor);
+}
+#custom-control-button:hover{
+    color: var(--bluecolor);
+}
 .plain-text{
     color: beige;
 }
