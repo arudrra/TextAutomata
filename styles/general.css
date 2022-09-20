@@ -161,6 +161,7 @@ label {
     white-space:pre-wrap;
     margin-top: var(--flexboxverticalgap);
     padding: 1rem;
+    background-color: var(--deepblue);
     /* border-color: var(--beigecolor); */
 }
 #return-to-template:hover{

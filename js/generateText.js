@@ -1,8 +1,5 @@
 //Globals
 let ParsedText;
-// let currentText;
-// let previousActions;
-// let remainingSegments;
 
 //Return to Template page (go back button)
 const returnToTemplateButton = document.getElementById("return-to-template");
@@ -22,6 +19,7 @@ function load() {
 
 
 function toggleDecision() {
+    //If the toggle is chosen
     const generatedTextArea = document.getElementById("generated-text");
     span = document.createElement("span");
     span.className = "toggle-text";
