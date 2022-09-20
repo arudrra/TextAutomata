@@ -210,3 +210,6 @@ label {
     height: var(--barheight);
     margin-top: var(--flexboxverticalgap);
 }
+.excluded-toggle{
+    text-decoration: line-through;
+}

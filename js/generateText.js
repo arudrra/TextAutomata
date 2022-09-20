@@ -21,6 +21,8 @@ function createToggleInterface(parent, child) {
     const generatorControlPanel = document.getElementById("generator-control-panel");
     const toggleInterfacePanel = document.createElement("div");
     toggleInterfacePanel.setAttribute("id", "toggle-interface-panel");
+    //1 means that the toggle is active, 0 means that it is inactive
+    ParsedText.segments[ParsedText.index].state = 1;
 
     const backButton = document.createElement("button");
     backButton.className = "bar-button left-control-button back-button";
@@ -30,10 +32,25 @@ function createToggleInterface(parent, child) {
     toggleExclude.className = "bar-button";
     toggleExclude.innerText = "exclude";
     toggleExclude.addEventListener("click", function() {
-        if (parent.contains(child)) {
+        if (ParsedText.segments[ParsedText.index].state == 1) {
+            ParsedText.segments[ParsedText.index].state = 0;
             parent.removeChild(child);
-        }
+            child.className = "toggle-text";
+        }    
     });
+    //adds "hover" functionality where the toggle text disappears when hovering on the exclude button
+    toggleExclude.addEventListener("mouseenter", function() {
+        if (ParsedText.segments[ParsedText.index].state == 1) {
+            child.className = "toggle-text excluded-toggle";
+            // child.setAttribute("text-decoration", "line-through !important");
+        }
+    })
+    toggleExclude.addEventListener("mouseleave", function() {
+        if (ParsedText.segments[ParsedText.index].state == 1) {
+            child.className = "toggle-text";
+        }
+    })
+
     //back-button has the red hover color
     // toggleExclude.setAttribute("back-button");
 
@@ -41,10 +58,22 @@ function createToggleInterface(parent, child) {
     toggleInclude.className = "bar-button";
     toggleInclude.innerText = "include";
     toggleInclude.addEventListener("click", function() {
-        if (!parent.contains(child)) {
+        if (ParsedText.segments[ParsedText.index].state == 0) {
+            ParsedText.segments[ParsedText.index].state = 1;
             parent.appendChild(child);
         }
     });
+    //adds "hover" functionality where the toggle text appears when hovering on the include button
+    // toggleInclude.addEventListener("mouseenter", function() {
+    //     if (ParsedText.segments[ParsedText.index].state == 0) {
+    //         parent.appendChild(child);
+    //     }
+    // })
+    // toggleInclude.addEventListener("mouseleave", function() {
+    //     if (ParsedText.segments[ParsedText.index].state == 0) {
+    //         parent.removeChild(child);
+    //     }
+    // })
 
     const nextButton = document.createElement('button');
     nextButton.className = "bar-button right-control-button next-button";
@@ -61,6 +90,8 @@ function createToggleInterface(parent, child) {
         toggleExclude.remove();
         toggleInclude.remove();
         nextButton.remove();
+        //Increase index
+        ParsedText.index += 1;
         //Advance to next decision
         advanceToNextDecision();
     })
@@ -82,9 +113,7 @@ function toggleDecision() {
     span.className = "toggle-text";
     span.textContent = ParsedText.segments[ParsedText.index].text;
     generatedTextArea.appendChild(span);
-    ParsedText.index += 1;
     createToggleInterface(generatedTextArea, span);
-    // advanceToNextDecision();
 }
 
 function customDecision() {
@@ -128,5 +157,7 @@ startButton.addEventListener("click", startGenerator);
 
 function startGenerator() {
     load();
+    document.getElementById("generated-text").innerHTML = "";
+    document.getElementById("generator-control-panel").innerHTML = "";
     advanceToNextDecision();
 }
