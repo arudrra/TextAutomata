@@ -1,5 +1,6 @@
 //Globals
 let ParsedText;
+CUSTOMFIELDLENGTH = 500;
 
 //Return to Template page (go back button)
 const returnToTemplateButton = document.getElementById("return-to-template");
@@ -96,14 +97,60 @@ function createToggleInterface(parent, child) {
         advanceToNextDecision();
     })
 
-
     toggleInterfacePanel.appendChild(backButton);
     toggleInterfacePanel.appendChild(toggleExclude);
     toggleInterfacePanel.appendChild(toggleInclude);
     toggleInterfacePanel.appendChild(nextButton);
     generatorControlPanel.appendChild(toggleInterfacePanel);
-    
+}
 
+function createCustomInterface(parent, child) {
+    const generatorControlPanel = document.getElementById("generator-control-panel");
+    const customInterfacePanel = document.createElement("div");
+    customInterfacePanel.setAttribute("id", "custom-interface-panel");
+    customInterfacePanel.className = "generated-text-container";
+
+    const customInputBox = document.createElement('textarea');
+    customInputBox.setAttribute("id", "custom-input-box");
+    customInputBox.setAttribute("maxlength",CUSTOMFIELDLENGTH);
+    customInputBox.setAttribute("placeholder", ParsedText.segments[ParsedText.index].text);
+    //mirrors the custom input text onto the generated textbox
+    // customInputBox.addEventListener("keyup", function() {
+    //     child.textContent = customInputBox.value.substring();
+    // })
+    // customInputBox.addEventListener("keydown", function() {
+    //     child.textContent = customInputBox.value.substring();
+    // })
+    // var heightLimit = 200; /* Maximum height: 200px */
+    customInputBox.oninput = function() {
+        customInputBox.style.height = ""; /* Reset the height*/
+    //   input.style.height = Math.min(input.scrollHeight, heightLimit) + "px";
+        customInputBox.style.height = customInputBox.scrollHeight + "px";
+        child.textContent = customInputBox.value.substring();
+
+    };
+
+    const nextButton = document.createElement('button');
+    nextButton.className = "bar-button right-control-button next-button";
+    nextButton.innerText = "next >";
+    nextButton.addEventListener("click", function() {
+        //Remove the interface for generating customs
+        generatorControlPanel.removeChild(customInterfacePanel);
+        customInterfacePanel.removeChild(customInputBox);
+        customInterfacePanel.removeChild(nextButton);
+        customInterfacePanel.remove();
+        customInputBox.remove();
+        nextButton.remove();
+        nextButton.remove();
+        //Increase index
+        ParsedText.index += 1;
+        //Advance to next decision
+        advanceToNextDecision();
+    })
+
+    customInterfacePanel.appendChild(customInputBox);
+    customInterfacePanel.appendChild(nextButton);
+    generatorControlPanel.appendChild(customInterfacePanel);
 }
 
 //If the toggle is chosen
@@ -123,8 +170,7 @@ function customDecision() {
     span.className = "custom-text";
     span.textContent = ParsedText.segments[ParsedText.index].text;
     generatedTextArea.appendChild(span);
-    ParsedText.index += 1;
-    advanceToNextDecision();
+    createCustomInterface(generatedTextArea, span);
 
 }
 

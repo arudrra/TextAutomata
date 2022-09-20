@@ -145,7 +145,7 @@ label {
     flex-direction: column;
 }
 
-#generated-text-container{
+.generated-text-container{
     margin: 0 auto;
     display: flex;
     width: var(--fullwidth);
@@ -169,6 +169,7 @@ label {
     color: var(--beigecolor);
     font-size: 1rem;
     width: 100%;
+    word-wrap: break-word;
 }
 
 #toggle-control-button:hover{
@@ -212,4 +213,17 @@ label {
 }
 .excluded-toggle{
     text-decoration: line-through;
+}
+
+#custom-input-box{
+    font-family: "Roboto Mono";
+    color: var(--beigecolor);
+    background-color: var(--deepblue);
+    font-size: 1rem;
+    width: 100%;
+    outline: none;
+    display: block;
+    border: none;
+    resize: none;
+
 }

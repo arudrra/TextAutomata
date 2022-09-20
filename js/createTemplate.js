@@ -1,5 +1,5 @@
 //Constants for markdown and custom prompt length
-const FIELDLENGTH = 15;
+const FIELDLENGTH = 20;
 const CUSTOMSTART= '{';
 const CUSTOMEND= '}';
 const TOGGLESTART = '[';
@@ -52,8 +52,8 @@ function downloadTemplate() {
     //Make the textbox for the name of the custom (the user will be prompted with later)
     const customNameInput = document.createElement('input');
     customNameInput.setAttribute("id", "name-input");
-    customNameInput.setAttribute("maxlength",30);
-    customNameInput.setAttribute("placeholder","enter name");
+    customNameInput.setAttribute("maxlength",FIELDLENGTH);
+    customNameInput.setAttribute("placeholder","enter filename");
     //Make the finish button
     const customFinishInputButton = document.createElement('button');
     customFinishInputButton.className = "bar-button right-control-button";
@@ -96,14 +96,6 @@ function downloadTemplate() {
     // document.body.removeChild(downloadTemplate);
     
 }
-
-// var heightLimit = 200; /* Maximum height: 200px */
-
-// input.oninput = function() {
-//   input.style.height = ""; /* Reset the height*/
-// //   input.style.height = Math.min(input.scrollHeight, heightLimit) + "px";
-//   input.style.height = input.scrollHeight + "px";
-// };
 
 //Splits 
 function splitOnSelection(text, start, end){
@@ -164,7 +156,7 @@ function createCustomSyntax(){
         //Make the textbox for the name of the custom (the user will be prompted with later)
         const customNameInput = document.createElement('input');
         customNameInput.setAttribute("id", "name-input");
-        customNameInput.setAttribute("maxlength",30);
+        customNameInput.setAttribute("maxlength",FIELDLENGTH);
         customNameInput.setAttribute("placeholder","enter name");
         //Make the finish button
         const customFinishInputButton = document.createElement('button');
