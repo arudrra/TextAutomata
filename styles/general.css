@@ -164,9 +164,7 @@ label {
     background-color: var(--deepblue);
     /* border-color: var(--beigecolor); */
 }
-#return-to-template:hover{
-    color: var(--redcolor);
-}
+
 #generated-text{
     color: var(--beigecolor);
     font-size: 1rem;
@@ -189,4 +187,26 @@ label {
 
 .custom-text{
     color: var(--bluecolor);
+}
+
+.back-button:hover{
+    color:var(--redcolor);
+}
+
+.next-button:hover{
+    color:var(--greencolor);
+}
+
+.toggle-button:hover{
+    color:var(--purplecolor);
+}
+
+#toggle-interface-panel{
+    width: 20rem;    
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    /* gap: 1px; */
+    height: var(--barheight);
+    margin-top: var(--flexboxverticalgap);
 }
