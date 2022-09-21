@@ -15,10 +15,18 @@ function load() {
     //String.raw necessary for firefox since \n is evaluated otherwise
     ParsedText.segments = JSON.parse(String.raw`${sessionStorage.parsedTemplate}`);
     ParsedText.index = 0;
+    //Map stores key value pairs to remember previous decisions for custom inputs
+    ParsedText.cache = new Map();
+    ParsedText.makeSuggestions = true;
 }
 
+// document.getElementById("")
+// function setAutoSuggest() {
+
+// }
+
 //Creates the the toggle interface for the user to decide on a toggle
-function createToggleInterface(parent, child) {
+function createToggleInterface(parent, child, returnFunction) {
     const generatorControlPanel = document.getElementById("generator-control-panel");
     const toggleInterfacePanel = document.createElement("div");
     toggleInterfacePanel.setAttribute("id", "toggle-interface-panel");
@@ -94,7 +102,7 @@ function createToggleInterface(parent, child) {
         //Increase index
         ParsedText.index += 1;
         //Advance to next decision
-        advanceToNextDecision();
+        returnFunction();
     })
 
     toggleInterfacePanel.appendChild(backButton);
@@ -104,7 +112,7 @@ function createToggleInterface(parent, child) {
     generatorControlPanel.appendChild(toggleInterfacePanel);
 }
 
-function createCustomInterface(parent, child) {
+function createCustomInterface(parent, child, returnFunction) {
     const generatorControlPanel = document.getElementById("generator-control-panel");
     const customInterfacePanel = document.createElement("div");
     customInterfacePanel.setAttribute("id", "custom-interface-panel");
@@ -114,6 +122,7 @@ function createCustomInterface(parent, child) {
     customInputBox.setAttribute("id", "custom-input-box");
     customInputBox.setAttribute("maxlength",CUSTOMFIELDLENGTH);
     customInputBox.setAttribute("placeholder", ParsedText.segments[ParsedText.index].text);
+    customInputBox.setAttribute("line-height", 1);
     //mirrors the custom input text onto the generated textbox
     // customInputBox.addEventListener("keyup", function() {
     //     child.textContent = customInputBox.value.substring();
@@ -129,28 +138,43 @@ function createCustomInterface(parent, child) {
         child.textContent = customInputBox.value.substring();
 
     };
+    
+    const bottomRowButtons = document.createElement('div');
+    bottomRowButtons.className = "bottom-row-buttons";
 
     const nextButton = document.createElement('button');
-    nextButton.className = "bar-button right-control-button next-button";
+    nextButton.className = "bar-button bottom-bar-button";
     nextButton.innerText = "next >";
     nextButton.addEventListener("click", function() {
         //Remove the interface for generating customs
         generatorControlPanel.removeChild(customInterfacePanel);
+        generatorControlPanel.removeChild(bottomRowButtons);
         customInterfacePanel.removeChild(customInputBox);
-        customInterfacePanel.removeChild(nextButton);
+        bottomRowButtons.removeChild(nextButton);
+        bottomRowButtons.removeChild(backButton);
         customInterfacePanel.remove();
+        bottomRowButtons.remove()
         customInputBox.remove();
         nextButton.remove();
-        nextButton.remove();
+        backButton.remove();
+        //Cache response for autofill in the future
+        ParsedText.cache[ParsedText.segments[ParsedText.index].text] = customInputBox.value.substring();
         //Increase index
         ParsedText.index += 1;
         //Advance to next decision
-        advanceToNextDecision();
+        returnFunction();
     })
 
+    const backButton = document.createElement('button');
+    backButton.className = "bar-button bottom-bar-button";
+    backButton.innerText = "< back";
+
+    bottomRowButtons.appendChild(backButton);
+    bottomRowButtons.appendChild(nextButton);
     customInterfacePanel.appendChild(customInputBox);
-    customInterfacePanel.appendChild(nextButton);
     generatorControlPanel.appendChild(customInterfacePanel);
+    generatorControlPanel.appendChild(bottomRowButtons);
+
 }
 
 //If the toggle is chosen
@@ -160,7 +184,8 @@ function toggleDecision() {
     span.className = "toggle-text";
     span.textContent = ParsedText.segments[ParsedText.index].text;
     generatedTextArea.appendChild(span);
-    createToggleInterface(generatedTextArea, span);
+    ParsedText.segments[ParsedText.index].state = 1;
+    createToggleInterface(generatedTextArea, span, advanceToNextDecision);
 }
 
 function customDecision() {
@@ -170,15 +195,15 @@ function customDecision() {
     span.className = "custom-text";
     span.textContent = ParsedText.segments[ParsedText.index].text;
     generatedTextArea.appendChild(span);
-    createCustomInterface(generatedTextArea, span);
+    createCustomInterface(generatedTextArea, span, advanceToNextDecision);
 
 }
 
 function nestedToggleDecision() {
     const generatedTextArea = document.getElementById("generated-text");
 
-    ParsedText.index += 1;
-    // advanceToNextDecision();
+    // ParsedText.index += 1;
+    
 
 }
 

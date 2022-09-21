@@ -12,7 +12,7 @@
     --lightgreycolor: #99947f;
     --bluecolor: rgb(181, 248, 255);
     --universalborderradius: 0.2rem;
-    --burntorange: rgb(234,128,204);
+    --pinkcolor: rgb(205,101,188);
 }
 
 html{
@@ -20,16 +20,24 @@ html{
 }
 #header-region{
     margin: 0 auto;
+    margin-bottom: 20rem;
 }
 
 h1 {
     color: var(--beigecolor);
-    text-align: center;
+    /* text-align: left;
+    display: inline-block;
+    align-items: flex-end;
+    margin-bottom: 0; */
 }
 body{
     /* background-color: var(--greycolor); */
     background-color: black;
     font-family: 'Roboto', sans-serif;
+    min-width: 20rem;
+}
+button:focus {
+    outline: 0;
 }
 .main-input-wrapper{ 
     margin: 0 auto;
@@ -80,7 +88,7 @@ body{
     width: 100%;    
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 0px;
 }
 #control-custom-buttons{
@@ -123,20 +131,23 @@ label {
     color: var(--beigecolor);
 }
 
-#bottom-row-buttons{
-    width: var(--fullwidth);
+.bottom-row-buttons{
+    width: 100%;
     height: var(--barheight);
     margin-top: var(--flexboxverticalgap);
+    display: flex;
+    justify-content: space-between;
 }
-#parse-button{
+.bottom-bar-button{
     width: 5rem;
     border-radius: var(--universalborderradius);
-    align-items: right;
-    justify-content: flex-end;
+
 }
+
 #parse-button:hover {
     color: var(--greencolor);
     background-color: black;
+    justify-content: flex-end;
 }
 
 .content-container {
@@ -226,5 +237,27 @@ label {
     display: block;
     border: none;
     resize: none;
+}
+
+.text-button{
+    font-family: "Roboto Mono";
+    color: var(--bluecolor);
+    background-color: inherit;
+    font-size: 1rem;
+    /* cursor: pointer; */
+    text-align: right;
+    margin-bottom: 0;
+}
+
+/* .text-button:hover{
+    color: var(--beigecolor);
+} */
+
+#header-region{
+    width: var(--fullwidth);    
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 3fr 0.8fr 0.8fr;
+    align-items:flex-end;
 
 }
