@@ -66,6 +66,7 @@ function downloadTemplate() {
         downloadTemplate.download = customNameInput.value.substring();
         document.body.appendChild(downloadTemplate);
         downloadTemplate.click();
+        document.body.removeChild(downloadTemplate);
         downloadTemplate.remove();
 
         //Swap navigation bar back
