@@ -1,6 +1,25 @@
 //Globals
-let ParsedText;
-CUSTOMFIELDLENGTH = 500;
+const CUSTOMFIELDLENGTH = 500;
+
+//Boolean for whether or not Autosuggest is selected
+let autosuggest = true;
+//Cache for autosuggest
+let cache = [];
+
+//References to all the segment spans that are created in initialize text
+//The array is flattened so we can go back and forward with nested toggles
+let segmentSpans = [];
+
+//Corresponds to segment spans, here is what it should look like for the different spans
+//Plain text: [0] 
+//custom text: [1, "key", "value"] 
+//toggle text: [1, 0 or 1] depending on "on" (1) or "off" (0)
+//segment toggle: [3, 0 or 1] depending on "on" (1) or "off" (0)
+let segmentStates = []
+let segmentIndex = 0;
+
+let firstDecisionIndex = -1;
+let lasttDecisionIndex = -1;
 
 //Return to Template page (go back button)
 const returnToTemplateButton = document.getElementById("return-to-template");
@@ -9,140 +28,136 @@ function returnToTemplate() {
     window.open("template.html", "_self");
 }
 
-//Loads template from storage
-function load() {
-    ParsedText = new Object();
+
+document.getElementById("restart-button").addEventListener("click", function(){
+    document.getElementById("generated-text").replaceChildren();
+    document.getElementById("generator-control-panel").replaceChildren();
+    loadSegments();
+    findDecisionEndpoints();
+    moveNext();
+});
+
+/**
+ * Loads segments from storage
+ */
+function loadSegments() {
     //String.raw necessary for firefox since \n is evaluated otherwise
-    ParsedText.segments = JSON.parse(String.raw`${sessionStorage.parsedTemplate}`);
-    ParsedText.index = 0;
-    //Map stores key value pairs to remember previous decisions for custom inputs
-    ParsedText.cache = new Map();
-    ParsedText.makeSuggestions = true;
-    //Two stacks to store moves for undo/redo when going back and forth
-    ParsedText.previousMoves = [];
-
+    const segments = JSON.parse(String.raw`${sessionStorage.parsedTemplate}`);
+    const parentNode = document.getElementById("generated-text");
+    initializeText(parentNode, segments);
 }
 
-// document.getElementById("")
-// function setAutoSuggest() {
-
-// }
-
-//Creates the the toggle interface for the user to decide on a toggle
-function createToggleInterface(parent, child, returnFunction) {
-    const generatorControlPanel = document.getElementById("generator-control-panel");
-    const toggleInterfacePanel = document.createElement("div");
-    toggleInterfacePanel.setAttribute("id", "toggle-interface-panel");
-
-    const backButton = document.createElement("button");
-    backButton.className = "bar-button left-control-button back-button";
-    backButton.innerText = "< back";
-    backButton.addEventListener("click", function() {
-        generatorControlPanel.removeChild(toggleInterfacePanel);
-        toggleInterfacePanel.removeChild(backButton);
-        toggleInterfacePanel.removeChild(toggleExclude);
-        toggleInterfacePanel.removeChild(toggleInclude);
-        toggleInterfacePanel.removeChild(nextButton);
-        toggleInterfacePanel.remove();
-        backButton.remove();
-        toggleExclude.remove();
-        toggleInclude.remove();
-        nextButton.remove();
-        backToPreviousDecision();
-    });
-
-    const toggleExclude = document.createElement("button")
-    toggleExclude.className = "bar-button";
-    toggleExclude.innerText = "exclude";
-    toggleExclude.addEventListener("click", function() {
-        if (ParsedText.segments[ParsedText.index].state == 1) {
-            ParsedText.segments[ParsedText.index].state = 0;
-            child.setAttribute("hidden", "hidden");
-            child.className = "toggle-text";
-        }    
-    });
-    //adds "hover" functionality where the toggle text disappears when hovering on the exclude button
-    toggleExclude.addEventListener("mouseenter", function() {
-        if (ParsedText.segments[ParsedText.index].state == 1) {
-            child.className = "toggle-text excluded-toggle";
+function findDecisionEndpoints() {
+    let firstFound = false;
+    for (let i = 0; i < segmentSpans.length; i++) {
+        if (!firstFound && segmentStates[0] != 0) {
+            firstFound = true;
+            firstDecisionIndex = i;
         }
-    })
-    toggleExclude.addEventListener("mouseleave", function() {
-        if (ParsedText.segments[ParsedText.index].state == 1) {
-            child.className = "toggle-text";
-        }
-    })
-
-    //back-button has the red hover color
-    // toggleExclude.setAttribute("back-button");
-
-    const toggleInclude = document.createElement("button")
-    toggleInclude.className = "bar-button";
-    toggleInclude.innerText = "include";
-    toggleInclude.addEventListener("click", function() {
-        if (ParsedText.segments[ParsedText.index].state == 0) {
-            ParsedText.segments[ParsedText.index].state = 1;
-        }
-        if (child.hasAttribute("hidden")) {
-            child.removeAttribute("hidden");
-        }
-        child.className = "toggle-text";
-    });
-    toggleInclude.addEventListener("mouseenter", function() {
-        if (ParsedText.segments[ParsedText.index].state == 0) {
-            child.className = "toggle-text";
-        }
-    });
-    toggleInclude.addEventListener("mouseleave", function() {
-        if (ParsedText.segments[ParsedText.index].state == 0) {
-            child.className = "toggle-text excluded-toggle";
-        }
-    });
-    //adds "hover" functionality where the toggle text appears when hovering on the include button
-    // toggleInclude.addEventListener("mouseenter", function() {
-    //     if (ParsedText.segments[ParsedText.index].state == 0) {
-    //         parent.appendChild(child);
-    //     }
-    // })
-    // toggleInclude.addEventListener("mouseleave", function() {
-    //     if (ParsedText.segments[ParsedText.index].state == 0) {
-    //         parent.removeChild(child);
-    //     }
-    // })
-
-    const nextButton = document.createElement('button');
-    nextButton.className = "bar-button right-control-button next-button";
-    nextButton.innerText = "next >";
-    nextButton.addEventListener("click", function() {
-        if (ParsedText.segments[ParsedText.index].state == 0) {
-            child.className = "toggle-text";
-            child.setAttribute("hidden", "hidden");
-        }
-        //Remove the interface for toggling
-        generatorControlPanel.removeChild(toggleInterfacePanel);
-        toggleInterfacePanel.removeChild(backButton);
-        toggleInterfacePanel.removeChild(toggleExclude);
-        toggleInterfacePanel.removeChild(toggleInclude);
-        toggleInterfacePanel.removeChild(nextButton);
-        toggleInterfacePanel.remove();
-        backButton.remove();
-        toggleExclude.remove();
-        toggleInclude.remove();
-        nextButton.remove();
-        //Increase index
-        ParsedText.index += 1;
-        //Advance to next decision
-        returnFunction();
-    })
-
-    toggleInterfacePanel.appendChild(backButton);
-    toggleInterfacePanel.appendChild(toggleExclude);
-    toggleInterfacePanel.appendChild(toggleInclude);
-    toggleInterfacePanel.appendChild(nextButton);
-    generatorControlPanel.appendChild(toggleInterfacePanel);
+        lasttDecisionIndex = i;
+    }
 }
 
-function createCustomInterface(parent, child, returnFunction) {
+/**
+ * Parses and places all the text into hidden spans at the beginning
+ * @param parentNode - segments are appended as children to this node
+ * @param segments - plain text, custom text, toggle text, or nested text
+ * Special case - nested text requires 1 level of recursion where the original
+ * span now becomes the parentNode
+ */
+function initializeText(parentNode, segments) {
+    for (let i = 0; i < segments.length; i++) {
+        //Text is broken into spans
+        let span = document.createElement("span");
+        //spans should be invisible until the user reaches that point in the text
+        span.setAttribute("hidden", "hidden");
+        parentNode.appendChild(span);
+        switch (segments[i].type) {
+            //Plain text
+            case 0:
+                span.className = "plain-text";
+                span.textContent = segments[i].text;
+                segmentSpans.push(span);
+                segmentStates.push([0])
+                break;
+            //Custom text
+            case 1:
+                span.className = "custom-text";
+                span.textContent = segments[i].text;
+                segmentSpans.push(span);
+                segmentStates.push([1, segments[i].text, segments[i].text])
+                break;
+            //Toggle text
+            case 2:
+                span.className = "toggle-text";
+                span.textContent = segments[i].text;
+                segmentSpans.push(span);
+                segmentStates.push([2, 1])
+                break;
+            //Nested text
+            case 3:
+                span.className = "nested-text";
+                //Special case occurs here (for DOM nesting)
+                initializeText(span, segments[i].parsedNesting);
+                segmentStates.push([3, 1])
+                break;
+        }
+    }
+}
+
+
+function inSegmentRange(indexToCheck) {
+    return indexToCheck >= 0 && indexToCheck < segmentSpans.length
+}
+
+function makeDecisions() {
+    switch (segmentStates[segmentIndex][0]) {
+        //Custom text
+        case 1:
+            debugger;
+            customDecision();
+            break;
+        //Toggle text
+        case 2:
+            toggleDecision();
+            break;
+        //Nested text
+        case 3:
+            makeDecisions();
+            break;
+    }
+}
+
+function moveNext() {
+    while (inSegmentRange(segmentIndex) && segmentStates[segmentIndex][0] == 0) {
+        if (segmentSpans[segmentIndex].hasAttribute("hidden")) {
+            segmentSpans[segmentIndex].removeAttribute("hidden");
+        }
+        segmentIndex += 1;
+    }
+    if (inSegmentRange(segmentIndex)) {
+        if (segmentSpans[segmentIndex].hasAttribute("hidden")) {
+            segmentSpans[segmentIndex].removeAttribute("hidden");
+        }
+        makeDecisions();
+    }
+}
+
+function moveBack() {
+    while (inSegmentRange(segmentIndex) && segmentStates[segmentIndex][0] == 0) {
+        segmentSpans[segmentIndex].setAttribute("hidden", "hidden");
+        segmentIndex -= 1;
+    }
+    //Case for hitting back on the first choice where segmentIndex becomes negative
+    if (segmentIndex <= 0) {
+        segmentIndex = 0;
+        moveNext();
+    } else {
+        makeDecisions();
+    }
+}
+
+function customDecision() {
     const generatorControlPanel = document.getElementById("generator-control-panel");
     const customInterfacePanel = document.createElement("div");
     customInterfacePanel.setAttribute("id", "custom-interface-panel");
@@ -151,7 +166,7 @@ function createCustomInterface(parent, child, returnFunction) {
     const customInputBox = document.createElement('textarea');
     customInputBox.setAttribute("id", "custom-input-box");
     customInputBox.setAttribute("maxlength",CUSTOMFIELDLENGTH);
-    customInputBox.setAttribute("placeholder", ParsedText.segments[ParsedText.index].text);
+    customInputBox.setAttribute("placeholder", segmentStates[segmentIndex][1]);
     customInputBox.setAttribute("line-height", 1);
     // Don't need a max height since we have a max char
     // var heightLimit = 200; /* Maximum height: 200px */
@@ -159,7 +174,7 @@ function createCustomInterface(parent, child, returnFunction) {
         customInputBox.style.height = ""; /* Reset the height*/
     //   input.style.height = Math.min(input.scrollHeight, heightLimit) + "px";
         customInputBox.style.height = customInputBox.scrollHeight + "px";
-        child.textContent = customInputBox.value.substring();
+        segmentSpans[segmentIndex].textContent = customInputBox.value.substring();
 
     };
     
@@ -182,175 +197,151 @@ function createCustomInterface(parent, child, returnFunction) {
         nextButton.remove();
         backButton.remove();
         //Cache response for autofill in the future
-        ParsedText.cache.set(ParsedText.segments[ParsedText.index].text, customInputBox.value.substring());
-        //Increase index
-        ParsedText.index += 1;
-        //Advance to next decision
-        returnFunction();
+        // ParsedText.cache.set(ParsedText.segments[ParsedText.index].text, customInputBox.value.substring());
+        // //Increase index
+        // ParsedText.index += 1;
+        // //Advance to next decision
+        if (inSegmentRange(segmentIndex + 1)) {
+            segmentIndex += 1;
+            moveNext();
+        } else {
+            createFinishInterface();
+        }
     })
 
     const backButton = document.createElement('button');
     backButton.className = "bar-button bottom-bar-button";
     backButton.innerText = "< back";
-    backButton.addEventListener("click", function() {
-        //Remove the interface for generating customs
-        generatorControlPanel.removeChild(customInterfacePanel);
-        generatorControlPanel.removeChild(bottomRowButtons);
-        customInterfacePanel.removeChild(customInputBox);
-        bottomRowButtons.removeChild(nextButton);
-        bottomRowButtons.removeChild(backButton);
-        customInterfacePanel.remove();
-        bottomRowButtons.remove()
-        customInputBox.remove();
-        nextButton.remove();
-        backButton.remove();
-        backToPreviousDecision();
-    });
-
+    if (segmentIndex != firstDecisionIndex) {
+        backButton.addEventListener("click", function() {
+            //Remove the interface for generating customs
+            generatorControlPanel.removeChild(customInterfacePanel);
+            generatorControlPanel.removeChild(bottomRowButtons);
+            customInterfacePanel.removeChild(customInputBox);
+            bottomRowButtons.removeChild(nextButton);
+            bottomRowButtons.removeChild(backButton);
+            customInterfacePanel.remove();
+            bottomRowButtons.remove()
+            customInputBox.remove();
+            nextButton.remove();
+            backButton.remove();
+            if (inSegmentRange(segmentIndex - 1)) {
+                segmentSpans[segmentIndex].setAttribute("hidden", "hidden");
+                segmentIndex -= 1;
+                moveBack();
+            }
+        });
+    }
     bottomRowButtons.appendChild(backButton);
     bottomRowButtons.appendChild(nextButton);
     customInterfacePanel.appendChild(customInputBox);
     generatorControlPanel.appendChild(customInterfacePanel);
     generatorControlPanel.appendChild(bottomRowButtons);
-
 }
 
-//If the toggle is chosen
+//Creates the the toggle interface for the user to decide on a toggle
 function toggleDecision() {
-    const generatedTextArea = document.getElementById("generated-text");
-    var span;
-    if (ParsedText.previousMoves.length == ParsedText.index) {
-        span = document.createElement("span");
-        span.className = "toggle-text";
-        span.textContent = ParsedText.segments[ParsedText.index].text;
-        ParsedText.previousMoves.push(span);
-        //1 means that the toggle is active, 0 means that it is inactive
-        //set to active by default so the user can see the toggle
-        ParsedText.segments[ParsedText.index].state = 1;
-    } else {
-        span = ParsedText.previousMoves[ParsedText.index];
-        console.log(span.state);
-        //if we go back on a hidden toggle, it won't show up
-        if (ParsedText.segments[ParsedText.index].state == 0) {
-            span.className = "toggle-text excluded-toggle";
-            span.removeAttribute("hidden");
-        }
+    if (segmentSpans[segmentIndex].hasAttribute("hidden")) {
+        segmentSpans[segmentIndex].removeAttribute("hidden", "hidden");
     }
-    generatedTextArea.appendChild(span);
-    createToggleInterface(generatedTextArea, span, advanceToNextDecision);
-}
+    const generatorControlPanel = document.getElementById("generator-control-panel");
+    const toggleInterfacePanel = document.createElement("div");
+    toggleInterfacePanel.setAttribute("id", "toggle-interface-panel");
 
-function customDecision() {
-    const generatedTextArea = document.getElementById("generated-text");
-    var span;
-    if (ParsedText.previousMoves.length == ParsedText.index) {
-        span = document.createElement("span");
-        span.className = "custom-text";
-        //Autosuggest implemented here (does not suggest when a user goes back steps)
-        //If the custom is being created for the first time, check if a value exists for same prompt
-        userPrompt = ParsedText.segments[ParsedText.index].text;
-        if (ParsedText.makeSuggestions == true && ParsedText.cache.has(userPrompt)) {
-            span.textContent = ParsedText.cache.get(userPrompt);
+    const backButton = document.createElement("button");
+    backButton.className = "bar-button left-control-button back-button";
+    backButton.innerText = "< back";
+    if (segmentIndex != firstDecisionIndex) {
+        backButton.addEventListener("click", function() {
+            generatorControlPanel.removeChild(toggleInterfacePanel);
+            toggleInterfacePanel.removeChild(backButton);
+            toggleInterfacePanel.removeChild(toggleExclude);
+            toggleInterfacePanel.removeChild(toggleInclude);
+            toggleInterfacePanel.removeChild(nextButton);
+            toggleInterfacePanel.remove();
+            backButton.remove();
+            toggleExclude.remove();
+            toggleInclude.remove();
+            nextButton.remove();
+            if (inSegmentRange(segmentIndex - 1)) {
+                segmentSpans[segmentIndex].setAttribute("hidden", "hidden");
+                segmentIndex -= 1;
+                moveBack();
+            }
+        });
+    }
+
+    const toggleExclude = document.createElement("button")
+    toggleExclude.className = "bar-button";
+    toggleExclude.innerText = "exclude";
+    toggleExclude.addEventListener("click", function() {
+        segmentStates[segmentIndex][1] = 0;
+        segmentSpans[segmentIndex].className = "toggle-text excluded-toggle";
+    });
+    //adds "hover" functionality where the toggle text disappears when hovering on the exclude button
+    toggleExclude.addEventListener("mouseenter", function() {
+        segmentSpans[segmentIndex].className = "toggle-text excluded-toggle";
+    })
+    toggleExclude.addEventListener("mouseleave", function() {
+        if (segmentStates[segmentIndex][1] == 1) {
+            segmentSpans[segmentIndex].className = "toggle-text";
+        }
+    })
+
+    //back-button has the red hover color
+    // toggleExclude.setAttribute("back-button");
+
+    const toggleInclude = document.createElement("button")
+    toggleInclude.className = "bar-button";
+    toggleInclude.innerText = "include";
+    toggleInclude.addEventListener("click", function() {
+        segmentStates[segmentIndex][1] = 1;
+        segmentSpans[segmentIndex].className = "toggle-text";
+    });
+    toggleInclude.addEventListener("mouseenter", function() {
+        segmentSpans[segmentIndex].className = "toggle-text";
+    });
+    toggleInclude.addEventListener("mouseleave", function() {
+        if (segmentStates[segmentIndex][1] == 0) {
+            segmentSpans[segmentIndex].className = "toggle-text excluded-toggle";
+        }
+    });
+
+
+    const nextButton = document.createElement('button');
+    nextButton.className = "bar-button right-control-button next-button";
+    nextButton.innerText = "next >";
+    nextButton.addEventListener("click", function() {
+        if (segmentStates[segmentIndex][1] == 0) {
+            segmentSpans[segmentIndex].setAttribute("hidden", "hidden");
+        }
+        //Remove the interface for toggling
+        generatorControlPanel.removeChild(toggleInterfacePanel);
+        toggleInterfacePanel.removeChild(backButton);
+        toggleInterfacePanel.removeChild(toggleExclude);
+        toggleInterfacePanel.removeChild(toggleInclude);
+        toggleInterfacePanel.removeChild(nextButton);
+        toggleInterfacePanel.remove();
+        backButton.remove();
+        toggleExclude.remove();
+        toggleInclude.remove();
+        nextButton.remove();
+
+        if (inSegmentRange(segmentIndex + 1)) {
+            segmentIndex += 1;
+            moveNext();
         } else {
-            span.textContent = userPrompt;
+            createFinishInterface();
         }
-        ParsedText.previousMoves.push(span);
-    } else {
-        span = ParsedText.previousMoves[ParsedText.index]
-    }
-    generatedTextArea.appendChild(span);
-    createCustomInterface(generatedTextArea, span, advanceToNextDecision);
+    })
+
+    toggleInterfacePanel.appendChild(backButton);
+    toggleInterfacePanel.appendChild(toggleExclude);
+    toggleInterfacePanel.appendChild(toggleInclude);
+    toggleInterfacePanel.appendChild(nextButton);
+    generatorControlPanel.appendChild(toggleInterfacePanel);
 }
 
-function nestedToggleDecision() {
-    const generatedTextArea = document.getElementById("generated-text");
+function createFinishInterface() {
 
-    // ParsedText.index += 1;
-    
-
-}
-
-//Remove all children from Dom until the previous decision
-function stepBackwards() {
-    const generatedTextArea = document.getElementById("generated-text");
-    move = ParsedText.previousMoves[ParsedText.index];
-    generatedTextArea.removeChild(move);
-    ParsedText.index -= 1;
-}
-
-function backToPreviousDecision() {
-    if (ParsedText.index > 0) {
-        //need to step backward once so the current element isn't recognized as type != 0
-        stepBackwards();
-        while (ParsedText.index > 0 && ParsedText.segments[ParsedText.index].type == 0) {
-            stepBackwards();
-        }
-    }
-    advanceToNextDecision();
-}
-
-//pass the appropriate filetypeFunction for the correct file extension
-//e.g for a textfile: download("testing-arudrra", txtDownload) initiates txtDownload for a .txt extension
-function download(filename, filetypeFunction) {
-    const generatedTextArea = document.getElementById("generated-text");
-    let finalText = "";
-    for (let i = 0; i < generatedTextArea.childNodes.length; i += 1) {
-        //Spans are nodetype of 1 and spans with hidden attributes are ignored
-        //Spans of nodetype 3 are just Text Nodes (unevaluated text from the template)
-        if (generatedTextArea.childNodes[i].nodeType == 1 && !generatedTextArea.childNodes[i].hasAttribute("hidden")) {
-            finalText += generatedTextArea.childNodes[i].innerText;
-        } else if (generatedTextArea.childNodes[i].nodeType == 3) {
-            finalText += generatedTextArea.childNodes[i].nodeValue;
-        }
-    }
-    filetypeFunction(filename, finalText);
-}
-
-
-function txtDownload(filename, content) {
-    //Download functionality
-    const downloadTemplate = document.createElement('a');
-    downloadTemplate.href = "data:text/plain," + content;
-    downloadTemplate.download = filename;
-    document.body.appendChild(downloadTemplate);
-    downloadTemplate.click();
-    document.body.removeChild(downloadTemplate);
-    downloadTemplate.remove();
-}
-
-function docxDownload(filename, content) {
-
-}
-
-
-function advanceToNextDecision() {
-    const generatedTextArea = document.getElementById("generated-text");
-    while (ParsedText.index < ParsedText.segments.length && ParsedText.segments[ParsedText.index].type == 0) {
-        var plainText;
-        if (ParsedText.previousMoves.length == ParsedText.index) {
-            plainText = document.createTextNode(ParsedText.segments[ParsedText.index].text);
-            ParsedText.previousMoves.push(plainText);
-        } else {
-            plainText = ParsedText.previousMoves[ParsedText.index];
-        }
-        generatedTextArea.appendChild(plainText);
-        ParsedText.index += 1;
-    }
-    if (ParsedText.index >= ParsedText.segments.length) {
-        // download();
-    } else if (ParsedText.segments[ParsedText.index].type == 1) {
-        customDecision();
-    } else if (ParsedText.segments[ParsedText.index].type == 2) {
-        toggleDecision();
-    }
-}
-
-const startButton = document.getElementById("restart-button");
-startButton.addEventListener("click", startGenerator);
-
-function startGenerator() {
-    load();
-    document.getElementById("generated-text").innerHTML = "";
-    document.getElementById("generator-control-panel").innerHTML = "";
-    advanceToNextDecision();
 }

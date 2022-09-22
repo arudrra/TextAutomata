@@ -202,6 +202,10 @@ label {
     color: var(--bluecolor);
 }
 
+.nested-text{
+    color: var(--pinkcolor);
+}
+
 .back-button:hover{
     color:var(--redcolor);
 }
