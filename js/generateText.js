@@ -20,6 +20,7 @@ function load() {
     ParsedText.makeSuggestions = true;
     //Two stacks to store moves for undo/redo when going back and forth
     ParsedText.previousMoves = [];
+
 }
 
 // document.getElementById("")
@@ -152,13 +153,7 @@ function createCustomInterface(parent, child, returnFunction) {
     customInputBox.setAttribute("maxlength",CUSTOMFIELDLENGTH);
     customInputBox.setAttribute("placeholder", ParsedText.segments[ParsedText.index].text);
     customInputBox.setAttribute("line-height", 1);
-    //mirrors the custom input text onto the generated textbox
-    // customInputBox.addEventListener("keyup", function() {
-    //     child.textContent = customInputBox.value.substring();
-    // })
-    // customInputBox.addEventListener("keydown", function() {
-    //     child.textContent = customInputBox.value.substring();
-    // })
+    // Don't need a max height since we have a max char
     // var heightLimit = 200; /* Maximum height: 200px */
     customInputBox.oninput = function() {
         customInputBox.style.height = ""; /* Reset the height*/
@@ -187,7 +182,7 @@ function createCustomInterface(parent, child, returnFunction) {
         nextButton.remove();
         backButton.remove();
         //Cache response for autofill in the future
-        ParsedText.cache[ParsedText.segments[ParsedText.index].text] = customInputBox.value.substring();
+        ParsedText.cache.set(ParsedText.segments[ParsedText.index].text, customInputBox.value.substring());
         //Increase index
         ParsedText.index += 1;
         //Advance to next decision
@@ -251,7 +246,14 @@ function customDecision() {
     if (ParsedText.previousMoves.length == ParsedText.index) {
         span = document.createElement("span");
         span.className = "custom-text";
-        span.textContent = ParsedText.segments[ParsedText.index].text;
+        //Autosuggest implemented here (does not suggest when a user goes back steps)
+        //If the custom is being created for the first time, check if a value exists for same prompt
+        userPrompt = ParsedText.segments[ParsedText.index].text;
+        if (ParsedText.makeSuggestions == true && ParsedText.cache.has(userPrompt)) {
+            span.textContent = ParsedText.cache.get(userPrompt);
+        } else {
+            span.textContent = userPrompt;
+        }
         ParsedText.previousMoves.push(span);
     } else {
         span = ParsedText.previousMoves[ParsedText.index]

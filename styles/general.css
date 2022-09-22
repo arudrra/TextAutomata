@@ -99,7 +99,7 @@ button:focus {
     gap: 0px;
 }
 #generate-control-buttons{
-    width: 20rem;    
+    width: var(--fullwidth);    
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
