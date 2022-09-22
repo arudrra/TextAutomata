@@ -18,6 +18,8 @@ function load() {
     //Map stores key value pairs to remember previous decisions for custom inputs
     ParsedText.cache = new Map();
     ParsedText.makeSuggestions = true;
+    //Two stacks to store moves for undo/redo when going back and forth
+    ParsedText.previousMoves = [];
 }
 
 // document.getElementById("")
@@ -30,12 +32,23 @@ function createToggleInterface(parent, child, returnFunction) {
     const generatorControlPanel = document.getElementById("generator-control-panel");
     const toggleInterfacePanel = document.createElement("div");
     toggleInterfacePanel.setAttribute("id", "toggle-interface-panel");
-    //1 means that the toggle is active, 0 means that it is inactive
-    ParsedText.segments[ParsedText.index].state = 1;
 
     const backButton = document.createElement("button");
     backButton.className = "bar-button left-control-button back-button";
     backButton.innerText = "< back";
+    backButton.addEventListener("click", function() {
+        generatorControlPanel.removeChild(toggleInterfacePanel);
+        toggleInterfacePanel.removeChild(backButton);
+        toggleInterfacePanel.removeChild(toggleExclude);
+        toggleInterfacePanel.removeChild(toggleInclude);
+        toggleInterfacePanel.removeChild(nextButton);
+        toggleInterfacePanel.remove();
+        backButton.remove();
+        toggleExclude.remove();
+        toggleInclude.remove();
+        nextButton.remove();
+        backToPreviousDecision();
+    });
 
     const toggleExclude = document.createElement("button")
     toggleExclude.className = "bar-button";
@@ -43,7 +56,7 @@ function createToggleInterface(parent, child, returnFunction) {
     toggleExclude.addEventListener("click", function() {
         if (ParsedText.segments[ParsedText.index].state == 1) {
             ParsedText.segments[ParsedText.index].state = 0;
-            parent.removeChild(child);
+            child.setAttribute("hidden", "hidden");
             child.className = "toggle-text";
         }    
     });
@@ -51,7 +64,6 @@ function createToggleInterface(parent, child, returnFunction) {
     toggleExclude.addEventListener("mouseenter", function() {
         if (ParsedText.segments[ParsedText.index].state == 1) {
             child.className = "toggle-text excluded-toggle";
-            // child.setAttribute("text-decoration", "line-through !important");
         }
     })
     toggleExclude.addEventListener("mouseleave", function() {
@@ -69,7 +81,20 @@ function createToggleInterface(parent, child, returnFunction) {
     toggleInclude.addEventListener("click", function() {
         if (ParsedText.segments[ParsedText.index].state == 0) {
             ParsedText.segments[ParsedText.index].state = 1;
-            parent.appendChild(child);
+        }
+        if (child.hasAttribute("hidden")) {
+            child.removeAttribute("hidden");
+        }
+        child.className = "toggle-text";
+    });
+    toggleInclude.addEventListener("mouseenter", function() {
+        if (ParsedText.segments[ParsedText.index].state == 0) {
+            child.className = "toggle-text";
+        }
+    });
+    toggleInclude.addEventListener("mouseleave", function() {
+        if (ParsedText.segments[ParsedText.index].state == 0) {
+            child.className = "toggle-text excluded-toggle";
         }
     });
     //adds "hover" functionality where the toggle text appears when hovering on the include button
@@ -88,6 +113,10 @@ function createToggleInterface(parent, child, returnFunction) {
     nextButton.className = "bar-button right-control-button next-button";
     nextButton.innerText = "next >";
     nextButton.addEventListener("click", function() {
+        if (ParsedText.segments[ParsedText.index].state == 0) {
+            child.className = "toggle-text";
+            child.setAttribute("hidden", "hidden");
+        }
         //Remove the interface for toggling
         generatorControlPanel.removeChild(toggleInterfacePanel);
         toggleInterfacePanel.removeChild(backButton);
@@ -168,6 +197,20 @@ function createCustomInterface(parent, child, returnFunction) {
     const backButton = document.createElement('button');
     backButton.className = "bar-button bottom-bar-button";
     backButton.innerText = "< back";
+    backButton.addEventListener("click", function() {
+        //Remove the interface for generating customs
+        generatorControlPanel.removeChild(customInterfacePanel);
+        generatorControlPanel.removeChild(bottomRowButtons);
+        customInterfacePanel.removeChild(customInputBox);
+        bottomRowButtons.removeChild(nextButton);
+        bottomRowButtons.removeChild(backButton);
+        customInterfacePanel.remove();
+        bottomRowButtons.remove()
+        customInputBox.remove();
+        nextButton.remove();
+        backButton.remove();
+        backToPreviousDecision();
+    });
 
     bottomRowButtons.appendChild(backButton);
     bottomRowButtons.appendChild(nextButton);
@@ -180,23 +223,41 @@ function createCustomInterface(parent, child, returnFunction) {
 //If the toggle is chosen
 function toggleDecision() {
     const generatedTextArea = document.getElementById("generated-text");
-    span = document.createElement("span");
-    span.className = "toggle-text";
-    span.textContent = ParsedText.segments[ParsedText.index].text;
+    var span;
+    if (ParsedText.previousMoves.length == ParsedText.index) {
+        span = document.createElement("span");
+        span.className = "toggle-text";
+        span.textContent = ParsedText.segments[ParsedText.index].text;
+        ParsedText.previousMoves.push(span);
+        //1 means that the toggle is active, 0 means that it is inactive
+        //set to active by default so the user can see the toggle
+        ParsedText.segments[ParsedText.index].state = 1;
+    } else {
+        span = ParsedText.previousMoves[ParsedText.index];
+        console.log(span.state);
+        //if we go back on a hidden toggle, it won't show up
+        if (ParsedText.segments[ParsedText.index].state == 0) {
+            span.className = "toggle-text excluded-toggle";
+            span.removeAttribute("hidden");
+        }
+    }
     generatedTextArea.appendChild(span);
-    ParsedText.segments[ParsedText.index].state = 1;
     createToggleInterface(generatedTextArea, span, advanceToNextDecision);
 }
 
 function customDecision() {
     const generatedTextArea = document.getElementById("generated-text");
-    // generatedTextArea.append('<span class="custom-text">' + ParsedText.segments[ParsedText.index].text + '<span>');
-    span = document.createElement("span");
-    span.className = "custom-text";
-    span.textContent = ParsedText.segments[ParsedText.index].text;
+    var span;
+    if (ParsedText.previousMoves.length == ParsedText.index) {
+        span = document.createElement("span");
+        span.className = "custom-text";
+        span.textContent = ParsedText.segments[ParsedText.index].text;
+        ParsedText.previousMoves.push(span);
+    } else {
+        span = ParsedText.previousMoves[ParsedText.index]
+    }
     generatedTextArea.appendChild(span);
     createCustomInterface(generatedTextArea, span, advanceToNextDecision);
-
 }
 
 function nestedToggleDecision() {
@@ -207,15 +268,44 @@ function nestedToggleDecision() {
 
 }
 
+//Remove all children from Dom until the previous decision
+function stepBackwards() {
+    const generatedTextArea = document.getElementById("generated-text");
+    move = ParsedText.previousMoves[ParsedText.index];
+    generatedTextArea.removeChild(move);
+    ParsedText.index -= 1;
+}
+
+function backToPreviousDecision() {
+    if (ParsedText.index > 0) {
+        //need to step backward once so the current element isn't recognized as type != 0
+        stepBackwards();
+        while (ParsedText.index > 0 && ParsedText.segments[ParsedText.index].type == 0) {
+            stepBackwards();
+        }
+    }
+    advanceToNextDecision();
+}
+
+function download() {
+
+}
+
 function advanceToNextDecision() {
     const generatedTextArea = document.getElementById("generated-text");
     while (ParsedText.index < ParsedText.segments.length && ParsedText.segments[ParsedText.index].type == 0) {
-        plainText = document.createTextNode(ParsedText.segments[ParsedText.index].text);
+        var plainText;
+        if (ParsedText.previousMoves.length == ParsedText.index) {
+            plainText = document.createTextNode(ParsedText.segments[ParsedText.index].text);
+            ParsedText.previousMoves.push(plainText);
+        } else {
+            plainText = ParsedText.previousMoves[ParsedText.index];
+        }
         generatedTextArea.appendChild(plainText);
-        ParsedText.index += 1
+        ParsedText.index += 1;
     }
     if (ParsedText.index >= ParsedText.segments.length) {
-        console.log("DONE")
+        download();
     } else if (ParsedText.segments[ParsedText.index].type == 1) {
         customDecision();
     } else if (ParsedText.segments[ParsedText.index].type == 2) {

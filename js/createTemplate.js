@@ -115,7 +115,6 @@ function createToggleSyntax(){
     if (input.selectionStart != input.selectionEnd) {
         const sections = splitOnSelection(text, input.selectionStart, input.selectionEnd);
         input.value = sections[0] + TOGGLESTART +  sections[1] + TOGGLEEND + sections[2];
-        console.log(JSON.stringify(input.value));
     } else {
         console.log("invalid toggle creation");
     }
@@ -235,7 +234,6 @@ function handleNestedToggles(segment) {
     }
     if (currentSegment.text.length > 0) segments.push(currentSegment);
     segment.parsedNesting = segments;
-    console.log(segment)
 }
 
 //Parses the markdown and stores the markdown + raw input in local storage
