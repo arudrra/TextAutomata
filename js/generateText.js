@@ -8,18 +8,8 @@ let cache = [];
 
 //References to all the segment spans that are created in initialize text
 //The array is flattened so we can go back and forward with nested toggles
-let segmentSpans = [];
-
-//Corresponds to segment spans, here is what it should look like for the different spans
-//Plain text: [0] 
-//custom text: [1, "key", "value"] 
-//toggle text: [1, 0 or 1] depending on "on" (1) or "off" (0)
-//segment toggle: [3, 0 or 1] depending on "on" (1) or "off" (0)
-let segmentStates = []
+let segments = [];
 let segmentIndex = 0;
-
-let firstDecisionIndex = -1;
-let lasttDecisionIndex = -1;
 
 //Return to Template page (go back button)
 const returnToTemplateButton = document.getElementById("return-to-template");
@@ -30,11 +20,22 @@ function returnToTemplate() {
 
 
 document.getElementById("restart-button").addEventListener("click", function(){
-    document.getElementById("generated-text").replaceChildren();
-    document.getElementById("generator-control-panel").replaceChildren();
+    // document.getElementById("generated-text").replaceChildren();
+    // document.getElementById("generator-control-panel").replaceChildren();
+    segmentIndex = 0;
     loadSegments();
-    findDecisionEndpoints();
-    moveNext();
+    while (segments[segmentIndex].type == 0) {
+        if (segments[segmentIndex].span.hasAttribute("hidden")) { 
+            segments[segmentIndex].span.removeAttribute("hidden");
+        }
+        segmentIndex += 1;
+    }
+    if (segments[segmentIndex].span.hasAttribute("hidden")) { 
+        segments[segmentIndex].span.removeAttribute("hidden");
+    }
+    makeDecisions();
+    // findDecisionEndpoints();
+    // moveNext();
 });
 
 /**
@@ -42,9 +43,11 @@ document.getElementById("restart-button").addEventListener("click", function(){
  */
 function loadSegments() {
     //String.raw necessary for firefox since \n is evaluated otherwise
-    const segments = JSON.parse(String.raw`${sessionStorage.parsedTemplate}`);
+    const parsedSegments = JSON.parse(String.raw`${sessionStorage.parsedTemplate}`);
     const parentNode = document.getElementById("generated-text");
-    initializeText(parentNode, segments);
+    lastDecisionIndex = initializeText(parentNode, parsedSegments, -1);
+    // set the last decision to be equal to the length (allow other function to recognize that)
+    segments[lastDecisionIndex].nextDecision = segments.length;
 }
 
 function findDecisionEndpoints() {
@@ -61,48 +64,81 @@ function findDecisionEndpoints() {
 /**
  * Parses and places all the text into hidden spans at the beginning
  * @param parentNode - segments are appended as children to this node
- * @param segments - plain text, custom text, toggle text, or nested text
+ * @param parsedSegments - plain text, custom text, toggle text, or nested text
  * Special case - nested text requires 1 level of recursion where the original
  * span now becomes the parentNode
  */
-function initializeText(parentNode, segments) {
-    for (let i = 0; i < segments.length; i++) {
+function initializeText(parentNode, parsedSegments, previousDecisionIndex) {
+    for (let i = 0; i < parsedSegments.length; i++) {
+        //Initialize segment object
+        let segment = new Object();
+        segments.push(segment);
         //Text is broken into spans
-        let span = document.createElement("span");
+        segment.span = document.createElement("span");
         //spans should be invisible until the user reaches that point in the text
-        span.setAttribute("hidden", "hidden");
-        parentNode.appendChild(span);
-        switch (segments[i].type) {
+        segment.span.setAttribute("hidden", "hidden");
+        parentNode.appendChild(segment.span);
+        switch (parsedSegments[i].type) {
             //Plain text
             case 0:
-                span.className = "plain-text";
-                span.textContent = segments[i].text;
-                segmentSpans.push(span);
-                segmentStates.push([0])
+                segment.span.className = "plain-text";
+                segment.span.textContent = parsedSegments[i].text;
+                segment.type = 0;
                 break;
             //Custom text
             case 1:
-                span.className = "custom-text";
-                span.textContent = segments[i].text;
-                segmentSpans.push(span);
-                segmentStates.push([1, segments[i].text, segments[i].text])
+                segment.span.className = "custom-text";
+                segment.span.textContent = parsedSegments[i].text;
+                segment.type = 1;
+                segment.prompt = parsedSegments[i].text;
+                segment.value = parsedSegments[i].text;
+                segment.previousDecision = previousDecisionIndex;
+                if (previousDecisionIndex != -1) {
+                    segments[previousDecisionIndex].nextDecision = segments.length-1;
+                }
+                previousDecisionIndex = segments.length-1;
                 break;
             //Toggle text
             case 2:
-                span.className = "toggle-text";
-                span.textContent = segments[i].text;
-                segmentSpans.push(span);
-                segmentStates.push([2, 1])
+                segment.span.className = "toggle-text";
+                segment.span.textContent = parsedSegments[i].text;
+                segment.type = 2;
+                //toggle on = true, off = false
+                segment.toggle = true;
+                segment.previousDecision = previousDecisionIndex;
+                if (previousDecisionIndex != -1) {
+                    segments[previousDecisionIndex].nextDecision = segments.length-1;
+                }
+                previousDecisionIndex = segments.length-1;
                 break;
             //Nested text
             case 3:
-                span.className = "nested-text";
-                segmentStates.push([3, 1]);
+                segment.span.className = "nested-text";
+                segment.type = 3; 
+                segment.toggle = true;
+                segment.previousDecision = previousDecisionIndex;
+                //temporarily set in the event that this is the end
+                segment.toggleVisibleIndex = -1
+                if (previousDecisionIndex != -1) {
+                    segments[previousDecisionIndex].nextDecision = segments.length-1;
+                }
+                previousDecisionIndex = segments.length-1;
                 //Special case occurs here (for DOM nesting)
-                initializeText(span, segments[i].parsedNesting);
+                const lastNestedDecisionIndex = initializeText(segment.span, parsedSegments[i].parsedNesting, i);
+                //The end of the nested segment points back to the start toggle
+                //For this case, we can get next by doing segments[nestedEndPointer].nextDecisionIndex
+                segments[lastNestedDecisionIndex].nestedEndPointer = previousDecisionIndex;
+                //link the first decision in the nesting as well (if the nesting is toggled visible)
+                for (let tempIndex = previousDecisionIndex+1; tempIndex < segments.length; tempIndex++) {
+                    if (segments[tempIndex].type != 0) {
+                        segment.toggleVisibleIndex = tempIndex;
+                        break;
+                    }
+                }
                 break;
         }
     }
+    return previousDecisionIndex;
 }
 
 
@@ -111,50 +147,103 @@ function inSegmentRange(indexToCheck) {
 }
 
 function makeDecisions() {
-    switch (segmentStates[segmentIndex][0]) {
-        //Custom text
-        case 1:
-            debugger;
-            customDecision();
-            break;
-        //Toggle text
-        case 2:
-            toggleDecision();
-            break;
-        //Nested text
-        case 3:
-            makeDecisions();
-            break;
+    if (segmentIndex == -1 || segmentIndex >= segments.length ) {
+        finishAndDownload();
+    } else {
+        switch (segments[segmentIndex].type) {
+            //Custom text
+            case 1:
+                customDecision();
+                break;
+            //Toggle text
+            case 2:
+                toggleDecision();
+                break;
+            //Nested text
+            case 3:
+                toggleDecision();
+                break;
+        }
+    }
+}
+
+function finishAndDownload(){
+    console.log("Done")
+};
+
+//Makes a group of consecutive spans visible (inclusive)
+function makeRangeVisible(start, end){
+    for (let i = start; i <= end && i < segments.length; i++) {
+        if (segments[i].span.hasAttribute("hidden")) {
+            segments[i].span.removeAttribute("hidden");
+        }
+    }
+}
+
+//Makes a group of consecutive spans invisible (inclusive)
+function makeRangeInvisible(start, end){
+    for (let i = end; i >= start; i--) {
+        segments[i].span.setAttribute("hidden");
     }
 }
 
 function moveNext() {
-    while (inSegmentRange(segmentIndex) && segmentStates[segmentIndex][0] == 0) {
-        if (segmentSpans[segmentIndex].hasAttribute("hidden")) {
-            segmentSpans[segmentIndex].removeAttribute("hidden");
+    let start = segmentIndex + 1;
+    let end = segments.length - 1;
+    //Check for a nested end pointer
+    if (!segments[segmentIndex].hasOwnProperty("nextDecision")) {
+        end = segments[segmentIndex].nestedEndPointer.nextDecision;
+    //Deal with the nested case
+    } else if (segments[segmentIndex].type == 3) {
+        //If the nested segment is visible (make everything until the first nested decision visible)
+        if (segments[segmentIndex].toggle) {
+            end = segments[segmentIndex].toggleVisibleIndex;
+        //If the nested segment is hidden (make everything from the end of the first nested segment to the next decision visible)
+        } else {
+            end = segments[segmentIndex].nextDecision;
         }
-        segmentIndex += 1;
+    //Else deal with the normal case
+    } else {
+        end = segments[segmentIndex].nextDecision;
     }
-    if (inSegmentRange(segmentIndex)) {
-        if (segmentSpans[segmentIndex].hasAttribute("hidden")) {
-            segmentSpans[segmentIndex].removeAttribute("hidden");
-        }
-        makeDecisions();
-    }
+
+    makeRangeVisible(start, end);
+    segmentIndex = end;
+    makeDecisions();
+
+
+
+    
+    // let nextDecisionIndex = -1;
+    // //If it is the start of a nested decision
+    // if (segments[segmentIndex].type == 3) {
+    //     //If the nested segment is toggled, go to the immediate next index
+    //     if (segment[segmentIndex].toggle) {
+    //         nextDecisionIndex = segments[tempIndex].toggleVisibleIndex;
+    //     } else {
+    //         nextDecisionIndex = segments[tempIndex].nextDecision;
+    //     }
+    // }
+
+    // //Normal Case for moving to next
+    // if (segments[segmentIndex].hasOwnProperty("nextDecision")) {
+    //     for (let i = segmentIndex + 1; i < segments[segmentIndex].nextDecision; i++) {
+    //         if (segments[segmentIndex].span.hasAttribute("hidden")) {
+    //             segments[segmentIndex].span.removeAttribute("hidden");
+    //         }
+    //     }
+    //     segmentIndex = segments[segmentIndex].nextDecision;
+    // } 
+    
+    // else if (segments[segmentIndex].hasOwnProperty("nestedEndPointer")) {
+    //     segmentIndex = segments[segmentIndex].nestedEndPointer.nextDecision;
+    // } else {
+    //     console.log("DONE");
+    // }
 }
 
 function moveBack() {
-    while (inSegmentRange(segmentIndex) && segmentStates[segmentIndex][0] == 0) {
-        segmentSpans[segmentIndex].setAttribute("hidden", "hidden");
-        segmentIndex -= 1;
-    }
-    //Case for hitting back on the first choice where segmentIndex becomes negative
-    if (segmentIndex <= 0) {
-        segmentIndex = 0;
-        moveNext();
-    } else {
-        makeDecisions();
-    }
+    // if segments.hasOwnProperty("")
 }
 
 function customDecision() {
@@ -166,7 +255,7 @@ function customDecision() {
     const customInputBox = document.createElement('textarea');
     customInputBox.setAttribute("id", "custom-input-box");
     customInputBox.setAttribute("maxlength",CUSTOMFIELDLENGTH);
-    customInputBox.setAttribute("placeholder", segmentStates[segmentIndex][1]);
+    customInputBox.setAttribute("placeholder", segments[segmentIndex].prompt);
     customInputBox.setAttribute("line-height", 1);
     // Don't need a max height since we have a max char
     // var heightLimit = 200; /* Maximum height: 200px */
@@ -174,7 +263,7 @@ function customDecision() {
         customInputBox.style.height = ""; /* Reset the height*/
     //   input.style.height = Math.min(input.scrollHeight, heightLimit) + "px";
         customInputBox.style.height = customInputBox.scrollHeight + "px";
-        segmentSpans[segmentIndex].textContent = customInputBox.value.substring();
+        segments[segmentIndex].span.textContent = customInputBox.value.substring();
 
     };
     
@@ -201,18 +290,13 @@ function customDecision() {
         // //Increase index
         // ParsedText.index += 1;
         // //Advance to next decision
-        if (inSegmentRange(segmentIndex + 1)) {
-            segmentIndex += 1;
-            moveNext();
-        } else {
-            createFinishInterface();
-        }
+        moveNext();
     })
 
     const backButton = document.createElement('button');
     backButton.className = "bar-button bottom-bar-button";
     backButton.innerText = "< back";
-    if (segmentIndex != firstDecisionIndex) {
+    if (segments[segmentIndex].previousDecision != -1) {
         backButton.addEventListener("click", function() {
             //Remove the interface for generating customs
             generatorControlPanel.removeChild(customInterfacePanel);
@@ -225,11 +309,7 @@ function customDecision() {
             customInputBox.remove();
             nextButton.remove();
             backButton.remove();
-            if (inSegmentRange(segmentIndex - 1)) {
-                segmentSpans[segmentIndex].setAttribute("hidden", "hidden");
-                segmentIndex -= 1;
-                moveBack();
-            }
+            moveBack();
         });
     }
     bottomRowButtons.appendChild(backButton);
@@ -241,9 +321,6 @@ function customDecision() {
 
 //Creates the the toggle interface for the user to decide on a toggle
 function toggleDecision() {
-    if (segmentSpans[segmentIndex].hasAttribute("hidden")) {
-        segmentSpans[segmentIndex].removeAttribute("hidden", "hidden");
-    }
     const generatorControlPanel = document.getElementById("generator-control-panel");
     const toggleInterfacePanel = document.createElement("div");
     toggleInterfacePanel.setAttribute("id", "toggle-interface-panel");
@@ -251,7 +328,7 @@ function toggleDecision() {
     const backButton = document.createElement("button");
     backButton.className = "bar-button left-control-button back-button";
     backButton.innerText = "< back";
-    if (segmentIndex != firstDecisionIndex) {
+    if (segments[segmentIndex].previousDecision != -1) {
         backButton.addEventListener("click", function() {
             generatorControlPanel.removeChild(toggleInterfacePanel);
             toggleInterfacePanel.removeChild(backButton);
@@ -263,11 +340,8 @@ function toggleDecision() {
             toggleExclude.remove();
             toggleInclude.remove();
             nextButton.remove();
-            if (inSegmentRange(segmentIndex - 1)) {
-                segmentSpans[segmentIndex].setAttribute("hidden", "hidden");
-                segmentIndex -= 1;
-                moveBack();
-            }
+            segments[segmentIndex].span.setAttribute("hidden", "hidden");
+            moveBack();
         });
     }
 
@@ -275,16 +349,16 @@ function toggleDecision() {
     toggleExclude.className = "bar-button";
     toggleExclude.innerText = "exclude";
     toggleExclude.addEventListener("click", function() {
-        segmentStates[segmentIndex][1] = 0;
-        segmentSpans[segmentIndex].className = "toggle-text excluded-toggle";
+        segments[segmentIndex].toggle = false;
+        segments[segmentIndex].span.className = "toggle-text excluded-toggle";
     });
     //adds "hover" functionality where the toggle text disappears when hovering on the exclude button
     toggleExclude.addEventListener("mouseenter", function() {
-        segmentSpans[segmentIndex].className = "toggle-text excluded-toggle";
+        segments[segmentIndex].span.className = "toggle-text excluded-toggle";
     })
     toggleExclude.addEventListener("mouseleave", function() {
-        if (segmentStates[segmentIndex][1] == 1) {
-            segmentSpans[segmentIndex].className = "toggle-text";
+        if (segments[segmentIndex].toggle) {
+            segments[segmentIndex].span.className = "toggle-text";
         }
     })
 
@@ -295,15 +369,15 @@ function toggleDecision() {
     toggleInclude.className = "bar-button";
     toggleInclude.innerText = "include";
     toggleInclude.addEventListener("click", function() {
-        segmentStates[segmentIndex][1] = 1;
-        segmentSpans[segmentIndex].className = "toggle-text";
+        segments[segmentIndex].toggle = true;
+        segments[segmentIndex].span.className = "toggle-text";
     });
     toggleInclude.addEventListener("mouseenter", function() {
-        segmentSpans[segmentIndex].className = "toggle-text";
+        segments[segmentIndex].span.className = "toggle-text";
     });
     toggleInclude.addEventListener("mouseleave", function() {
-        if (segmentStates[segmentIndex][1] == 0) {
-            segmentSpans[segmentIndex].className = "toggle-text excluded-toggle";
+        if (!segments[segmentIndex].toggle) {
+            segments[segmentIndex].span.className = "toggle-text excluded-toggle";
         }
     });
 
@@ -312,8 +386,8 @@ function toggleDecision() {
     nextButton.className = "bar-button right-control-button next-button";
     nextButton.innerText = "next >";
     nextButton.addEventListener("click", function() {
-        if (segmentStates[segmentIndex][1] == 0) {
-            segmentSpans[segmentIndex].setAttribute("hidden", "hidden");
+        if (!segments[segmentIndex].toggle) {
+            segments[segmentIndex].span.setAttribute("hidden", "hidden");
         }
         //Remove the interface for toggling
         generatorControlPanel.removeChild(toggleInterfacePanel);
@@ -326,13 +400,7 @@ function toggleDecision() {
         toggleExclude.remove();
         toggleInclude.remove();
         nextButton.remove();
-
-        if (inSegmentRange(segmentIndex + 1)) {
-            segmentIndex += 1;
-            moveNext();
-        } else {
-            createFinishInterface();
-        }
+        moveNext();
     })
 
     toggleInterfacePanel.appendChild(backButton);
@@ -342,6 +410,6 @@ function toggleDecision() {
     generatorControlPanel.appendChild(toggleInterfacePanel);
 }
 
-function createFinishInterface() {
+function nestedToggleDecision() {
 
 }
