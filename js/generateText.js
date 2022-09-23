@@ -97,9 +97,9 @@ function initializeText(parentNode, segments) {
             //Nested text
             case 3:
                 span.className = "nested-text";
+                segmentStates.push([3, 1]);
                 //Special case occurs here (for DOM nesting)
                 initializeText(span, segments[i].parsedNesting);
-                segmentStates.push([3, 1])
                 break;
         }
     }

@@ -6,7 +6,6 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Mono:wght@300;400&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="styles/general.css">
-        <script src="js/createTemplate.js" defer></script>
     </head>
 
     <body>
@@ -18,9 +17,44 @@
                 <!-- <button id="tutorial-button" class="text-button">tutorial</button>
                 <button id="code-button" class="text-button">code</button> -->
             </div>
+            <hr>
+            <div id="generated-text">
+                <h2>Introduction</h2>
+                <p class="tutorial-text">
+                    Text Automata allows users to quickly generate text from a template. 
+                </p>
+
+                <h2>Toggle</h2>
+                <p class="tutorial-text">
+                    Toggled text is text that a user may or may not want to exclude.
+                    The user can simply include (toggle on) or exclude (toggle off) the text in the UI when assembling the text.
+                    It is represented in the markdown using square brackets <span class="toggle-text">[ ]</span>.
+                </p>
+
+                <p class="example-text">
+                    Hi, <span class="toggle-text">[that time works well!]</span><span class="toggle-text">[unfortunately, I won't be able to make it.]</span>
+                </p>
+
+                <h2>Custom</h2>
+                <p class="tutorial-text">
+                    Custom text allows the user to dynamically change a segment of text while generating the final text.
+                </p>
+
+                <p class="example-text">
+                    I would love to work at <span class="custom-text">{name}</span> as a <span class="custom-text">{role}</span>
+                </p>
+
+                <h2>Escape Character</h2>
+                <p class="tutorial-text">
+                    The escape character '\' allows you to escape text that would otherwise be evaluated.
+                </p>
+
+                <p class="example-text">
+                    arr\[0] -> arr[0] 
+                </p>
+            </div>
 
         </div>
-
 
 
 

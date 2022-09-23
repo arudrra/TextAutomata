@@ -265,3 +265,22 @@ label {
     align-items:flex-end;
 
 }
+
+.tutorial-text{
+    color: var(--beigecolor);
+    font-family: "Roboto Mono";
+}
+
+.example-text{
+    background-color: var(--deepblue);
+    border-radius: 0.5rem;
+    border-width: 1px;
+    border-style: solid;
+    padding: 1rem;
+    border-color: var(--beigecolor);
+    font-family: "Roboto Mono";
+}
+
+hr{
+    width: var(--fullwidth);
+}
