@@ -402,7 +402,7 @@ function toggleDecision() {
 }
 
 function setAllChildrenVisible(segment) {
-    children = segments[3].span.children;
+    children = segments[segmentIndex].span.children;
     for (let i = 0; i < children.length; i++) {
         if (children[i].hasAttribute("hidden")) {
             children[i].removeAttribute("hidden");
