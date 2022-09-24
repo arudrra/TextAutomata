@@ -151,7 +151,6 @@ function makeDecisions() {
     if (segmentIndex == -1 || segmentIndex >= segments.length ) {
         finishAndDownload();
     } else {
-        console.log(segmentIndex)
         switch (segments[segmentIndex].type) {
             //Custom text
             case 1:
@@ -185,12 +184,11 @@ function makeRangeVisible(start, end){
 //Makes a group of consecutive spans invisible (inclusive)
 function makeRangeInvisible(start, end){
     for (let i = end; i >= start; i--) {
-        segments[i].span.setAttribute("hidden");
+        segments[i].span.setAttribute("hidden", "hidden");
     }
 }
 
 function moveNext() {
-    debugger;
     let start = segmentIndex + 1;
     let end = segments.length - 1;
     //Check for a nested end pointer
@@ -216,28 +214,10 @@ function moveNext() {
 }
 
 function moveBack() {
-    let start = segmentIndex + 1;
-    let end = segments.length - 1;
-
-    //Check for a nested end pointer
-    if (segments[segmentIndex].hasOwnProperty("nestedEndPointer")) {
-        end = segments[segmentIndex].nestedEndPointer.nextDecision;
-    //Deal with the nested case
-    } else if (segments[segmentIndex].type == 3) {
-        //If the nested segment is visible (make everything until the first nested decision visible)
-        if (segments[segmentIndex].toggle) {
-            end = segments[segmentIndex].toggleVisibleIndex;
-        //If the nested segment is hidden (make everything from the end of the first nested segment to the next decision visible)
-        } else {
-            end = segments[segmentIndex].nextDecision;
-        }
-    //Else deal with the normal case
-    } else {
-        end = segments[segmentIndex].nextDecision;
-    }
-
+    let start = segments[segmentIndex].previousDecision + 1;
+    let end = segmentIndex;
     makeRangeInvisible(start, end);
-    segmentIndex = first;
+    segmentIndex = segments[segmentIndex].previousDecision;
     makeDecisions();
 }
 
