@@ -1,3 +1,4 @@
+
 //Globals
 const CUSTOMFIELDLENGTH = 500;
 
@@ -29,7 +30,8 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById("auto-suggest-button").innerText = "autofill: off";
         }
     }
-    // restart();
+    segmentIndex = 0;
+    restart();
 });
 
 //Return to Template page (go back button)
@@ -69,16 +71,17 @@ autosuggestButton.addEventListener("mouseleave", function() {
     }
 });
 
-
-
-
 document.getElementById("restart-button").addEventListener("click", restart);
 
 function restart (){
-    // document.getElementById("generated-text").replaceChildren();
-    // document.getElementById("generator-control-panel").replaceChildren();
+    document.getElementById("generated-text").innerHTML = "";
+    document.getElementById("generator-control-panel").innerHTML = "";
+    cache = new Map();
     segmentIndex = 0;
+    segments = []
     loadSegments();
+    // // document.getElementById("generated-text").replaceChildren();
+    // // document.getElementById("generator-control-panel").replaceChildren();
     while (segments[segmentIndex].type == 0) {
         if (segments[segmentIndex].span.hasAttribute("hidden")) { 
             segments[segmentIndex].span.removeAttribute("hidden");
