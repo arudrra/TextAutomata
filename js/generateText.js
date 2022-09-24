@@ -74,6 +74,7 @@ function initializeText(parentNode, parsedSegments, previousDecisionIndex) {
         let segment = new Object();
         segments.push(segment);
         //Text is broken into spans
+        segment.index = segments.length - 1;
         segment.span = document.createElement("span");
         //spans should be invisible until the user reaches that point in the text
         segment.span.setAttribute("hidden", "hidden");
@@ -150,6 +151,7 @@ function makeDecisions() {
     if (segmentIndex == -1 || segmentIndex >= segments.length ) {
         finishAndDownload();
     } else {
+        console.log(segmentIndex)
         switch (segments[segmentIndex].type) {
             //Custom text
             case 1:
@@ -161,7 +163,7 @@ function makeDecisions() {
                 break;
             //Nested text
             case 3:
-                toggleDecision();
+                nestedToggleDecision();
                 break;
         }
     }
@@ -192,7 +194,7 @@ function moveNext() {
     let end = segments.length - 1;
     //Check for a nested end pointer
     if (!segments[segmentIndex].hasOwnProperty("nextDecision")) {
-        end = segments[segmentIndex].nestedEndPointer.nextDecision;
+        end = segments[segments[segmentIndex].nestedEndPointer].nextDecision
     //Deal with the nested case
     } else if (segments[segmentIndex].type == 3) {
         //If the nested segment is visible (make everything until the first nested decision visible)
@@ -210,40 +212,32 @@ function moveNext() {
     makeRangeVisible(start, end);
     segmentIndex = end;
     makeDecisions();
-
-
-
-    
-    // let nextDecisionIndex = -1;
-    // //If it is the start of a nested decision
-    // if (segments[segmentIndex].type == 3) {
-    //     //If the nested segment is toggled, go to the immediate next index
-    //     if (segment[segmentIndex].toggle) {
-    //         nextDecisionIndex = segments[tempIndex].toggleVisibleIndex;
-    //     } else {
-    //         nextDecisionIndex = segments[tempIndex].nextDecision;
-    //     }
-    // }
-
-    // //Normal Case for moving to next
-    // if (segments[segmentIndex].hasOwnProperty("nextDecision")) {
-    //     for (let i = segmentIndex + 1; i < segments[segmentIndex].nextDecision; i++) {
-    //         if (segments[segmentIndex].span.hasAttribute("hidden")) {
-    //             segments[segmentIndex].span.removeAttribute("hidden");
-    //         }
-    //     }
-    //     segmentIndex = segments[segmentIndex].nextDecision;
-    // } 
-    
-    // else if (segments[segmentIndex].hasOwnProperty("nestedEndPointer")) {
-    //     segmentIndex = segments[segmentIndex].nestedEndPointer.nextDecision;
-    // } else {
-    //     console.log("DONE");
-    // }
 }
 
 function moveBack() {
-    // if segments.hasOwnProperty("")
+    let start = segmentIndex + 1;
+    let end = segments.length - 1;
+
+    //Check for a nested end pointer
+    if (!segments[segmentIndex].hasOwnProperty("nextDecision")) {
+        end = segments[segmentIndex].nestedEndPointer.nextDecision;
+    //Deal with the nested case
+    } else if (segments[segmentIndex].type == 3) {
+        //If the nested segment is visible (make everything until the first nested decision visible)
+        if (segments[segmentIndex].toggle) {
+            end = segments[segmentIndex].toggleVisibleIndex;
+        //If the nested segment is hidden (make everything from the end of the first nested segment to the next decision visible)
+        } else {
+            end = segments[segmentIndex].nextDecision;
+        }
+    //Else deal with the normal case
+    } else {
+        end = segments[segmentIndex].nextDecision;
+    }
+
+    makeRangeInvisible(start, end);
+    segmentIndex = first;
+    makeDecisions();
 }
 
 function customDecision() {
@@ -362,9 +356,6 @@ function toggleDecision() {
         }
     })
 
-    //back-button has the red hover color
-    // toggleExclude.setAttribute("back-button");
-
     const toggleInclude = document.createElement("button")
     toggleInclude.className = "bar-button";
     toggleInclude.innerText = "include";
@@ -410,6 +401,99 @@ function toggleDecision() {
     generatorControlPanel.appendChild(toggleInterfacePanel);
 }
 
-function nestedToggleDecision() {
+function setAllChildrenVisible(segment) {
+    children = segments[3].span.children;
+    for (let i = 0; i < children.length; i++) {
+        if (children[i].hasAttribute("hidden")) {
+            children[i].removeAttribute("hidden");
+        }
+    }
+}
 
+function nestedToggleDecision() {
+    const generatorControlPanel = document.getElementById("generator-control-panel");
+    const toggleInterfacePanel = document.createElement("div");
+    toggleInterfacePanel.setAttribute("id", "toggle-interface-panel");
+    setAllChildrenVisible(segments[segmentIndex].span);
+
+    const backButton = document.createElement("button");
+    backButton.className = "bar-button left-control-button back-button";
+    backButton.innerText = "< back";
+    if (segments[segmentIndex].previousDecision != -1) {
+        backButton.addEventListener("click", function() {
+            generatorControlPanel.removeChild(toggleInterfacePanel);
+            toggleInterfacePanel.removeChild(backButton);
+            toggleInterfacePanel.removeChild(toggleExclude);
+            toggleInterfacePanel.removeChild(toggleInclude);
+            toggleInterfacePanel.removeChild(nextButton);
+            toggleInterfacePanel.remove();
+            backButton.remove();
+            toggleExclude.remove();
+            toggleInclude.remove();
+            nextButton.remove();
+            segments[segmentIndex].span.setAttribute("hidden", "hidden");
+            moveBack();
+        });
+    }
+
+    const toggleExclude = document.createElement("button")
+    toggleExclude.className = "bar-button";
+    toggleExclude.innerText = "exclude";
+    toggleExclude.addEventListener("click", function() {
+        segments[segmentIndex].toggle = false;
+        segments[segmentIndex].span.className = "toggle-text excluded-toggle";
+    });
+    //adds "hover" functionality where the toggle text disappears when hovering on the exclude button
+    toggleExclude.addEventListener("mouseenter", function() {
+        segments[segmentIndex].span.className = "toggle-text excluded-toggle";
+    })
+    toggleExclude.addEventListener("mouseleave", function() {
+        if (segments[segmentIndex].toggle) {
+            segments[segmentIndex].span.className = "toggle-text";
+        }
+    })
+
+    const toggleInclude = document.createElement("button")
+    toggleInclude.className = "bar-button";
+    toggleInclude.innerText = "include";
+    toggleInclude.addEventListener("click", function() {
+        segments[segmentIndex].toggle = true;
+        segments[segmentIndex].span.className = "toggle-text";
+    });
+    toggleInclude.addEventListener("mouseenter", function() {
+        segments[segmentIndex].span.className = "toggle-text";
+    });
+    toggleInclude.addEventListener("mouseleave", function() {
+        if (!segments[segmentIndex].toggle) {
+            segments[segmentIndex].span.className = "toggle-text excluded-toggle";
+        }
+    });
+
+
+    const nextButton = document.createElement('button');
+    nextButton.className = "bar-button right-control-button next-button";
+    nextButton.innerText = "next >";
+    nextButton.addEventListener("click", function() {
+        if (!segments[segmentIndex].toggle) {
+            segments[segmentIndex].span.setAttribute("hidden", "hidden");
+        }
+        //Remove the interface for toggling
+        generatorControlPanel.removeChild(toggleInterfacePanel);
+        toggleInterfacePanel.removeChild(backButton);
+        toggleInterfacePanel.removeChild(toggleExclude);
+        toggleInterfacePanel.removeChild(toggleInclude);
+        toggleInterfacePanel.removeChild(nextButton);
+        toggleInterfacePanel.remove();
+        backButton.remove();
+        toggleExclude.remove();
+        toggleInclude.remove();
+        nextButton.remove();
+        moveNext();
+    })
+
+    toggleInterfacePanel.appendChild(backButton);
+    toggleInterfacePanel.appendChild(toggleExclude);
+    toggleInterfacePanel.appendChild(toggleInclude);
+    toggleInterfacePanel.appendChild(nextButton);
+    generatorControlPanel.appendChild(toggleInterfacePanel);
 }
