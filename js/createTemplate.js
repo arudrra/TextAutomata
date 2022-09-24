@@ -244,6 +244,10 @@ parseButton.addEventListener("click", parse);
 function parse(){
     const text = input.value.substring();
     sessionStorage.setItem("rawTemplate", JSON.stringify(text));
+    if (text.length == 0) {
+        alert("Template is empty. Please enter some text before continuing.");
+        return;
+    }
     let i = 0;
     let toggleActive = false;
     let customActive = false;
