@@ -11,6 +11,27 @@ let cache;
 let segments = [];
 let segmentIndex = 0;
 
+
+document.addEventListener('DOMContentLoaded', function() {
+    //Reset cache for autofill
+    cache = new Map();
+    //Set autofill button and global
+    if (sessionStorage.autosuggest === undefined) {
+        autosuggest = false;
+        sessionStorage.setItem("autosuggest", "false");
+        document.getElementById("auto-suggest-button").innerText = "autofill: off";
+    } else {
+        if (sessionStorage.autosuggest === "true") {
+            autosuggest = true;
+            document.getElementById("auto-suggest-button").innerText = "autofill: on";
+        } else {
+            autosuggest = false;
+            document.getElementById("auto-suggest-button").innerText = "autofill: off";
+        }
+    }
+    // restart();
+});
+
 //Return to Template page (go back button)
 const returnToTemplateButton = document.getElementById("return-to-template");
 returnToTemplateButton.addEventListener("click", returnToTemplate);
@@ -18,8 +39,42 @@ function returnToTemplate() {
     window.open("template.html", "_self");
 }
 
+//Autofill toggle
+const autosuggestButton = document.getElementById("auto-suggest-button");
+autosuggestButton.addEventListener("click", function() {
+    if (autosuggest) {
+        autosuggest = false;
+        sessionStorage.setItem("autosuggest", "false");
+        autosuggestButton.innerText = "autofill: off";
+    } else {
+        autosuggest = true;
+        sessionStorage.setItem("autosuggest", "true");
+        autosuggestButton.innerText = "autofill: on";
+    }
+});
 
-document.getElementById("restart-button").addEventListener("click", function(){
+//Autofill hover
+autosuggestButton.addEventListener("mouseenter", function() {
+    if (autosuggest) {
+        autosuggestButton.innerText = "click to turn off";
+    } else {
+        autosuggestButton.innerText = "click to turn on";
+    }});
+
+autosuggestButton.addEventListener("mouseleave", function() {
+    if (autosuggest) {
+        autosuggestButton.innerText = "autofill: on";
+    } else {
+        autosuggestButton.innerText = "autofill: off";
+    }
+});
+
+
+
+
+document.getElementById("restart-button").addEventListener("click", restart);
+
+function restart (){
     // document.getElementById("generated-text").replaceChildren();
     // document.getElementById("generator-control-panel").replaceChildren();
     segmentIndex = 0;
@@ -34,9 +89,7 @@ document.getElementById("restart-button").addEventListener("click", function(){
         segments[segmentIndex].span.removeAttribute("hidden");
     }
     makeDecisions();
-    // findDecisionEndpoints();
-    // moveNext();
-});
+}
 
 /**
  * Loads segments from storage
@@ -48,17 +101,6 @@ function loadSegments() {
     lastDecisionIndex = initializeText(parentNode, parsedSegments, -1);
     // set the last decision to be equal to the length (allow other function to recognize that)
     segments[lastDecisionIndex].nextDecision = segments.length;
-}
-
-function findDecisionEndpoints() {
-    let firstFound = false;
-    for (let i = 0; i < segmentSpans.length; i++) {
-        if (!firstFound && segmentStates[0] != 0) {
-            firstFound = true;
-            firstDecisionIndex = i;
-        }
-        lasttDecisionIndex = i;
-    }
 }
 
 /**
@@ -230,6 +272,10 @@ function customDecision() {
     const customInputBox = document.createElement('textarea');
     customInputBox.setAttribute("id", "custom-input-box");
     customInputBox.setAttribute("maxlength",CUSTOMFIELDLENGTH);
+    //Autosuggest implemented here
+    if (autosuggest && cache.has(segments[segmentIndex].prompt) && segments[segmentIndex].span.textContent == segments[segmentIndex].prompt) {
+        segments[segmentIndex].span.textContent = cache.get(segments[segmentIndex].prompt);
+    } 
     customInputBox.setAttribute("placeholder", segments[segmentIndex].prompt);
     customInputBox.setAttribute("line-height", 1);
     // Don't need a max height since we have a max char
@@ -261,7 +307,7 @@ function customDecision() {
         nextButton.remove();
         backButton.remove();
         //Cache response for autofill in the future
-        // cache.set(segments[], customInputBox.value.substring());
+        cache.set(segments[segmentIndex].prompt, segments[segmentIndex].span.textContent);
         // //Increase index
         // ParsedText.index += 1;
         // //Advance to next decision

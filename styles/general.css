@@ -14,6 +14,7 @@
     --universalborderradius: 0.2rem;
     --pinkcolor: rgb(205,101,188);
     --orangecolor: rgb(255,111,82);
+    --brightpinkcolor: rgb(239, 69, 160);
 }
 
 html{
@@ -204,7 +205,7 @@ label {
 }
 
 .nested-text{
-    color: var(--orangecolor);
+    color: var(--brightpinkcolor);
 }
 
 .back-button:hover{
