@@ -10,18 +10,16 @@ const input = document.getElementById("main-input");
 // const nameInputBox = document.getElementById("name-input");
 const originalControlPanel = document.getElementById("control-buttons");
 
-// //Loads template from session storage (doesn't work)
-// document.addEventListener("DOMContentLoaded", function() {
-//     rawTemplate = JSON.parse(localStorage.rawTemplate);
-//     input.value = rawTemplate;
-//   });
+//Loads template from session storage when the page is loaded
+document.addEventListener("DOMContentLoaded", function() {
+    rawTemplate = JSON.parse(sessionStorage.rawTemplate);
+    input.value = rawTemplate;
+  });
 
-// //Saves template to session storage in event of accidental refresh
-// document.addEventListener("beforeunload", function(){
-//     localStorage.setItem("rawTemplate", JSON.stringify(text));
-//     sessionStorage.setItem("reloading", "true");
-// });
-
+//Saves the the raw template before the page moves elsewhere
+window.onbeforeunload = function() {
+    sessionStorage.setItem("rawTemplate", JSON.stringify(input.value));
+}
 
 //Import template functionality
 const importButton = document.getElementById('upload');
@@ -243,7 +241,6 @@ const parseButton = document.getElementById("parse-button");
 parseButton.addEventListener("click", parse);
 function parse(){
     const text = input.value.substring();
-    sessionStorage.setItem("rawTemplate", JSON.stringify(text));
     if (text.length == 0) {
         alert("Template is empty. Please enter some text before continuing.");
         return;
