@@ -382,20 +382,26 @@ function toggleDecision() {
     generatorControlPanel.appendChild(toggleInterfacePanel);
 }
 
-function setAllChildrenVisible(segment) {
+function setAllChildrenVisibleAndAddToggleColor(segment) {
     children = segments[segmentIndex].span.children;
     for (let i = 0; i < children.length; i++) {
         if (children[i].hasAttribute("hidden")) {
-            children[i].removeAttribute("hidden");
+            children[i].removeAttribute("hidden", "hidden");
+        }
+        if (children[i].className == "plain-text"){
+            children[i].className = "";
         }
     }
 }
 
 function nestedToggleDecision() {
+    if (segments[segmentIndex].span.hasAttribute("hidden")) {
+        segments[segmentIndex].span.removeAttribute("hidden", "hidden");
+    }
     const generatorControlPanel = document.getElementById("generator-control-panel");
     const toggleInterfacePanel = document.createElement("div");
     toggleInterfacePanel.setAttribute("id", "toggle-interface-panel");
-    setAllChildrenVisible(segments[segmentIndex].span);
+    setAllChildrenVisibleAndAddToggleColor(segments[segmentIndex].span);
 
     const backButton = document.createElement("button");
     backButton.className = "bar-button left-control-button back-button";
@@ -422,15 +428,15 @@ function nestedToggleDecision() {
     toggleExclude.innerText = "exclude";
     toggleExclude.addEventListener("click", function() {
         segments[segmentIndex].toggle = false;
-        segments[segmentIndex].span.className = "toggle-text excluded-toggle";
+        segments[segmentIndex].span.className = "nested-text excluded-toggle";
     });
     //adds "hover" functionality where the toggle text disappears when hovering on the exclude button
     toggleExclude.addEventListener("mouseenter", function() {
-        segments[segmentIndex].span.className = "toggle-text excluded-toggle";
+        segments[segmentIndex].span.className = "nested-text excluded-toggle";
     })
     toggleExclude.addEventListener("mouseleave", function() {
         if (segments[segmentIndex].toggle) {
-            segments[segmentIndex].span.className = "toggle-text";
+            segments[segmentIndex].span.className = "nested-text";
         }
     })
 
@@ -439,14 +445,14 @@ function nestedToggleDecision() {
     toggleInclude.innerText = "include";
     toggleInclude.addEventListener("click", function() {
         segments[segmentIndex].toggle = true;
-        segments[segmentIndex].span.className = "toggle-text";
+        segments[segmentIndex].span.className = "nested-text";
     });
     toggleInclude.addEventListener("mouseenter", function() {
-        segments[segmentIndex].span.className = "toggle-text";
+        segments[segmentIndex].span.className = "nested-text";
     });
     toggleInclude.addEventListener("mouseleave", function() {
         if (!segments[segmentIndex].toggle) {
-            segments[segmentIndex].span.className = "toggle-text excluded-toggle";
+            segments[segmentIndex].span.className = "nested-text excluded-toggle";
         }
     });
 
