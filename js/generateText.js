@@ -4,7 +4,7 @@ const CUSTOMFIELDLENGTH = 500;
 //Boolean for whether or not Autosuggest is selected
 let autosuggest = true;
 //Cache for autosuggest
-let cache = [];
+let cache;
 
 //References to all the segment spans that are created in initialize text
 //The array is flattened so we can go back and forward with nested toggles
@@ -261,7 +261,7 @@ function customDecision() {
         nextButton.remove();
         backButton.remove();
         //Cache response for autofill in the future
-        // ParsedText.cache.set(ParsedText.segments[ParsedText.index].text, customInputBox.value.substring());
+        // cache.set(segments[], customInputBox.value.substring());
         // //Increase index
         // ParsedText.index += 1;
         // //Advance to next decision
