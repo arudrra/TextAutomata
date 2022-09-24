@@ -190,10 +190,11 @@ function makeRangeInvisible(start, end){
 }
 
 function moveNext() {
+    debugger;
     let start = segmentIndex + 1;
     let end = segments.length - 1;
     //Check for a nested end pointer
-    if (!segments[segmentIndex].hasOwnProperty("nextDecision")) {
+    if (segments[segmentIndex].hasOwnProperty("nestedEndPointer")) {
         end = segments[segments[segmentIndex].nestedEndPointer].nextDecision
     //Deal with the nested case
     } else if (segments[segmentIndex].type == 3) {
@@ -219,7 +220,7 @@ function moveBack() {
     let end = segments.length - 1;
 
     //Check for a nested end pointer
-    if (!segments[segmentIndex].hasOwnProperty("nextDecision")) {
+    if (segments[segmentIndex].hasOwnProperty("nestedEndPointer")) {
         end = segments[segmentIndex].nestedEndPointer.nextDecision;
     //Deal with the nested case
     } else if (segments[segmentIndex].type == 3) {
