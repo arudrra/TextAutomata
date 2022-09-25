@@ -533,3 +533,33 @@ function nestedToggleDecision() {
     toggleInterfacePanel.appendChild(nextButton);
     generatorControlPanel.appendChild(toggleInterfacePanel);
 }
+
+//pass the appropriate filetypeFunction for the correct file extension
+//e.g for a textfile: download("testing-arudrra", txtDownload) initiates txtDownload for a .txt extension
+function download(filename, filetypeFunction) {
+    const generatedTextArea = document.getElementById("generated-text");
+    let finalText = "";
+    for (let i = 0; i < generatedTextArea.childNodes.length; i += 1) {
+        //Spans are nodetype of 1 and spans with hidden attributes are ignored
+        //Spans of nodetype 3 are just Text Nodes (unevaluated text from the template)
+        if (generatedTextArea.childNodes[i].nodeType == 1 && !generatedTextArea.childNodes[i].hasAttribute("hidden")) {
+            finalText += generatedTextArea.childNodes[i].innerText;
+        } else if (generatedTextArea.childNodes[i].nodeType == 3) {
+            finalText += generatedTextArea.childNodes[i].nodeValue;
+        }
+    }
+    console.log(finalText);
+    filetypeFunction(filename, finalText);
+}
+
+
+function txtDownload(filename, content) {
+    //Download functionality
+    const downloadTemplate = document.createElement('a');
+    downloadTemplate.href = "data:text/plain," + content;
+    downloadTemplate.download = filename;
+    document.body.appendChild(downloadTemplate);
+    downloadTemplate.click();
+    document.body.removeChild(downloadTemplate);
+    downloadTemplate.remove();
+}
