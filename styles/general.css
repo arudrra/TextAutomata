@@ -101,7 +101,7 @@ button:focus {
     width: 100%;    
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     gap: 0px;
 }
 #control-custom-buttons{
@@ -154,7 +154,6 @@ label {
 .bottom-bar-button{
     width: 5rem;
     border-radius: var(--universalborderradius);
-
 }
 
 #parse-button:hover {
@@ -298,19 +297,30 @@ hr{
     width: var(--fullwidth);
 }
 
-#download-template-button{
-    color: var(--pinkcolor);
-    background:none;
-    border:none;
-    margin:0;
-    padding:0;
-    cursor: pointer;
-}
-
 #control-generate-download-buttons{
     width: 20rem;    
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr 2fr 1fr 1fr;
     gap: 0px;
+}
+
+#tutorial-button{
+    background:none;
+    color: var(--bluecolor);
+}
+
+#tutorial-button:hover{
+    background:none;
+    color: var(--greencolor);
+}
+
+#github-button{
+    background:none;
+    color: var(--purplecolor);
+}
+
+#github-button:hover{
+    background:none;
+    color: var(--greencolor);
 }

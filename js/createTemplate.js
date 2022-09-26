@@ -202,7 +202,7 @@ function createNewSegment(type){
     segment.text = "";
     segment.type = type;
     segment.generatedHTML = "";
-    return segment
+    return segment;
 }
 
 function handleNestedToggles(segment) {
@@ -247,20 +247,29 @@ function inputExists() {
     return true;
 }
 
+function containsDynamicInput(segments) {
+    for (let i = 0; i < segments.length; i++) {
+        if (segments[i].type != 0) {
+            return true;
+        }
+    }
+    alert("Template is does not have any toggles or variables. The current output will look exactly like the input. View the markdown using the preview button.");
+    return false;
+}
+
 const parseButton = document.getElementById("parse-button");
 //Parses the markdown and stores the markdown + raw input in local storage
 parseButton.addEventListener("click", function() {
     if (inputExists()) {
-        parse();
-        window.open("generate.html", "_self");
+        segments = parse();
+        if (containsDynamicInput(segments)) {
+            window.open("generate.html", "_self");
+        }
     }
 });
+
 function parse(){
     const text = input.value.substring();
-    if (text.length == 0) {
-        alert("Template is empty. Please enter some text before continuing.");
-        return;
-    }
     let i = 0;
     let toggleActive = false;
     let customActive = false;
@@ -309,12 +318,24 @@ function parse(){
         } 
     }
     sessionStorage.setItem("parsedTemplate", JSON.stringify(segments));
+    return segments;
 }
 
 const previewButton = document.getElementById("preview-control-button");
 previewButton.addEventListener("click", function() {
     if (inputExists()) {
         parse();
-        window.open("preview.html", "_self");
+        window.open("preview.html", "_blank");
     }
+});
+
+
+const tutorialButton = document.getElementById("tutorial-button");
+tutorialButton.addEventListener("click", function() {
+    window.open("tutorial.html", "_blank");
+});
+
+const githubButton = document.getElementById("github-button");
+githubButton.addEventListener("click", function() {
+    window.open("https://github.com/arudrra/TextAutomata", "_blank");
 });

@@ -13,7 +13,6 @@
         <div class="content-container">
             <div id="header-region">
                 <h1>text automata</h1>
-                <h3>tutorial</h3>
                 <!-- <p class="text-button">tutorial</p>
                 <p class="text-button">code</p> -->
                 <!-- <button id="tutorial-button" class="text-button">tutorial</button>
@@ -27,19 +26,19 @@
                 <button type="button" class="bar-button left-control-button" onclick="document.getElementById('upload').click()">import</button>
                 <button id="custom-control-button" class="bar-button">new variable</button>
                 <button id="toggle-control-button" class="bar-button">new toggle</button>
-                <button id="preview-control-button" class="bar-button preview right-control-button">preview</button>
+                <button id="preview-control-button" class="bar-button " target="_blank">preview</button>
+                <button id="download-template-button" class="bar-button right-control-button">download</button>
             </div>
             <div class="main-input-wrapper">
                 <textarea placeholder="Enter or paste text here" class="main-input" id="main-input"></textarea>
             </div>
             <div class="bottom-row-buttons">
-                <button id="download-template-button" class="bar-button bottom-bar-button">download</button>
-                <button id="parse-button" class="bar-button bottom-bar-button" href="generate.html">next ></button>
+                <div>
+                    <button id="tutorial-button" class="bar-button bottom-bar-button">tutorial</button>
+                    <button id="github-button" class="bar-button bottom-bar-button">github</button>
+                </div>
+                <button id="parse-button" class="bar-button bottom-bar-button">next ></button>
             </div>
         </div>
-
-
-
-
     </body>
 </html>
