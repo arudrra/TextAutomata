@@ -295,3 +295,9 @@ function parse(){
     sessionStorage.setItem("parsedTemplate", JSON.stringify(segments));
     window.open("generate.html", "_self");
 }
+
+const previewButton = document.getElementById("preview-control-button");
+previewButton.addEventListener("click", function() {
+    parse();
+    window.open("generate.html", "_self");
+});

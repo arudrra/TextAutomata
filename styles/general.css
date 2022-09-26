@@ -101,7 +101,7 @@ button:focus {
     width: 100%;    
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 0px;
 }
 #control-custom-buttons{
