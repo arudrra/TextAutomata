@@ -13,7 +13,7 @@
     --bluecolor: rgb(181, 248, 255);
     --universalborderradius: 0.2rem;
     --pinkcolor: rgb(205,101,188);
-    --orangecolor: rgb(255,111,82);
+    --orangecolor: rgb(244,166,88);
     --brightpinkcolor: rgb(239, 69, 160);
 }
 
@@ -216,7 +216,7 @@ label {
 }
 
 .nested-text{
-    color: var(--brightpinkcolor);
+    color: var(--orangecolor);
 }
 
 .back-button:hover{

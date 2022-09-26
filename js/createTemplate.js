@@ -12,8 +12,10 @@ const originalControlPanel = document.getElementById("control-buttons");
 
 //Loads template from session storage when the page is loaded
 document.addEventListener("DOMContentLoaded", function() {
-    rawTemplate = JSON.parse(sessionStorage.rawTemplate);
-    input.value = rawTemplate;
+    if (sessionStorage.parsedTemplate !== undefined) {
+        rawTemplate = JSON.parse(sessionStorage.rawTemplate);
+        input.value = rawTemplate;
+    }
   });
 
 //Saves the the raw template before the page moves elsewhere
@@ -235,10 +237,24 @@ function handleNestedToggles(segment) {
     segment.parsedNesting = segments;
 }
 
-//Parses the markdown and stores the markdown + raw input in local storage
-//Also switches to the generator page
+//Check to make sure that there is something in the input
+function inputExists() {
+    text = input.value.substring();
+    if (text.length == 0) {
+        alert("Template is empty. Please enter some text before continuing.");
+        return false;
+    }
+    return true;
+}
+
 const parseButton = document.getElementById("parse-button");
-parseButton.addEventListener("click", parse);
+//Parses the markdown and stores the markdown + raw input in local storage
+parseButton.addEventListener("click", function() {
+    if (inputExists()) {
+        parse();
+        window.open("generate.html", "_self");
+    }
+});
 function parse(){
     const text = input.value.substring();
     if (text.length == 0) {
@@ -293,11 +309,12 @@ function parse(){
         } 
     }
     sessionStorage.setItem("parsedTemplate", JSON.stringify(segments));
-    window.open("generate.html", "_self");
 }
 
 const previewButton = document.getElementById("preview-control-button");
 previewButton.addEventListener("click", function() {
-    parse();
-    window.open("generate.html", "_self");
+    if (inputExists()) {
+        parse();
+        window.open("preview.html", "_self");
+    }
 });

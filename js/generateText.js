@@ -1,6 +1,7 @@
 
 //Globals
 const CUSTOMFIELDLENGTH = 500;
+const FIELDLENGTH = 20;
 
 //Boolean for whether or not Autosuggest is selected
 let autosuggest = true;
@@ -214,7 +215,7 @@ function makeDecisions() {
 }
 
 function finishAndDownload(){
-    console.log("Done")
+    download();
 };
 
 //Makes a group of consecutive spans visible (inclusive)
@@ -536,7 +537,7 @@ function nestedToggleDecision() {
 
 //pass the appropriate filetypeFunction for the correct file extension
 //e.g for a textfile: download("testing-arudrra", txtDownload) initiates txtDownload for a .txt extension
-function download(filename, filetypeFunction) {
+function download() {
     const generatedTextArea = document.getElementById("generated-text");
     let finalText = "";
     for (let i = 0; i < generatedTextArea.childNodes.length; i += 1) {
@@ -549,7 +550,39 @@ function download(filename, filetypeFunction) {
         }
     }
     console.log(finalText);
-    filetypeFunction(filename, finalText);
+
+
+    const originalControlPanel = document.getElementById("generator-control-panel");
+    //Control panel for custom input
+    //Make div for control panel
+    const customControlPanel = document.createElement('div');
+    customControlPanel.setAttribute("id", "control-custom-buttons");
+    //Make the back button
+    const customBackButton = document.createElement('button');
+    customBackButton.className = "bar-button left-control-button";
+    customBackButton.innerText = "go back";
+    customBackButton.addEventListener("click", function(){
+        console.log("to be implemented")
+    });
+
+    //Make the textbox for the name of the custom (the user will be prompted with later)
+    const customNameInput = document.createElement('input');
+    customNameInput.setAttribute("id", "name-input");
+    customNameInput.setAttribute("maxlength",FIELDLENGTH);
+    customNameInput.setAttribute("placeholder","enter filename");
+    //Make the finish button
+    const customFinishInputButton = document.createElement('button');
+    customFinishInputButton.className = "bar-button right-control-button";
+    customFinishInputButton.innerText = "finish";
+    customFinishInputButton.addEventListener("click", function() {
+        //Download functionality
+        txtDownload(customNameInput.value, finalText);
+    });
+    //Append all the buttons to the main div
+    customControlPanel.appendChild(customBackButton);
+    customControlPanel.appendChild(customNameInput);
+    customControlPanel.appendChild(customFinishInputButton);
+    originalControlPanel.replaceWith(customControlPanel);
 }
 
 
