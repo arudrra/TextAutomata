@@ -12,7 +12,7 @@ let cache;
 //The array is flattened so we can go back and forward with nested toggles
 let segments = [];
 let segmentIndex = 0;
-
+let lastCachedDecisionIndex = 0;
 
 document.addEventListener('DOMContentLoaded', function() {
     //Reset cache for autofill
@@ -102,7 +102,7 @@ function loadSegments() {
     //String.raw necessary for firefox since \n is evaluated otherwise
     const parsedSegments = JSON.parse(String.raw`${sessionStorage.parsedTemplate}`);
     const parentNode = document.getElementById("generated-text");
-    lastDecisionIndex = initializeText(parentNode, parsedSegments, -1);
+    const lastDecisionIndex = initializeText(parentNode, parsedSegments, -1);
     // set the last decision to be equal to the length (allow other function to recognize that)
     segments[lastDecisionIndex].nextDecision = segments.length;
 }
@@ -255,6 +255,7 @@ function moveNext() {
     }
 
     makeRangeVisible(start, end);
+    lastCachedDecisionIndex = segmentIndex;
     segmentIndex = end;
     makeDecisions();
 }
@@ -552,18 +553,15 @@ function download() {
     console.log(finalText);
 
 
-    const originalControlPanel = document.getElementById("generator-control-panel");
+    const originalControlPanel = document.getElementById("generate-control-buttons");
     //Control panel for custom input
     //Make div for control panel
     const customControlPanel = document.createElement('div');
-    customControlPanel.setAttribute("id", "control-custom-buttons");
+    customControlPanel.setAttribute("id", "control-generate-download-buttons");
     //Make the back button
-    const customBackButton = document.createElement('button');
-    customBackButton.className = "bar-button left-control-button";
-    customBackButton.innerText = "go back";
-    customBackButton.addEventListener("click", function(){
-        console.log("to be implemented")
-    });
+    const customRestartButton = document.createElement('button');
+    customRestartButton.className = "bar-button left-control-button";
+    customRestartButton.innerText = "restart";
 
     //Make the textbox for the name of the custom (the user will be prompted with later)
     const customNameInput = document.createElement('input');
@@ -571,18 +569,42 @@ function download() {
     customNameInput.setAttribute("maxlength",FIELDLENGTH);
     customNameInput.setAttribute("placeholder","enter filename");
     //Make the finish button
-    const customFinishInputButton = document.createElement('button');
-    customFinishInputButton.className = "bar-button right-control-button";
-    customFinishInputButton.innerText = "finish";
-    customFinishInputButton.addEventListener("click", function() {
+    const txtDownloadButton = document.createElement('button');
+    txtDownloadButton.className = "bar-button";
+    txtDownloadButton.innerText = "download";
+    txtDownloadButton.addEventListener("click", function() {
         //Download functionality
         txtDownload(customNameInput.value, finalText);
     });
+
+    const copyToClipboardButton = document.createElement('button');
+    copyToClipboardButton.className = "bar-button right-control-button";
+    copyToClipboardButton.innerText = "copy";
+    copyToClipboardButton.addEventListener("click", function() {
+        //Download functionality
+        copyToClipboard(finalText);
+    });
+
     //Append all the buttons to the main div
-    customControlPanel.appendChild(customBackButton);
+    customControlPanel.appendChild(customRestartButton);
     customControlPanel.appendChild(customNameInput);
-    customControlPanel.appendChild(customFinishInputButton);
+    customControlPanel.appendChild(txtDownloadButton);
+    customControlPanel.appendChild(copyToClipboardButton);
     originalControlPanel.replaceWith(customControlPanel);
+
+    customRestartButton.addEventListener("click", function(){
+        customControlPanel.replaceWith(originalControlPanel);
+        customControlPanel.removeChild(customRestartButton);
+        customControlPanel.removeChild(customNameInput);
+        customControlPanel.removeChild(txtDownloadButton);
+        customControlPanel.removeChild(copyToClipboardButton);
+        customControlPanel.remove();
+        customRestartButton.remove();
+        customNameInput.remove();
+        txtDownloadButton.remove();
+        copyToClipboardButton.remove();
+        restart();
+    });
 }
 
 
@@ -597,13 +619,10 @@ function txtDownload(filename, content) {
     downloadTemplate.remove();
 }
 
-function pdfDownload(filename, content) {
-    //Download functionality
-    const downloadTemplate = document.createElement('a');
-    downloadTemplate.href = "data:text/pdf," + content;
-    downloadTemplate.download = filename;
-    document.body.appendChild(downloadTemplate);
-    downloadTemplate.click();
-    document.body.removeChild(downloadTemplate);
-    downloadTemplate.remove();
+function copyToClipboard(content) {
+    if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(content);
+    } else {
+        console.log("clipboard unavailable");
+    }
 }

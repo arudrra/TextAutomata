@@ -306,3 +306,11 @@ hr{
     padding:0;
     cursor: pointer;
 }
+
+#control-generate-download-buttons{
+    width: 20rem;    
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr;
+    gap: 0px;
+}
