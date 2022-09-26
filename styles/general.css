@@ -23,14 +23,25 @@ html{
 #header-region{
     margin: 0 auto;
     margin-bottom: 20rem;
+    line-height: 2rem;
+    position: relative;
 }
 
 h1 {
+    line-height: 2rem;
+
     color: var(--beigecolor);
-    /* text-align: left;
+    text-align: left;
     display: inline-block;
-    align-items: flex-end;
-    margin-bottom: 0; */
+    vertical-align: bottom;
+}
+h3 {
+    line-height: 2rem;
+
+    text-align: right;
+    display: inline-block;
+    vertical-align: bottom;
+    color: var(--beigecolor);
 }
 body{
     /* background-color: var(--greycolor); */
@@ -90,7 +101,7 @@ button:focus {
     width: 100%;    
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 0px;
 }
 #control-custom-buttons{
@@ -285,4 +296,13 @@ label {
 
 hr{
     width: var(--fullwidth);
+}
+
+#download-template-button{
+    color: var(--pinkcolor);
+    background:none;
+    border:none;
+    margin:0;
+    padding:0;
+    cursor: pointer;
 }

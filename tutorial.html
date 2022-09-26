@@ -22,6 +22,7 @@
                 <h2>Introduction</h2>
                 <p class="tutorial-text">
                     Text Automata allows users to quickly generate text from a template. 
+                    Once a template is created, the user can iterate through three different semantic choices as defined in the template.
                 </p>
 
                 <h2>Toggle</h2>
@@ -29,25 +30,79 @@
                     Toggled text is text that a user may or may not want to exclude.
                     The user can simply include (toggle on) or exclude (toggle off) the text in the UI when assembling the text.
                     It is represented in the markdown using square brackets <span class="toggle-text">[ ]</span>.
+                    Here is an example toggle template:
                 </p>
 
                 <p class="example-text">
                     Hi, <span class="toggle-text">[that time works well!]</span><span class="toggle-text">[unfortunately, I won't be able to make it.]</span>
                 </p>
 
-                <h2>Custom</h2>
                 <p class="tutorial-text">
-                    Custom text allows the user to dynamically change a segment of text while generating the final text.
+                    While stepping through the template on the generate page, the user will be prompted to include or exclude each toggled segment.
+                    By default, a toggled segment is included (toggled on) for visibility.
+                    Here is an example of a user stepping through the example toggle template:
                 </p>
 
                 <p class="example-text">
-                    I would love to work at <span class="custom-text">{name}</span> as a <span class="custom-text">{role}</span>
+                    Hi, <span class="toggle-text">that time works well!</span>
+                </p>
+
+                <p class="tutorial-text">
+                    The user selects the exclude button and the toggle is crossed out:
+                </p>
+
+                <p class="example-text">
+                    Hi, <span class="toggle-text excluded-toggle">that time works well!</span>
+                </p>
+
+                <p class="tutorial-text">
+                    The user continues to the next segment.
+                    The excluded toggle is hidden for brevity and the next toggle is displayed:
+                </p>
+                
+                <p class="example-text">
+                    Hi, <span class="toggle-text">unfortunately, I won't be able to make it.</span>
+                </p>
+
+                <h2>Variable</h2>
+                <p class="tutorial-text">
+                    Variable text allows the user to dynamically change a segment of text while generating the final text.
+                    It is represented in the markdown using braces <span class="custom-text">{ }</span>.
+                </p>
+
+                <p class="example-text">
+                    I would like to apply for the <span class="custom-text">{role}</span> at <span class="custom-text">{company}</span>.
+                </p>
+
+                <p class="tutorial-text">
+                    The generate page will prompt the user to fill out the <span class="custom-text">role</span> and <span class="custom-text">company</span> variables.
+                    Here are two different sentences that can be generated from the same template:
+                </p>
+
+                <p class="example-text">
+                    I would like to apply for the <span class="custom-text">keyboard designer position</span> at <span class="custom-text">Artemis Design Studios</span>.
+                </p>
+
+                <p class="example-text">
+                    I would like to apply for the <span class="custom-text">frontend developer role</span> at <span class="custom-text">Text Automata</span>.
+                </p>
+
+                <h2>Nesting</h2>
+
+                <p class="tutorial-text">
+                    The user can nest variables within toggles. Here is an example of valid nesting:
+                </p>
+
+                <p class="example-text">
+                    <span class="nested-text">[As an avid follower of the <span class="custom-text">{industry}</span>, I was excited about the opportunity at <span class="custom-text">company</span>.]</span>
+                    <span class="nested-text">[While I am unfamiliar with the <span class="custom-text">{industry}</span> I believe my experience in  <span class="custom-text">experience</span> will allow me to thrive at <span class="custom-text">company</span>.]</span>
                 </p>
 
                 <h2>Escape Character</h2>
                 <p class="tutorial-text">
                     The escape character '\' allows you to escape text that would otherwise be evaluated.
                 </p>
+                
 
                 <p class="example-text">
                     arr\[0] -> arr[0] 

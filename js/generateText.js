@@ -563,3 +563,14 @@ function txtDownload(filename, content) {
     document.body.removeChild(downloadTemplate);
     downloadTemplate.remove();
 }
+
+function pdfDownload(filename, content) {
+    //Download functionality
+    const downloadTemplate = document.createElement('a');
+    downloadTemplate.href = "data:text/pdf," + content;
+    downloadTemplate.download = filename;
+    document.body.appendChild(downloadTemplate);
+    downloadTemplate.click();
+    document.body.removeChild(downloadTemplate);
+    downloadTemplate.remove();
+}
