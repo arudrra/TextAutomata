@@ -26,7 +26,7 @@ function initializeText(parentNode, parsedSegments) {
             //Toggle text
             case 2:
                 span.className = "toggle-text";
-                segment.span.textContent = parsedSegments[i].text;
+                span.textContent = parsedSegments[i].text;
                 break;
             //Nested text
             case 3:

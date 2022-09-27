@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
 const returnToTemplateButton = document.getElementById("return-to-template");
 returnToTemplateButton.addEventListener("click", returnToTemplate);
 function returnToTemplate() {
-    window.open("template.html", "_self");
+    window.open("index.html", "_self");
 }
 
 //Autofill toggle

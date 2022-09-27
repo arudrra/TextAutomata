@@ -21,15 +21,16 @@
             <div id="generated-text">
                 <h2>Introduction</h2>
                 <p class="tutorial-text">
-                    Text Automata allows users to quickly generate text from a template. 
-                    Once a template is created, the user can iterate through three different semantic choices as defined in the template.
+                    Text Automata allows you to quickly generate text from a template.
+                    You can create the markdown for a template using the tools on the <a href="index.html">template page</a> and generate the text from the template on the generate page (which can be reached by clicking the "next" button on the template page).
+                    The tool is useful for dynamically generating text for repetitive tasks such as cover letters and applications.
                 </p>
 
                 <h2>Toggle</h2>
                 <p class="tutorial-text">
-                    Toggled text is text that you can include (toggle on) or exclude (toggle of).
+                    Toggled text is text that you can include (toggle on) or exclude (toggle off).
                     It is represented in the markdown using square brackets <span class="toggle-text">[ ]</span>.
-                    Here is an example toggle template:
+                    Here is an example of a template with two toggles:
                 </p>
 
                 <p class="example-text">
@@ -37,9 +38,16 @@
                 </p>
 
                 <p class="tutorial-text">
-                    While stepping through the template on the generate page, the user will be prompted to include or exclude each toggled segment.
-                    By default, a toggled segment is included (toggled on) for visibility.
-                    Here is an example of a user stepping through the example toggle template:
+                    There are two ways to create a toggle on the template page:<br><br>
+                    1. Select/highlight the text you want to toggle in the main input section and click the toggle button.
+                    NOTE: If you do not select or highlight any text before clicking the toggle button, the square brackets <span class="toggle-text">[ ]</span> will not appear.<br>
+                    2. Type the '<span class="toggle-text">[</span>' and '<span class="toggle-text">]</span>' characters around the text you want to toggle.<br>
+                </p>
+
+                <p class="tutorial-text">
+                    While stepping through the template on the generate page, you will be prompted to include or exclude each toggled segment.
+                    By default, a toggled segment is included (toggled on) for visibility. 
+                    Here is what you will see first for the template from the previous example:
                 </p>
 
                 <p class="example-text">
@@ -47,7 +55,7 @@
                 </p>
 
                 <p class="tutorial-text">
-                    The user selects the exclude button and the toggle is crossed out:
+                    If you click the exclude button, the toggle will be crossed out:
                 </p>
 
                 <p class="example-text">
@@ -55,8 +63,7 @@
                 </p>
 
                 <p class="tutorial-text">
-                    The user continues to the next segment.
-                    The excluded toggle is hidden for brevity and the next toggle is displayed:
+                    After you click the "next" button, the excluded toggle will disappear since it is not included in the final text and the next toggle will appear:
                 </p>
                 
                 <p class="example-text">
@@ -65,7 +72,7 @@
 
                 <h2>Variable</h2>
                 <p class="tutorial-text">
-                    Variable text allows the user to dynamically change a segment of text while generating the final text.
+                    You can type anything into variable text.
                     It is represented in the markdown using braces <span class="custom-text">{ }</span>.
                 </p>
 
@@ -74,38 +81,137 @@
                 </p>
 
                 <p class="tutorial-text">
-                    The generate page will prompt the user to fill out the <span class="custom-text">role</span> and <span class="custom-text">company</span> variables.
-                    Here are two different sentences that can be generated from the same template:
+                    There are three ways to create a variable on the template page:<br><br>
+                    1. Select/highlight the text you want to make into a variable and click the variable button.<br>
+                    2. Type the '<span class="custom-text">{</span>' and '<span class="custom-text">}</span>' characters around the text you want to make into a custom prompt.<br>
+                    3. Click the variable button, enter the variable name, and click finish.
+                    NOTE: There is a character limit on the variable name length with the template user interface. 
+                    If you want to use a longer variable name, you must manually enter the '<span class="custom-text">{</span>' and '<span class="custom-text">}</span>' characters around the variable name.
+                </p>
+
+                <p class="tutorial-text">
+                    The generate page will sequentially prompt you to fill out the variables.
+                    Here is what you will see first for the template from the previous example:
                 </p>
 
                 <p class="example-text">
-                    I would like to apply for the <span class="custom-text">keyboard designer position</span> at <span class="custom-text">Artemis Design Studios</span>.
+                    I would like to apply for the <span class="custom-text">role</span>.
+                </p>
+
+                <p class="tutorial-text">
+                    By default, the prompt text is shown. 
+                    You can type anything into the input box to overwrite the prompt.
+                    After entering "frontend developer role" and selecting next, you will be prompted for the next variable.
+                </p>
+
+                <p class="example-text">
+                    I would like to apply for the <span class="custom-text">frontend developer role</span> at <span class="custom-text">company</span>.
+                </p>
+
+                <p class="tutorial-text">
+                    After entering "Text Automata" for the company, the final text will look like this:
                 </p>
 
                 <p class="example-text">
                     I would like to apply for the <span class="custom-text">frontend developer role</span> at <span class="custom-text">Text Automata</span>.
                 </p>
 
-                <h2>Nesting</h2>
-
                 <p class="tutorial-text">
-                    The user can nest variables within toggles. Here is an example of valid nesting:
+                    Here is another example of a sentence you can generate with the same template:
                 </p>
 
                 <p class="example-text">
-                    <span class="nested-text">[As an avid follower of the <span class="custom-text">{industry}</span>, I was excited about the opportunity at <span class="custom-text">company</span>.]</span>
-                    <span class="nested-text">[While I am unfamiliar with the <span class="custom-text">{industry}</span> I believe my experience in  <span class="custom-text">experience</span> will allow me to thrive at <span class="custom-text">company</span>.]</span>
+                    I would like to apply for the <span class="custom-text">keyboard designer position</span> at <span class="custom-text">Artemis Design Studios</span>.
+                </p>
+
+                <p class="tutorial-text">
+                    If you have autofill turned on, the previous variable entry for the same prompt will be displayed instead of the prompt.
+                    You can still change the variable entry by typing anything into the text input box.
+                    Here is a template to demonstrate how autofill works:
+                </p>
+
+                <p class="example-text">
+                    I was excited when I saw the opportunity at <span class="custom-text">{company}</span>.
+                    I believe that my experience in <span class="custom-text">{experience}</span> will allow me to thrive at <span class="custom-text">{company}</span>.
+                </p>
+
+                <p class="tutorial-text">
+                    You will be prompted for the company initially since there was no previous entry for company.
+                </p>
+
+                <p class="example-text">
+                    I was excited when I saw the opportunity at <span class="custom-text">company</span>
+                </p>
+
+                <p class="tutorial-text">
+                    After filling out the <span class="custom-text">company</span> entry as <span class="custom-text">Text Automata</span> and the <span class="custom-text">experience</span> entry as <span class="custom-text">HTML, CSS, and Javascript</span>, the second <span class="custom-text">company</span> prompt will be autofilled with <span class="custom-text">Text Automata</span>.
+                </p>
+
+                <p class="example-text">
+                    I was excited when I saw the opportunity at <span class="custom-text">Text Automata</span>.
+                    I believe that my experience in <span class="custom-text">HTML, CSS, and Javascript</span> will allow me to thrive at <span class="custom-text">Text Automata</span>
+                </p>
+
+                <p class="tutorial-text">
+                    You can still enter any text for the second <span class="custom-text">company</span> entry and override the <span class="custom-text">Text Automata</span> suggestion.
+                    You can turn autofill on or off by clicking the autofill button.
+                </p>
+
+
+                <h2>Nesting</h2>
+
+                <p class="tutorial-text">
+                    You can nest variables within toggles. Here is an example of valid nesting:
+                </p>
+
+                <p class="example-text">
+                    <span class="nested-text">[As an avid follower of the <span class="custom-text">{industry}</span>, I was excited about the opportunity at <span class="custom-text">{company}</span>.]</span>
+                    <span class="nested-text">[While I am unfamiliar with the <span class="custom-text">{industry}</span> I believe my experience in  <span class="custom-text">{experience}</span> will allow me to thrive at <span class="custom-text">{company}</span>.]</span>
+                </p>
+
+                <p class="tutorial-text">
+                    The toggle is evaluated before the nested variables. 
+                    If you choose to exclude a nested toggle, you will not be prompted for the nested variables inside the toggle.
+                    Instead, you will be prompted to make the next decision.
                 </p>
 
                 <h2>Escape Character</h2>
                 <p class="tutorial-text">
-                    The escape character '\' allows you to escape text that would otherwise be evaluated.
+                    You can use the escape character '<span class="emphasized-text">\</span>' (backslash) to enter text that would otherwise be evaluated.
+                    Here are some examples in a template:
                 </p>
-                
 
                 <p class="example-text">
-                    arr\[0] -> arr[0] 
+                    1. arr[0]<br>
+                    2. arr\[0]<br>
+                    3. Here is a \\
                 </p>
+
+                <p class="tutorial-text">
+                    Here is what the template evaluates to:
+                </p>
+
+                <p class="example-text">
+                    1. arr<span class="toggle-text">0</span><br>
+                    2. arr[0]<br>
+                    3. Here is a \
+                </p>
+
+                <h2>Preview</h2>
+
+                <p class="tutorial-text">
+                    The preview button on the template page allows you to preview how your text will be semantically parsed.
+                    It displays the text without the parced braces or brackets while including colors (like the examples on this page) to display a preview of the parsing.
+                </p>
+
+                <h2>Import and Download</h2>
+
+                <p class="tutorial-text">
+                    You can import an existing template into the template page.
+                    The preferred file format is .txt for imports but it works on other formats as well.
+                    You can download the template and the generated text as .txt files.
+                </p>
+
             </div>
 
         </div>

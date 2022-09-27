@@ -324,3 +324,12 @@ hr{
     background:none;
     color: var(--greencolor);
 }
+
+a{
+    color:var(--pinkcolor);
+    text-decoration: none;
+}
+
+.emphasized-text {
+    color: var(--pinkcolor);
+}
