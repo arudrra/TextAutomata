@@ -7,6 +7,7 @@ const TOGGLEEND = ']';
 
 //Input box contains template (used by most functions)
 const input = document.getElementById("main-input");
+
 // const nameInputBox = document.getElementById("name-input");
 const originalControlPanel = document.getElementById("control-buttons");
 
@@ -106,6 +107,43 @@ function splitOnSelection(text, start, end){
     return [prefix, middle, suffix];
 }
 
+//Adds a wrapping end character (bracket or brace)
+function addWrappingCharacter(start, end, text, closingCharacter) {
+    if (end == text.length) {
+        input.value = text + closingCharacter;
+        input.setSelectionRange(end, end);
+    } else {
+        const sections = splitOnSelection(text, start, end);
+        input.value = sections[0] +  closingCharacter + sections[2];
+        input.setSelectionRange(sections[0].length, sections[0].length);
+    }
+}
+
+//Automatically close braces and brackets
+input.addEventListener("keydown", function(e) {
+    const start = input.selectionStart;
+    const end = input.selectionEnd;
+    const text = input.value.substring();
+    if (start === end) {
+        if (e.key === TOGGLESTART) {
+            addWrappingCharacter(start, end, text, TOGGLEEND);
+        } else if (e.key === CUSTOMSTART) {
+            addWrappingCharacter(start, end, text, CUSTOMEND);
+        }
+    } else {
+        if (e.key === TOGGLESTART) {
+            e.preventDefault();
+            const sections = splitOnSelection(text, start, end);
+            console.log("run");
+            input.value = sections[0] + TOGGLESTART + sections[1] + TOGGLEEND + sections[2];
+        } else if (e.key === CUSTOMSTART) {
+            e.preventDefault();
+            const sections = splitOnSelection(text, start, end);
+            input.value = sections[0] + CUSTOMSTART + sections[1] + CUSTOMEND + sections[2];
+        }
+    }
+});
+
 //Toggle Button and syntax insertion
 const toggleButton = document.getElementById("toggle-control-button");
 toggleButton.addEventListener("click", createToggleSyntax);
@@ -113,14 +151,13 @@ function createToggleSyntax(){
     const start = input.selectionStart;
     const end = input.selectionEnd;
     const text = input.value.substring();
-    if (input.selectionStart != input.selectionEnd) {
-        const sections = splitOnSelection(text, input.selectionStart, input.selectionEnd);
-        input.value = sections[0] + TOGGLESTART +  sections[1] + TOGGLEEND + sections[2];
+    if (start != end) {
+        const sections = text.slice(start);
+        input.value = sections[0] + TOGGLESTART + TOGGLEEND + sections[2];
     } else {
         console.log("invalid toggle creation");
     }
 }
-
 
 
 //Custom Button, navigation bar swapper, and syntax insertion

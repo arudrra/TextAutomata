@@ -6,20 +6,25 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Mono:wght@300;400&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="styles/general.css">
-        <script src="js/generateText.js" defer></script>
-    </head>
+        <script src="js/assembleText.js" defer></script>
 
+    </head>
     <body>
         <div class="content-container">
             <div id="header-region">
                 <h1>text automata</h1>
             </div>
-            <hr>
+            <div id=generate-control-buttons>
+                <button id="return-to-template" class="bar-button left-control-button back-button">&#60 back</button>
+                <button id="restart-button" class="bar-button">restart</button>
+                <button id="auto-suggest-button" class="bar-button right-control-button">autofill</button>
+            </div>
             <div class="generated-text-container">
                 <p id="generated-text"></p>
             </div>
             <div id="generator-control-panel">
             </div>
-        </div>        
+        </div>
+
     </body>
-</html>    
+</html>

@@ -298,7 +298,7 @@ hr{
 }
 
 #control-generate-download-buttons{
-    width: 20rem;    
+    width: var(--fullwidth);    
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr 2fr 1fr 1fr;
@@ -332,4 +332,8 @@ a{
 
 .emphasized-text {
     color: var(--pinkcolor);
+}
+
+.clickable{
+    cursor: pointer;
 }
