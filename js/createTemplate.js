@@ -134,7 +134,6 @@ input.addEventListener("keydown", function(e) {
         if (e.key === TOGGLESTART) {
             e.preventDefault();
             const sections = splitOnSelection(text, start, end);
-            console.log("run");
             input.value = sections[0] + TOGGLESTART + sections[1] + TOGGLEEND + sections[2];
         } else if (e.key === CUSTOMSTART) {
             e.preventDefault();
@@ -152,8 +151,8 @@ function createToggleSyntax(){
     const end = input.selectionEnd;
     const text = input.value.substring();
     if (start != end) {
-        const sections = text.slice(start);
-        input.value = sections[0] + TOGGLESTART + TOGGLEEND + sections[2];
+        const sections = splitOnSelection(text, start, end);
+        input.value = sections[0] + TOGGLESTART + sections[1] + TOGGLEEND + sections[2];
     } else {
         console.log("invalid toggle creation");
     }
