@@ -12,30 +12,40 @@ let showAllToggles = true;
 //Cache for autosuggest
 let groupedCustoms;
 
+//Keyloger global function
+let keyLogger = function(e) {
+    //Default appears to toggle the autosuggest when space is entered for some reason
+    e.preventDefault();
+    if (customSelection == true) {
+        if (e.key == "Enter") {
+            customKeyListener("\n");
+        } else if (e.key == "Escape") {
+            for (let customIndex = 0; customIndex < relatedSpans.length; customIndex += 1) {
+                relatedSpans[customIndex].style.color = "";
+            }
+            customSelection = false;
+        } else {
+            customKeyListener(e.key);
+        }
+    }
+};
+const FIELDLENGTH = 20;
 
-document.addEventListener('DOMContentLoaded', function() {
+
+
+document.addEventListener('DOMContentLoaded', restart);
+
+function restart (){
+    document.getElementById("generated-text").innerHTML = "";
+    document.getElementById("generator-control-panel").innerHTML = "";
+
     if (sessionStorage.parsedTemplate !== undefined) {
         const parsedSegments = JSON.parse(String.raw`${sessionStorage.parsedTemplate}`);
         const parentNode = document.getElementById("generated-text");
         parentNode.className += "plain-text";
         groupedCustoms = new Map();
         initializeText(parentNode, parsedSegments);
-        document.addEventListener('keydown', function(e) {
-            //Default appears to toggle the autosuggest when space is entered for some reason
-            e.preventDefault();
-            if (customSelection == true) {
-                if (e.key == "Enter") {
-                    customKeyListener("\n");
-                } else if (e.key == "Escape") {
-                    for (let customIndex = 0; customIndex < relatedSpans.length; customIndex += 1) {
-                        relatedSpans[customIndex].style.color = "";
-                    }
-                    customSelection = false;
-                } else {
-                    customKeyListener(e.key);
-                }
-            }
-        });
+        document.addEventListener('keydown', keyLogger);
     }
 
     //Set autofill button and global
@@ -67,7 +77,8 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById("show-hide-toggle-button").innerText = "toggles: hidden";
         }
     }
-});
+
+}
 
 function customKeyListener(key) {
     if (key === "Backspace") {
@@ -300,3 +311,96 @@ returnToTemplateButton.addEventListener("click", returnToTemplate);
 function returnToTemplate() {
     window.open("index.html", "_self");
 }
+
+
+document.getElementById("download-button").addEventListener("click", download);
+
+function download() {
+    document.removeEventListener("keydown", keyLogger);
+    const generatedTextArea = document.getElementById("generated-text");
+    let finalText = "";
+    for (let i = 0; i < generatedTextArea.childNodes.length; i += 1) {
+        //Spans are nodetype of 1 and spans with hidden attributes are ignored
+        //Spans of nodetype 3 are just Text Nodes (unevaluated text from the template)
+        if (generatedTextArea.childNodes[i].nodeType == 1 && !generatedTextArea.childNodes[i].hasAttribute("hidden")) {
+            finalText += generatedTextArea.childNodes[i].innerText;
+        } else if (generatedTextArea.childNodes[i].nodeType == 3) {
+            finalText += generatedTextArea.childNodes[i].nodeValue;
+        }
+    }
+
+    const originalControlPanel = document.getElementById("generate-control-buttons");
+    //Control panel for custom input
+    //Make div for control panel
+    const customControlPanel = document.createElement('div');
+    customControlPanel.setAttribute("id", "control-generate-download-buttons");
+    //Make the back button
+    const customRestartButton = document.createElement('button');
+    customRestartButton.className = "bar-button left-control-button";
+    customRestartButton.innerText = "restart";
+
+    //Make the textbox for the name of the custom (the user will be prompted with later)
+    const customNameInput = document.createElement('input');
+    customNameInput.setAttribute("id", "name-input");
+    customNameInput.setAttribute("maxlength",FIELDLENGTH);
+    customNameInput.setAttribute("placeholder","enter filename");
+    //Make the finish button
+    const txtDownloadButton = document.createElement('button');
+    txtDownloadButton.className = "bar-button";
+    txtDownloadButton.innerText = "download";
+    txtDownloadButton.addEventListener("click", function() {
+        //Download functionality
+        txtDownload(customNameInput.value, finalText);
+    });
+
+    const copyToClipboardButton = document.createElement('button');
+    copyToClipboardButton.className = "bar-button right-control-button";
+    copyToClipboardButton.innerText = "copy";
+    copyToClipboardButton.addEventListener("click", function() {
+        //Download functionality
+        copyToClipboard(finalText);
+    });
+
+    //Append all the buttons to the main div
+    customControlPanel.appendChild(customRestartButton);
+    customControlPanel.appendChild(customNameInput);
+    customControlPanel.appendChild(txtDownloadButton);
+    customControlPanel.appendChild(copyToClipboardButton);
+    originalControlPanel.replaceWith(customControlPanel);
+
+    customRestartButton.addEventListener("click", function(){
+        customControlPanel.replaceWith(originalControlPanel);
+        customControlPanel.removeChild(customRestartButton);
+        customControlPanel.removeChild(customNameInput);
+        customControlPanel.removeChild(txtDownloadButton);
+        customControlPanel.removeChild(copyToClipboardButton);
+        customControlPanel.remove();
+        customRestartButton.remove();
+        customNameInput.remove();
+        txtDownloadButton.remove();
+        copyToClipboardButton.remove();
+        restart();
+    });
+}
+
+
+function txtDownload(filename, content) {
+    //Download functionality
+    const downloadTemplate = document.createElement('a');
+    downloadTemplate.href = "data:text/plain," + content;
+    downloadTemplate.download = filename;
+    document.body.appendChild(downloadTemplate);
+    downloadTemplate.click();
+    document.body.removeChild(downloadTemplate);
+    downloadTemplate.remove();
+}
+
+function copyToClipboard(content) {
+    if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(content);
+    } else {
+        console.log("clipboard unavailable");
+    }
+}
+
+document.getElementById("restart-button").addEventListener("click", restart);

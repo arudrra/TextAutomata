@@ -551,7 +551,7 @@ function download() {
         }
     }
 
-    const originalControlPanel = document.getElementById("generate-control-buttons");
+    const originalControlPanel = document.getElementById("assemble-control-buttons");
     //Control panel for custom input
     //Make div for control panel
     const customControlPanel = document.createElement('div');
