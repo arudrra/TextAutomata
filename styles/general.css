@@ -115,9 +115,17 @@ button:focus {
     width: var(--fullwidth);    
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 0px;
 }
+#assemble-control-buttons{
+    width: var(--fullwidth);    
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 0px;
+}
+
 .left-control-button{
     border-bottom-left-radius: 0.5rem;
     border-top-left-radius: 0.5rem;
