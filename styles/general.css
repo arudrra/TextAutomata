@@ -115,7 +115,7 @@ button:focus {
     width: var(--fullwidth);    
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     gap: 0px;
 }
 #assemble-control-buttons{
@@ -344,4 +344,21 @@ a{
 
 .clickable{
     cursor: pointer;
+}
+
+.dynamic-input{
+    /* font-family: "Roboto Mono"; */
+    background-color: var(--deepblue);
+    color: var(--bluecolor);
+    font-size: 1rem;
+    /* border-width: 1px;
+    border-radius: 0.5rem;
+    border-color: var(--beigecolor);
+    width: 100%;
+    box-sizing: border-box;
+    height: 70vh; */
+    outline: none;
+    display:inline;
+    border: none;
+    overflow: auto;
 }

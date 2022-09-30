@@ -1,13 +1,16 @@
-var customSelection = false;
+let customSelection = false;
+let selectedSpan;
+let relatedSpans;
+let customPrompt;
+const selectedSpanColor = "rgb(205,101,188)";
 const CUSTOMFIELDLENGTH = 200;
 //Boolean for whether or not Autosuggest is selected
 let autosuggest = true;
 //Boolean for whether or not toggles are supposed to be hidden
+//Global index to help the cached toggle states
 let showAllToggles = true;
 //Cache for autosuggest
 let groupedCustoms;
-//Cache for toggle
-let toggleStates;
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -16,8 +19,23 @@ document.addEventListener('DOMContentLoaded', function() {
         const parentNode = document.getElementById("generated-text");
         parentNode.className += "plain-text";
         groupedCustoms = new Map();
-        toggleStates = new Map();
         initializeText(parentNode, parsedSegments);
+        document.addEventListener('keydown', function(e) {
+            //Default appears to toggle the autosuggest when space is entered for some reason
+            e.preventDefault();
+            if (customSelection == true) {
+                if (e.key == "Enter") {
+                    customKeyListener("\n");
+                } else if (e.key == "Escape") {
+                    for (let customIndex = 0; customIndex < relatedSpans.length; customIndex += 1) {
+                        relatedSpans[customIndex].style.color = "";
+                    }
+                    customSelection = false;
+                } else {
+                    customKeyListener(e.key);
+                }
+            }
+        });
     }
 
     //Set autofill button and global
@@ -39,17 +57,49 @@ document.addEventListener('DOMContentLoaded', function() {
     if (sessionStorage.showAllToggles === undefined) {
         showAllToggles = false;
         sessionStorage.setItem("showAllToggles", "false");
-        document.getElementById("show-hide-toggle-button").innerText = "hide toggles: on";
+        document.getElementById("show-hide-toggle-button").innerText = "toggles: hidden";
     } else {
         if (sessionStorage.showAllToggles === "true") {
             showAllToggles = true;
-            document.getElementById("show-hide-toggle-button").innerText = "hide toggles: off";
+            document.getElementById("show-hide-toggle-button").innerText = "toggles: shown";
         } else {
             showAllToggles = false;
-            document.getElementById("show-hide-toggle-button").innerText = "hide toggles: on";
+            document.getElementById("show-hide-toggle-button").innerText = "toggles: hidden";
         }
     }
 });
+
+function customKeyListener(key) {
+    if (key === "Backspace") {
+        if (selectedSpan.textContent !== customPrompt) {
+            if (selectedSpan.textContent.length > 0) {
+                selectedSpan.textContent = selectedSpan.textContent.substring(0, selectedSpan.textContent.length-1);
+            }
+            if (selectedSpan.textContent.length == 0) {
+                selectedSpan.textContent = customPrompt;
+            }
+            const updatedTextContent = selectedSpan.textContent;
+            if (autosuggest) {
+                for (let customIndex = 0; customIndex < relatedSpans.length; customIndex += 1) {
+                    relatedSpans[customIndex].textContent = updatedTextContent;
+                }
+            }
+        }
+    } else if (key.length == 1) {
+        if (selectedSpan.textContent === customPrompt) {
+            selectedSpan.textContent = key;
+        } else {
+            selectedSpan.textContent += key;
+        }
+        const updatedTextContent = selectedSpan.textContent;
+        if (autosuggest) {
+            for (let customIndex = 0; customIndex < relatedSpans.length; customIndex += 1) {
+                relatedSpans[customIndex].textContent = updatedTextContent;
+            }
+        }
+    }
+
+}
 
 function initializeText(parentNode, parsedSegments) {
     for (let i = 0; i < parsedSegments.length; i++) {
@@ -70,61 +120,22 @@ function initializeText(parentNode, parsedSegments) {
                 } else {
                     groupedCustoms.set(parsedSegments[i].text, [span]);
                 }
-                span.addEventListener("click", function(e) {
-                    e.stopPropagation();
-                    if (!customSelection) {
-                        customSelection = true;
-                        const generatorControlPanel = document.getElementById("generator-control-panel");
-                        const customInterfacePanel = document.createElement("div");
-                        customInterfacePanel.setAttribute("id", "custom-interface-panel");
-                        customInterfacePanel.className = "generated-text-container";
-                    
-                        const customInputBox = document.createElement('textarea');
-                        customInputBox.setAttribute("id", "custom-input-box");
-                        customInputBox.setAttribute("maxlength",CUSTOMFIELDLENGTH);
-
-                        customInputBox.setAttribute("placeholder", parsedSegments[i].text);
-                        customInputBox.setAttribute("line-height", 1);
-                        // Don't need a max height since we have a max char
-                        // var heightLimit = 200; /* Maximum height: 200px */
-                        customInputBox.oninput = function() {
-                            customInputBox.style.height = ""; /* Reset the height*/
-                        //   input.style.height = Math.min(input.scrollHeight, heightLimit) + "px";
-                            customInputBox.style.height = customInputBox.scrollHeight + "px";
-                            if (autosuggest) {
-                                if (groupedCustoms.has(parsedSegments[i].text)) {
-                                    for (let customIndex = 0; customIndex < groupedCustoms.get(parsedSegments[i].text).length; customIndex += 1) {
-                                        groupedCustoms.get(parsedSegments[i].text)[customIndex].textContent = customInputBox.value.substring();
-                                    }
-                                }
-                            } else {
-                                span.textContent = customInputBox.value.substring();
-                            }
-                        };
-                        const bottomRowButtons = document.createElement('div');
-                        bottomRowButtons.className = "bottom-row-buttons";
-
-                        const nextButton = document.createElement('button');
-                        nextButton.className = "bar-button bottom-bar-button";
-                        nextButton.innerText = "done";
-                        nextButton.addEventListener("click", function() {
-                            //Remove the interface for generating customs
-                            generatorControlPanel.removeChild(customInterfacePanel);
-                            generatorControlPanel.removeChild(bottomRowButtons);
-                            customInterfacePanel.removeChild(customInputBox);
-                            bottomRowButtons.removeChild(nextButton);
-                            customInterfacePanel.remove();
-                            bottomRowButtons.remove();
-                            customInputBox.remove();
-                            nextButton.remove();
-                            //Cache response for autofill in the future
-                            // cache.set(segments[segmentIndex].prompt, segments[segmentIndex].span.textContent);
-                            customSelection = false;
-                        })
-                        bottomRowButtons.appendChild(nextButton);
-                        customInterfacePanel.appendChild(customInputBox);
-                        generatorControlPanel.appendChild(customInterfacePanel);
-                        generatorControlPanel.appendChild(bottomRowButtons);
+                span.addEventListener("click", function() {
+                    if (customSelection) {
+                        for (let customIndex = 0; customIndex < relatedSpans.length; customIndex += 1) {
+                            relatedSpans[customIndex].style.color = "";
+                        }
+                    }
+                    customSelection = true;
+                    selectedSpan = span;
+                    customPrompt = parsedSegments[i].text;
+                    relatedSpans = groupedCustoms.get(parsedSegments[i].text);
+                    if (autosuggest) {
+                        for (let customIndex = 0; customIndex < relatedSpans.length; customIndex += 1) {
+                            relatedSpans[customIndex].style.color = selectedSpanColor;
+                        }
+                    } else {
+                        selectedSpan.style.color = selectedSpanColor;
                     }
                 });
                 break;
@@ -132,18 +143,34 @@ function initializeText(parentNode, parsedSegments) {
             case 2:
                 span.className = "toggle-text clickable";
                 span.textContent = parsedSegments[i].text;
+                let toggleState = 1;
                 span.addEventListener("click", function() {
-                    if (!customSelection) {
-                        if (span.className == "toggle-text clickable") {
-                            span.className = "toggle-text clickable excluded-toggle";
-                            if (!showAllToggles) {
-                                hideToggles();
-                            }
-                        } else {
-                            span.className = "toggle-text clickable";
+                    if (toggleState == 1) {
+                        toggleState = 0;
+                        if (!showAllToggles) {
+                            hideToggles();
                         }
+                    } else {
+                        toggleState = 1;
+                        span.className = "toggle-text clickable";
                     }
                 });
+                span.addEventListener("mouseenter", function(){
+                    if (toggleState == 1) {
+                        span.className = "toggle-text clickable excluded-toggle";
+                    } else {
+                        span.className = "toggle-text clickable";
+                    }
+                });
+                span.addEventListener("mouseleave", function(){
+                    if (toggleState == 1) {
+                        span.className = "toggle-text clickable";
+                    } else {
+                        span.className = "toggle-text clickable excluded-toggle";
+                    }
+                });
+
+                // });
                 break;
             //Nested text
             case 3:
@@ -190,14 +217,31 @@ function showToggles() {
 //Autofill toggle
 const autosuggestButton = document.getElementById("auto-suggest-button");
 autosuggestButton.addEventListener("click", function() {
+    console.log(arguments.callee.caller);
     if (autosuggest) {
         autosuggest = false;
         sessionStorage.setItem("autosuggest", "false");
         autosuggestButton.innerText = "autoapply: off";
+        //If autoapply is turned off, remove all colors
+        for (let customIndex = 0; customIndex < relatedSpans.length; customIndex += 1) {
+            relatedSpans[customIndex].style.color = "";
+        }
+        //If editing a custom, leave the selected span's color unchanged
+        if (customSelection) {
+            selectedSpan.style.color = selectedSpanColor;
+        }
     } else {
         autosuggest = true;
         sessionStorage.setItem("autosuggest", "true");
         autosuggestButton.innerText = "autoapply: on";
+        //If autoapply is turned on while editing a custom, update all the colors
+        if (customSelection) {
+            const updatedTextContent = selectedSpan.textContent;
+            for (let customIndex = 0; customIndex < relatedSpans.length; customIndex += 1) {
+                relatedSpans[customIndex].style.color = selectedSpanColor;
+                relatedSpans[customIndex].textContent = updatedTextContent;
+            }
+        }
     }
 });
 
@@ -223,12 +267,12 @@ showHideToggleButton.addEventListener("click", function() {
     if (showAllToggles) {
         showAllToggles = false;
         sessionStorage.setItem("showAllToggles", "false");
-        showHideToggleButton.innerText = "hide toggles: on";
+        showHideToggleButton.innerText = "toggles: hidden";
         hideToggles();
     } else {
         showAllToggles = true;
         sessionStorage.setItem("showAllToggles", "true");
-        showHideToggleButton.innerText = "hide toggles: off";
+        showHideToggleButton.innerText = "toggles: shown";
         showToggles();
     }
 });
@@ -244,9 +288,9 @@ showHideToggleButton.addEventListener("mouseenter", function() {
 
 showHideToggleButton.addEventListener("mouseleave", function() {
     if (showAllToggles) {
-        showHideToggleButton.innerText = "hide toggles: off";
+        showHideToggleButton.innerText = "toggles: shown";
     } else {
-        showHideToggleButton.innerText = "hide toggles: on";
+        showHideToggleButton.innerText = "toggles: hidden";
     }
 });
 
