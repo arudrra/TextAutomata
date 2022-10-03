@@ -375,3 +375,8 @@ const githubButton = document.getElementById("github-button");
 githubButton.addEventListener("click", function() {
     window.open("https://github.com/arudrra/TextAutomata", "_blank");
 });
+
+const legacyButton = document.getElementById("legacy-button");
+legacyButton.addEventListener("click", function() {
+    window.open("assemble.html", "_blank");
+});

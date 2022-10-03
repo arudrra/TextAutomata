@@ -22,7 +22,7 @@
                 <h2>Introduction</h2>
                 <p class="tutorial-text">
                     Text Automata allows you to quickly generate text from a template.
-                    You can create the markdown for a template using the tools on the <a href="index.html">template page</a> and generate the text from the template on the generate page (which can be reached by clicking the "next" button on the template page).
+                    You can create the markdown for a template using the tools on the <a href="index.html">template page</a> and generate the text from the template on the generate page (by clicking the "next" button on the template page).
                     The tool is useful for dynamically generating text for repetitive tasks such as cover letters and applications.
                 </p>
 
@@ -45,25 +45,23 @@
                 </p>
 
                 <p class="tutorial-text">
-                    While stepping through the template on the generate page, you will be prompted to include or exclude each toggled segment.
-                    By default, a toggled segment is included (toggled on) for visibility. 
-                    Here is what you will see first for the template from the previous example:
+                    By default, all toggled segments are toggled on for visibility.
                 </p>
 
                 <p class="example-text">
-                    Hi, <span class="toggle-text">that time works well!</span>
+                    Hi, <span class="toggle-text">that time works well!</span><span class="toggle-text">unfortunately, I won't be able to make it.</span>
                 </p>
 
                 <p class="tutorial-text">
-                    If you click the exclude button, the toggle will be crossed out:
+                    If you click the text, the toggle will be crossed out:
                 </p>
 
                 <p class="example-text">
-                    Hi, <span class="toggle-text excluded-toggle">that time works well!</span>
+                    Hi, <span class="toggle-text excluded-toggle">that time works well!</span><span class="toggle-text">unfortunately, I won't be able to make it.</span>
                 </p>
 
                 <p class="tutorial-text">
-                    After you click the "next" button, the excluded toggle will disappear since it is not included in the final text and the next toggle will appear:
+                    You can hide all excluded (crossed-out) by changing the page settings in the menu bar.
                 </p>
                 
                 <p class="example-text">
@@ -86,22 +84,34 @@
                     2. Type the '<span class="custom-text">{</span>' and '<span class="custom-text">}</span>' characters around the text you want to make into a custom prompt.<br>
                     3. Click the variable button, enter the variable name, and click finish.
                     NOTE: There is a character limit on the variable name length with the template user interface. 
-                    If you want to use a longer variable name, you must manually enter the '<span class="custom-text">{</span>' and '<span class="custom-text">}</span>' characters around the variable name.
+                    If you want to use a longer variable name, you must manually select and/or enter the '<span class="custom-text">{</span>' and '<span class="custom-text">}</span>' characters around the variable name.
                 </p>
 
                 <p class="tutorial-text">
-                    The generate page will sequentially prompt you to fill out the variables.
                     Here is what you will see first for the template from the previous example:
                 </p>
 
                 <p class="example-text">
-                    I would like to apply for the <span class="custom-text">role</span>.
+                    I would like to apply for the <span class="custom-text">role</span> at <span class="custom-text">company</span>.
+                </p>
+
+                <p class="tutorial-text">
+                    By default, the prompt text is shown.
+                    Click on the variable to edit it. 
+                    Variables that you are currently editing will be <span class="emphasized-text">highlighted</span>.
+                </p>
+
+                <p class="example-text">
+                    I would like to apply for the <span class="custom-text emphasized-text">role</span> at <span class="custom-text">company</span>.
                 </p>
 
                 <p class="tutorial-text">
                     By default, the prompt text is shown. 
-                    You can type anything into the input box to overwrite the prompt.
-                    After entering "frontend developer role" and selecting next, you will be prompted for the next variable.
+                    You can type anything to overwrite the prompt.
+                    You can create a new line by hitting enter.
+                    Hit the Esc key to finish editing.
+                    If you do not hit the Esc key after editing, you will not be able to edit other parts of the text.
+                    To copy and paste text into a variable, use the legacy generator linked at the bottom of the template page.
                 </p>
 
                 <p class="example-text">
@@ -109,7 +119,7 @@
                 </p>
 
                 <p class="tutorial-text">
-                    After entering "Text Automata" for the company, the final text will look like this:
+                    Your final text after editing both variables will look like this:
                 </p>
 
                 <p class="example-text">
@@ -117,7 +127,7 @@
                 </p>
 
                 <p class="tutorial-text">
-                    Here is another example of a sentence you can generate with the same template:
+                    Here is another sentence you can generate with the same template:
                 </p>
 
                 <p class="example-text">
@@ -125,9 +135,7 @@
                 </p>
 
                 <p class="tutorial-text">
-                    If you have autofill turned on, the previous variable entry for the same prompt will be displayed instead of the prompt.
-                    You can still change the variable entry by typing anything into the text input box.
-                    Here is a template to demonstrate how autofill works:
+                    The autoapply setting assigns the same value to all variables with the same name.
                 </p>
 
                 <p class="example-text">
@@ -136,25 +144,31 @@
                 </p>
 
                 <p class="tutorial-text">
-                    You will be prompted for the company initially since there was no previous entry for company.
+                    When you select company, all variables with the name <span class="custom-text">company</span> will be <span class="emphasized-text">highlighted</span>.
                 </p>
 
                 <p class="example-text">
-                    I was excited when I saw the opportunity at <span class="custom-text">company</span>
+                    I was excited when I saw the opportunity at <span class="custom-text emphasized-text">company</span>.
+                    I believe that my experience in <span class="custom-text">experience</span> will allow me to thrive at <span class="custom-text emphasized-text">company</span>.
                 </p>
 
                 <p class="tutorial-text">
-                    After filling out the <span class="custom-text">company</span> entry as <span class="custom-text">Text Automata</span> and the <span class="custom-text">experience</span> entry as <span class="custom-text">HTML, CSS, and Javascript</span>, the second <span class="custom-text">company</span> prompt will be autofilled with <span class="custom-text">Text Automata</span>.
+                    You can now edit both variables simultaneously:
+                </p>
+
+                <p class="example-text">
+                    I was excited when I saw the opportunity at <span class="custom-text emphasized-text">Text Automata</span>.
+                    I believe that my experience in <span class="custom-text">experience</span> will allow me to thrive at <span class="custom-text emphasized-text">Text Automata</span>.
+                </p>
+
+                <p class="tutorial-text">
+                    You can turn off autoapply by clicking the autoapply button.
+                    With autoapply turned off, you can overwrite the text for the second <span class="custom-text">company</span> entry.
                 </p>
 
                 <p class="example-text">
                     I was excited when I saw the opportunity at <span class="custom-text">Text Automata</span>.
-                    I believe that my experience in <span class="custom-text">HTML, CSS, and Javascript</span> will allow me to thrive at <span class="custom-text">Text Automata</span>
-                </p>
-
-                <p class="tutorial-text">
-                    You can still enter any text for the second <span class="custom-text">company</span> entry and override the <span class="custom-text">Text Automata</span> suggestion.
-                    You can turn autofill on or off by clicking the autofill button.
+                    I believe that my experience in <span class="custom-text">experience</span> will allow me to thrive at <span class="custom-text emphasized-text">Artemis Design Studios</span>.
                 </p>
 
 
@@ -170,9 +184,7 @@
                 </p>
 
                 <p class="tutorial-text">
-                    The toggle is evaluated before the nested variables. 
-                    If you choose to exclude a nested toggle, you will not be prompted for the nested variables inside the toggle.
-                    Instead, you will be prompted to make the next decision.
+                    If you exlude and hide a nested toggle, the variables within the nested toggle will be hidden.
                 </p>
 
                 <h2>Escape Character</h2>
@@ -197,6 +209,15 @@
                     3. Here is a \
                 </p>
 
+                <h2>Legacy Generator</h2>
+
+                <p class="tutorial-text">
+                    The original Text Automata generator provided a step-by-step interface to edit each segment individually.
+                    If you are concerned about forgetting variables or copying and pasting text, you may find the the legacy generator more useful.
+                    The legacy generator supports also supports hidden toggles and autoapply (in the form of autofill) as well.
+                    You can can use the legacy generator by selecting the legacy button on the template page.
+                </p>
+
                 <h2>Preview</h2>
 
                 <p class="tutorial-text">
@@ -208,7 +229,7 @@
 
                 <p class="tutorial-text">
                     You can import an existing template into the template page.
-                    The preferred file format is .txt for imports but it works on other formats as well.
+                    The preferred file format is .txt for imports but it works with other formats as well.
                     You can download the template and the generated text as .txt files.
                 </p>
 

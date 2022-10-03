@@ -195,7 +195,7 @@ function inSegmentRange(indexToCheck) {
 
 function makeDecisions() {
     if (segmentIndex == -1 || segmentIndex >= segments.length ) {
-        finishAndDownload();
+        download();
     } else {
         switch (segments[segmentIndex].type) {
             //Custom text
@@ -213,10 +213,6 @@ function makeDecisions() {
         }
     }
 }
-
-function finishAndDownload(){
-    download();
-};
 
 //Makes a group of consecutive spans visible (inclusive)
 function makeRangeVisible(start, end){
@@ -269,6 +265,9 @@ function moveBack() {
 }
 
 function customDecision() {
+    if (segments[segmentIndex].span.hasAttribute("hidden")) { 
+        segments[segmentIndex].span.removeAttribute("hidden");
+    }
     const generatorControlPanel = document.getElementById("generator-control-panel");
     const customInterfacePanel = document.createElement("div");
     customInterfacePanel.setAttribute("id", "custom-interface-panel");
@@ -347,6 +346,9 @@ function customDecision() {
 
 //Creates the the toggle interface for the user to decide on a toggle
 function toggleDecision() {
+    if (segments[segmentIndex].span.hasAttribute("hidden")) {
+        segments[segmentIndex].span.removeAttribute("hidden", "hidden");
+    }
     const generatorControlPanel = document.getElementById("generator-control-panel");
     const toggleInterfacePanel = document.createElement("div");
     toggleInterfacePanel.setAttribute("id", "toggle-interface-panel");
@@ -623,4 +625,10 @@ function copyToClipboard(content) {
     } else {
         console.log("clipboard unavailable");
     }
+}
+
+function moveBackFromEnd() {
+    makeRangeInvisible(lastCachedDecisionIndex, segments.length - 1);
+    segmentIndex = lastCachedDecisionIndex;
+    makeDecisions();
 }

@@ -47,7 +47,7 @@ body{
     /* background-color: var(--greycolor); */
     background-color: black;
     font-family: 'Roboto', sans-serif;
-    min-width: 20rem;
+    min-width: 400px;
 }
 button:focus {
     outline: 0;
@@ -105,14 +105,15 @@ button:focus {
     gap: 0px;
 }
 #control-custom-buttons{
-    width: 20rem;    
+    width: 100%;
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
     gap: 0px;
 }
 #generate-control-buttons{
-    width: var(--fullwidth);    
+    width: 100%;
+    min-width: 15rem;
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
@@ -122,7 +123,7 @@ button:focus {
     width: var(--fullwidth);    
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 0px;
 }
 
@@ -333,6 +334,16 @@ hr{
     color: var(--greencolor);
 }
 
+#legacy-button{
+    background:none;
+    color: var(--pinkcolor);
+}
+
+#legacy-button:hover{
+    background:none;
+    color: var(--greencolor);
+}
+
 a{
     color:var(--pinkcolor);
     text-decoration: none;
@@ -361,4 +372,8 @@ a{
     display:inline;
     border: none;
     overflow: auto;
+}
+
+.generate-legend{
+    width: 100%;
 }

@@ -52,14 +52,14 @@ function restart (){
     if (sessionStorage.autosuggest === undefined) {
         autosuggest = false;
         sessionStorage.setItem("autosuggest", "false");
-        document.getElementById("auto-suggest-button").innerText = "autofill: off";
+        document.getElementById("auto-suggest-button").innerText = "autoapply: off";
     } else {
         if (sessionStorage.autosuggest === "true") {
             autosuggest = true;
-            document.getElementById("auto-suggest-button").innerText = "autofill: on";
+            document.getElementById("auto-suggest-button").innerText = "autoapply: on";
         } else {
             autosuggest = false;
-            document.getElementById("auto-suggest-button").innerText = "autofill: off";
+            document.getElementById("auto-suggest-button").innerText = "autoapply: off";
         }
     }
 
