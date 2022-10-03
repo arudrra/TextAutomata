@@ -378,5 +378,10 @@ githubButton.addEventListener("click", function() {
 
 const legacyButton = document.getElementById("legacy-button");
 legacyButton.addEventListener("click", function() {
-    window.open("assemble.html", "_blank");
+    if (inputExists()) {
+        segments = parse();
+        if (containsDynamicInput(segments)) {
+            window.open("assemble.html", "_self");
+        }
+    }
 });

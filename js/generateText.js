@@ -257,20 +257,20 @@ autosuggestButton.addEventListener("click", function() {
 });
 
 //Autofill hover
-autosuggestButton.addEventListener("mouseenter", function() {
-    if (autosuggest) {
-        autosuggestButton.innerText = "click to turn off";
-    } else {
-        autosuggestButton.innerText = "click to turn on";
-    }});
+// autosuggestButton.addEventListener("mouseenter", function() {
+//     if (autosuggest) {
+//         autosuggestButton.innerText = "click to turn off";
+//     } else {
+//         autosuggestButton.innerText = "click to turn on";
+//     }});
 
-autosuggestButton.addEventListener("mouseleave", function() {
-    if (autosuggest) {
-        autosuggestButton.innerText = "autoapply: on";
-    } else {
-        autosuggestButton.innerText = "autoapply: off";
-    }
-});
+// autosuggestButton.addEventListener("mouseleave", function() {
+//     if (autosuggest) {
+//         autosuggestButton.innerText = "autoapply: on";
+//     } else {
+//         autosuggestButton.innerText = "autoapply: off";
+//     }
+// });
 
 //Toggle toggle
 const showHideToggleButton = document.getElementById("show-hide-toggle-button");
@@ -289,21 +289,21 @@ showHideToggleButton.addEventListener("click", function() {
 });
 
 //Toggle hover
-showHideToggleButton.addEventListener("mouseenter", function() {
-    if (showAllToggles) {
-        showHideToggleButton.innerText = "click to hide";
-    } else {
-        showHideToggleButton.innerText = "click to show";
-    }
-});
+// showHideToggleButton.addEventListener("mouseenter", function() {
+//     if (showAllToggles) {
+//         showHideToggleButton.innerText = "click to hide";
+//     } else {
+//         showHideToggleButton.innerText = "click to show";
+//     }
+// });
 
-showHideToggleButton.addEventListener("mouseleave", function() {
-    if (showAllToggles) {
-        showHideToggleButton.innerText = "toggles: shown";
-    } else {
-        showHideToggleButton.innerText = "toggles: hidden";
-    }
-});
+// showHideToggleButton.addEventListener("mouseleave", function() {
+//     if (showAllToggles) {
+//         showHideToggleButton.innerText = "toggles: shown";
+//     } else {
+//         showHideToggleButton.innerText = "toggles: hidden";
+//     }
+// });
 
 //Return to Template page (go back button)
 const returnToTemplateButton = document.getElementById("return-to-template");
@@ -311,7 +311,6 @@ returnToTemplateButton.addEventListener("click", returnToTemplate);
 function returnToTemplate() {
     window.open("index.html", "_self");
 }
-
 
 document.getElementById("download-button").addEventListener("click", download);
 
@@ -322,10 +321,8 @@ function download() {
     for (let i = 0; i < generatedTextArea.childNodes.length; i += 1) {
         //Spans are nodetype of 1 and spans with hidden attributes are ignored
         //Spans of nodetype 3 are just Text Nodes (unevaluated text from the template)
-        if (generatedTextArea.childNodes[i].nodeType == 1 && !generatedTextArea.childNodes[i].hasAttribute("hidden")) {
+        if (generatedTextArea.childNodes[i].nodeType == 1 && !generatedTextArea.childNodes[i].hasAttribute("hidden") && generatedTextArea.childNodes[i].className.indexOf("excluded-toggle") == -1) {
             finalText += generatedTextArea.childNodes[i].innerText;
-        } else if (generatedTextArea.childNodes[i].nodeType == 3) {
-            finalText += generatedTextArea.childNodes[i].nodeValue;
         }
     }
 
