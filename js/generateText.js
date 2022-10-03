@@ -228,7 +228,6 @@ function showToggles() {
 //Autofill toggle
 const autosuggestButton = document.getElementById("auto-suggest-button");
 autosuggestButton.addEventListener("click", function() {
-    console.log(arguments.callee.caller);
     if (autosuggest) {
         autosuggest = false;
         sessionStorage.setItem("autosuggest", "false");

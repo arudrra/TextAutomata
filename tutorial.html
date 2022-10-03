@@ -6,6 +6,7 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Mono:wght@300;400&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="styles/general.css">
+        <script src="js/tutorial.js" defer></script>
     </head>
 
     <body>
@@ -19,26 +20,96 @@
                 <h2>Table of Contents</h2>
                 <div class="tutorial-text">
                     <a href="#tutorial-introduction">&#8195;1. Introduction</a><br>
-                    <a href="#tutorial-toggles">&#8195;2. Toggles</a><br>
-                    <a href="#tutorial-variables">&#8195;3. Variables</a><br>
-                    <a href="#tutorial-nesting">&#8195;4. Nesting</a><br>
-                    <a href="#tutorial-escape-character">&#8195;5. Escape Character</a><br>
-                    <a href="#tutorial-legacy-generator">&#8195;6. Legacy Generator</a><br>
-                    <a href="#tutorial-preview">&#8195;7. Preview</a><br>
-                    <a href="#tutorial-imports-and-downloads">&#8195;8. Imports and Downloads</a><br>
+                    <a href="#tutorial-how-it-works">&#8195;2. How It Works</a><br>
+                    <a href="#tutorial-toggles">&#8195;3. Toggles</a><br>
+                    <a href="#tutorial-variables">&#8195;4. Variables</a><br>
+                    <a href="#tutorial-nesting">&#8195;5. Nesting</a><br>
+                    <a href="#tutorial-escape-character">&#8195;6. Escape Character</a><br>
+                    <a href="#tutorial-legacy-generator">&#8195;7. Legacy Generator</a><br>
+                    <a href="#tutorial-preview">&#8195;8. Preview</a><br>
+                    <a href="#tutorial-imports-and-downloads">&#8195;9. Imports and Downloads</a><br>
                 </div>
 
                 <h2 id="tutorial-introduction">Introduction</h2>
                 <p class="tutorial-text">
-                    Text Automata allows you to quickly generate text from a template.
-                    You can create the markdown for a template using the tools on the <a href="index.html">template page</a> and generate the text from the template on the generate page (by clicking the "next" button on the template page).
-                    The tool is useful for dynamically generating text for repetitive tasks such as cover letters and applications.
+
+                </p>
+
+                <h2 id="tutorial-how-it-works">How It Works</h2>
+                <p class="tutorial-text">
+                    The first step in the process is creating a text (.txt) template.
+                    You can create the text template using the tools on the template page.
+                    For example, consider the following sample template for a cover letter:
+                </p>
+
+                <p class="example-text">
+                    To whom it may concern, <br><br>
+
+                    I would like to apply for the <span class="custom-text">{position}</span> position at <span class="custom-text">{company}</span>.
+
+                    <span class=nested-text>[As an avid follower of the <span class="custom-text">{industry}</span>, I was excited to hear about the opportunity at <span class="custom-text">{company}</span>.]</span>
+
+                    Having read through the qualifications, I believe that my experience in <span class="custom-text">{experience}</span> will allow me to contribute and thrive in the <span class="custom-text">{environment}</span> environment fostered by <span class="custom-text">{company}</span>. <br><br>
+
+                    <span class="toggle-text">[I developed Text Automata, a tool designed to help people generate text with repetitive parts such as Cover Letters. I used HTML, CSS, and Javascript to develop the website and hosted it on AWS.]</span>
+                        
+                    <span class="toggle-text">[My friend and I designed and developed the Paragon, a 75% mechanical keyboard that was sold worldwide. I used Fusion360 to design the keyboard and created manufacturing drawings for factories.]</span><br><br>
+
+                    I would be delighted to further elaborate upon my experiences in an interview. My preferred modem of communication is via email at <span class="custom-text">{email}</span> or by phone at <span class="custom-text">{phone number}</span>. Thank you for your consideration, <br><br>
+
+                    Sincerely,<br><br>
+
+                    <span class="custom-text">{name}</span>
+                </p>
+
+                <p class="tutorial-text">
+                    You can view and edit this template for the sample cover letter <span id="tutorial-link-to-template" class="emphasized-text">here</span>. <br><br>
+
+                    Text Automata parses the template and provides you with an interface to dynamically change parts of the text.
+
+                    Here are a few different cover letters that can be generated from the preceding sample template:
+                </p>
+
+                <p class="example-text">
+                    To whom it may concern, <br><br>
+
+                    I would like to apply for the <span class="custom-text">software engineering</span> position at <span class="custom-text">Text Automata</span>.
+
+                    Having read through the qualifications, I believe that my experience in <span class="custom-text">HTML, CSS, Javascript, and AWS</span> will allow me to contribute and thrive in the <span class="custom-text">data-driven</span> environment fostered by <span class="custom-text">Text Automata</span>. <br><br>
+                        
+                    I would be delighted to further elaborate upon my experiences in an interview. My preferred modem of communication is via email at <span class="custom-text">arudrra@r00dy.com</span> or by phone at <span class="custom-text">1-(111)-111-1111</span>. Thank you for your consideration, <br><br>
+
+                    Sincerely,<br><br>
+
+                    <span class="custom-text">Arudrra</span>
+                </p>
+
+                <p class="example-text">
+                    To whom it may concern, <br><br>
+
+                    I would like to apply for the <span class="custom-text">keyboard designer</span> position at <span class="custom-text">Artemis Design Studios</span>.
+
+                    <span class=nested-text>As an avid follower of the <span class="custom-text">mechanical keyboard space</span>, I was excited to hear about the opportunity at <span class="custom-text">Artemis Design Studios</span>.</span>
+
+                    Having read through the qualifications, I believe that my experience in <span class="custom-text">CAD and manufacturing</span> will allow me to contribute and thrive in the <span class="custom-text">innovative</span> environment fostered by <span class="custom-text">Artemis Design Studios</span>. <br><br>
+                        
+                    <span class="toggle-text">My friend and I designed and developed the Paragon, a 75% mechanical keyboard that was sold worldwide. I used Fusion360 to design the keyboard and created manufacturing drawings for factories.</span><br><br>
+
+                    I would be delighted to further elaborate upon my experiences in an interview. My preferred modem of communication is via email at <span class="custom-text">r00dy@keyboarddesigner.com</span> or by phone at <span class="custom-text">1-(999)-999-9999</span>. Thank you for your consideration, <br><br>
+
+                    Sincerely,<br><br>
+
+                    <span class="custom-text">Roody</span>
+                </p>
+
+                <p class="tutorial-text">
+                    Try generating a cover letter from the sample template <span id="tutorial-link-to-generate" class="emphasized-text">here</span>.
                 </p>
 
                 <h2 id="tutorial-toggles">Toggles</h2>
                 <p class="tutorial-text">
                     Toggled text is text that you can include (toggle on) or exclude (toggle off).
-                    It is represented in the markdown using square brackets <span class="toggle-text">[ ]</span>.
+                    It is represented in the template using square brackets <span class="toggle-text">[ ]</span>.
                     Here is an example of a template with two toggles:
                 </p>
 
@@ -49,12 +120,12 @@
                 <p class="tutorial-text">
                     There are two ways to create a toggle on the template page:<br><br>
                     1. Select/highlight the text you want to toggle in the main input section and click the toggle button.
-                    NOTE: If you do not select or highlight any text before clicking the toggle button, the square brackets <span class="toggle-text">[ ]</span> will not appear.<br>
+                    NOTE: If you do not select or highlight any text before clicking the toggle button, the square brackets <span class="toggle-text">[ ]</span> won't display.<br>
                     2. Type the '<span class="toggle-text">[</span>' and '<span class="toggle-text">]</span>' characters around the text you want to toggle.<br>
                 </p>
 
                 <p class="tutorial-text">
-                    By default, all toggled segments are toggled on for visibility.
+                    When the <span class="toggle-text">toggles</span> setting is set to On (default), Text Automata displays all toggled text whether or not the text is excluded. When the <span class="toggle-text">toggles</span> setting is set to Off, Text Automata displays only toggled content selected for inclusion.
                 </p>
 
                 <p class="example-text">
@@ -62,7 +133,7 @@
                 </p>
 
                 <p class="tutorial-text">
-                    If you click the text, the toggle will be crossed out:
+                    You can exclude toggled content by clicking on the text. Text Automata strikes through excluded content:
                 </p>
 
                 <p class="example-text">
@@ -70,7 +141,7 @@
                 </p>
 
                 <p class="tutorial-text">
-                    You can hide all excluded (crossed-out) by changing the page settings in the menu bar.
+                    You can hide all excluded (crossed-out) toggles by changing the page settings in the menu bar.
                 </p>
                 
                 <p class="example-text">
@@ -80,7 +151,7 @@
                 <h2 id="tutorial-variables">Variables</h2>
                 <p class="tutorial-text">
                     You can type anything into variable text.
-                    It is represented in the markdown using braces <span class="custom-text">{ }</span>.
+                    It is represented in the template using braces <span class="custom-text">{ }</span>.
                 </p>
 
                 <p class="example-text">
