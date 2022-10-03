@@ -12,21 +12,30 @@
         <div class="content-container">
             <div id="header-region">
                 <h1>text automata</h1>
-                <!-- <p class="text-button">tutorial</p>
-                <p class="text-button">code</p> -->
-                <!-- <button id="tutorial-button" class="text-button">tutorial</button>
-                <button id="code-button" class="text-button">code</button> -->
             </div>
             <hr>
+
             <div id="generated-text">
-                <h2>Introduction</h2>
+                <h2>Table of Contents</h2>
+                <div class="tutorial-text">
+                    <a href="#tutorial-introduction">&#8195;1. Introduction</a><br>
+                    <a href="#tutorial-toggles">&#8195;2. Toggles</a><br>
+                    <a href="#tutorial-variables">&#8195;3. Variables</a><br>
+                    <a href="#tutorial-nesting">&#8195;4. Nesting</a><br>
+                    <a href="#tutorial-escape-character">&#8195;5. Escape Character</a><br>
+                    <a href="#tutorial-legacy-generator">&#8195;6. Legacy Generator</a><br>
+                    <a href="#tutorial-preview">&#8195;7. Preview</a><br>
+                    <a href="#tutorial-imports-and-downloads">&#8195;8. Imports and Downloads</a><br>
+                </div>
+
+                <h2 id="tutorial-introduction">Introduction</h2>
                 <p class="tutorial-text">
                     Text Automata allows you to quickly generate text from a template.
                     You can create the markdown for a template using the tools on the <a href="index.html">template page</a> and generate the text from the template on the generate page (by clicking the "next" button on the template page).
                     The tool is useful for dynamically generating text for repetitive tasks such as cover letters and applications.
                 </p>
 
-                <h2>Toggle</h2>
+                <h2 id="tutorial-toggles">Toggles</h2>
                 <p class="tutorial-text">
                     Toggled text is text that you can include (toggle on) or exclude (toggle off).
                     It is represented in the markdown using square brackets <span class="toggle-text">[ ]</span>.
@@ -68,7 +77,7 @@
                     Hi, <span class="toggle-text">unfortunately, I won't be able to make it.</span>
                 </p>
 
-                <h2>Variable</h2>
+                <h2 id="tutorial-variables">Variables</h2>
                 <p class="tutorial-text">
                     You can type anything into variable text.
                     It is represented in the markdown using braces <span class="custom-text">{ }</span>.
@@ -172,7 +181,7 @@
                 </p>
 
 
-                <h2>Nesting</h2>
+                <h2 id="tutorial-nesting">Nesting</h2>
 
                 <p class="tutorial-text">
                     You can nest variables within toggles. Here is an example of valid nesting:
@@ -187,7 +196,7 @@
                     If you exlude and hide a nested toggle, the variables within the nested toggle will be hidden.
                 </p>
 
-                <h2>Escape Character</h2>
+                <h2 id="tutorial-escape-character">Escape Character</h2>
                 <p class="tutorial-text">
                     You can use the escape character '<span class="emphasized-text">\</span>' (backslash) to enter text that would otherwise be evaluated.
                     Here are some examples in a template:
@@ -209,7 +218,7 @@
                     3. Here is a \
                 </p>
 
-                <h2>Legacy Generator</h2>
+                <h2 id="tutorial-legacy-generator">Legacy Generator</h2>
 
                 <p class="tutorial-text">
                     The original Text Automata generator provided a step-by-step interface to edit each segment individually.
@@ -218,14 +227,14 @@
                     You can can use the legacy generator by selecting the legacy button on the template page.
                 </p>
 
-                <h2>Preview</h2>
+                <h2 id="tutorial-preview">Preview</h2>
 
                 <p class="tutorial-text">
                     The preview button on the template page allows you to preview how your text will be semantically parsed.
                     It displays the text without the parced braces or brackets while including colors (like the examples on this page) to display a preview of the parsing.
                 </p>
 
-                <h2>Import and Download</h2>
+                <h2 id="tutorial-imports-and-downloads">Import and Download</h2>
 
                 <p class="tutorial-text">
                     You can import an existing template into the template page.
