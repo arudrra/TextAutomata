@@ -189,7 +189,6 @@ label {
     border-width: 2px;
     border-radius: 0.5rem;
     border-color: var(--beigecolor);
-    width: 100%;
     box-sizing: border-box;
     white-space:pre-wrap;
     margin-top: var(--flexboxverticalgap);

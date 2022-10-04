@@ -336,7 +336,7 @@ function download() {
     //Make the back button
     const customBackButton = document.createElement('button');
     customBackButton.className = "bar-button left-control-button back-button";
-    customBackButton.innerText = "back";
+    customBackButton.innerText = "< back";
 
     const customRestartButton = document.createElement('button');
     customRestartButton.className = "bar-button";
