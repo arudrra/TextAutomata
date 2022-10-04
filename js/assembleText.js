@@ -562,10 +562,14 @@ function download() {
     //Control panel for custom input
     //Make div for control panel
     const customControlPanel = document.createElement('div');
-    customControlPanel.setAttribute("id", "control-assemble-download-buttons");
+    customControlPanel.setAttribute("id", "control-generate-download-buttons");
     //Make the back button
+    const customBackButton = document.createElement('button');
+    customBackButton.className = "bar-button left-control-button back-button";
+    customBackButton.innerText = "< back";
+
     const customRestartButton = document.createElement('button');
-    customRestartButton.className = "bar-button left-control-button";
+    customRestartButton.className = "bar-button";
     customRestartButton.innerText = "restart";
 
     //Make the textbox for the name of the custom (the user will be prompted with later)
@@ -591,14 +595,31 @@ function download() {
     });
 
     //Append all the buttons to the main div
+    customControlPanel.appendChild(customBackButton);
     customControlPanel.appendChild(customRestartButton);
     customControlPanel.appendChild(customNameInput);
     customControlPanel.appendChild(txtDownloadButton);
     customControlPanel.appendChild(copyToClipboardButton);
     originalControlPanel.replaceWith(customControlPanel);
 
+    customBackButton.addEventListener("click", function() {
+        customControlPanel.replaceWith(originalControlPanel);
+        customControlPanel.removeChild(customBackButton);
+        customControlPanel.removeChild(customRestartButton);
+        customControlPanel.removeChild(customNameInput);
+        customControlPanel.removeChild(txtDownloadButton);
+        customControlPanel.removeChild(copyToClipboardButton);
+        customControlPanel.remove();
+        customRestartButton.remove();
+        customNameInput.remove();
+        txtDownloadButton.remove();
+        copyToClipboardButton.remove();
+        moveBackFromEnd();
+    });
+
     customRestartButton.addEventListener("click", function(){
         customControlPanel.replaceWith(originalControlPanel);
+        customControlPanel.removeChild(customBackButton);
         customControlPanel.removeChild(customRestartButton);
         customControlPanel.removeChild(customNameInput);
         customControlPanel.removeChild(txtDownloadButton);
