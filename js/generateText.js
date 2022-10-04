@@ -36,8 +36,11 @@ const FIELDLENGTH = 20;
 document.addEventListener('DOMContentLoaded', restart);
 
 function restart (){
-    document.getElementById("generated-text").innerHTML = "";
-    document.getElementById("generator-control-panel").innerHTML = "";
+    // document.getElementById("generated-text").innerHTML = "";
+    parent = document.getElementById("generated-text");
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
 
     if (sessionStorage.parsedTemplate !== undefined) {
         const parsedSegments = JSON.parse(String.raw`${sessionStorage.parsedTemplate}`);
@@ -67,14 +70,14 @@ function restart (){
     if (sessionStorage.showAllToggles === undefined) {
         showAllToggles = false;
         sessionStorage.setItem("showAllToggles", "false");
-        document.getElementById("show-hide-toggle-button").innerText = "toggles: hidden";
+        document.getElementById("show-hide-toggle-button").innerText = "toggles: hide";
     } else {
         if (sessionStorage.showAllToggles === "true") {
             showAllToggles = true;
-            document.getElementById("show-hide-toggle-button").innerText = "toggles: shown";
+            document.getElementById("show-hide-toggle-button").innerText = "toggles: show";
         } else {
             showAllToggles = false;
-            document.getElementById("show-hide-toggle-button").innerText = "toggles: hidden";
+            document.getElementById("show-hide-toggle-button").innerText = "toggles: hide";
         }
     }
 
@@ -277,12 +280,12 @@ showHideToggleButton.addEventListener("click", function() {
     if (showAllToggles) {
         showAllToggles = false;
         sessionStorage.setItem("showAllToggles", "false");
-        showHideToggleButton.innerText = "toggles: hidden";
+        showHideToggleButton.innerText = "toggles: hide";
         hideToggles();
     } else {
         showAllToggles = true;
         sessionStorage.setItem("showAllToggles", "true");
-        showHideToggleButton.innerText = "toggles: shown";
+        showHideToggleButton.innerText = "toggles: show";
         showToggles();
     }
 });
@@ -331,8 +334,12 @@ function download() {
     const customControlPanel = document.createElement('div');
     customControlPanel.setAttribute("id", "control-generate-download-buttons");
     //Make the back button
+    const customBackButton = document.createElement('button');
+    customBackButton.className = "bar-button left-control-button back-button";
+    customBackButton.innerText = "back";
+
     const customRestartButton = document.createElement('button');
-    customRestartButton.className = "bar-button left-control-button";
+    customRestartButton.className = "bar-button";
     customRestartButton.innerText = "restart";
 
     //Make the textbox for the name of the custom (the user will be prompted with later)
@@ -358,14 +365,31 @@ function download() {
     });
 
     //Append all the buttons to the main div
+    customControlPanel.appendChild(customBackButton);
     customControlPanel.appendChild(customRestartButton);
     customControlPanel.appendChild(customNameInput);
     customControlPanel.appendChild(txtDownloadButton);
     customControlPanel.appendChild(copyToClipboardButton);
     originalControlPanel.replaceWith(customControlPanel);
 
+    customBackButton.addEventListener("click", function() {
+        document.addEventListener('keydown', keyLogger);
+        customControlPanel.replaceWith(originalControlPanel);
+        customControlPanel.removeChild(customBackButton);
+        customControlPanel.removeChild(customRestartButton);
+        customControlPanel.removeChild(customNameInput);
+        customControlPanel.removeChild(txtDownloadButton);
+        customControlPanel.removeChild(copyToClipboardButton);
+        customControlPanel.remove();
+        customRestartButton.remove();
+        customNameInput.remove();
+        txtDownloadButton.remove();
+        copyToClipboardButton.remove();
+    });
+
     customRestartButton.addEventListener("click", function(){
         customControlPanel.replaceWith(originalControlPanel);
+        customControlPanel.removeChild(customBackButton);
         customControlPanel.removeChild(customRestartButton);
         customControlPanel.removeChild(customNameInput);
         customControlPanel.removeChild(txtDownloadButton);

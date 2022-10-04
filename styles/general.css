@@ -307,10 +307,18 @@ hr{
 }
 
 #control-generate-download-buttons{
-    width: var(--fullwidth);    
+    width: 100%;   
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    gap: 0px;
+}
+
+#control-assemble-download-buttons{
+    width: 100%;   
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 0px;
 }
 

@@ -75,8 +75,18 @@ autosuggestButton.addEventListener("mouseleave", function() {
 document.getElementById("restart-button").addEventListener("click", restart);
 
 function restart (){
-    document.getElementById("generated-text").innerHTML = "";
-    document.getElementById("generator-control-panel").innerHTML = "";
+    // document.getElementById("generated-text").innerHTML = "";
+    // document.getElementById("generator-control-panel").innerHTML = "";
+
+    parent = document.getElementById("generated-text");
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+    parent = document.getElementById("generator-control-panel");
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+
     cache = new Map();
     segmentIndex = 0;
     segments = []
@@ -258,7 +268,8 @@ function moveNext() {
 
 function moveBack() {
     let start = segments[segmentIndex].previousDecision + 1;
-    let end = segmentIndex;
+    //In the event of a nested toggle, we need to hide more than just the current index
+    let end = segments.length-1;
     makeRangeInvisible(start, end);
     segmentIndex = segments[segmentIndex].previousDecision;
     makeDecisions();
@@ -551,7 +562,7 @@ function download() {
     //Control panel for custom input
     //Make div for control panel
     const customControlPanel = document.createElement('div');
-    customControlPanel.setAttribute("id", "control-generate-download-buttons");
+    customControlPanel.setAttribute("id", "control-assemble-download-buttons");
     //Make the back button
     const customRestartButton = document.createElement('button');
     customRestartButton.className = "bar-button left-control-button";
