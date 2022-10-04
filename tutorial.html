@@ -109,8 +109,11 @@
                 <h2 id="tutorial-toggles">Toggles</h2>
                 <p class="tutorial-text">
                     Toggled text is text that you can include (toggle on) or exclude (toggle off).
-                    It is represented in the template using square brackets <span class="toggle-text">[ ]</span>.
-                    Here is an example of a template with two toggles:
+                    You can define toggles in the source template using square brackets <span class="toggle-text">[ ]</span>.
+                </p>
+
+                <p class="example-text">
+                    The following is an example of a source template with two toggles:
                 </p>
 
                 <p class="example-text">
@@ -118,14 +121,20 @@
                 </p>
 
                 <p class="tutorial-text">
-                    There are two ways to create a toggle on the template page:<br><br>
+                    There are two ways to create a toggle on the source template page:<br><br>
                     1. Select/highlight the text you want to toggle in the main input section and click the toggle button.
                     NOTE: If you do not select or highlight any text before clicking the toggle button, the square brackets <span class="toggle-text">[ ]</span> won't display.<br>
                     2. Type the '<span class="toggle-text">[</span>' and '<span class="toggle-text">]</span>' characters around the text you want to toggle.<br>
                 </p>
 
                 <p class="tutorial-text">
-                    When the <span class="toggle-text">toggles</span> setting is set to On (default), Text Automata displays all toggled text whether or not the text is excluded. When the <span class="toggle-text">toggles</span> setting is set to Off, Text Automata displays only toggled content selected for inclusion.
+                    When the <span class="toggle-text">toggles</span> setting is set to show (default), Text Automata displays all toggled 
+                    text in the generated template whether or not the text is excluded. When the <span class="toggle-text">toggles</span> 
+                    setting is set to hide, Text Automata displays only toggled text selected for inclusion in the generated template.
+                </p>
+
+                <p class="tutorial-text">
+                    For example, the following template for the preceding example toggles displays both toggles because <span class="toggle-text">toggles</span> setting is set to show.
                 </p>
 
                 <p class="example-text">
@@ -133,7 +142,7 @@
                 </p>
 
                 <p class="tutorial-text">
-                    You can exclude toggled content by clicking on the text. Text Automata strikes through excluded content:
+                    You can exclude a toggle by clicking on the text. Text Automata displays a strikethrough excluded toggles:
                 </p>
 
                 <p class="example-text">
@@ -141,7 +150,8 @@
                 </p>
 
                 <p class="tutorial-text">
-                    You can hide all excluded (crossed-out) toggles by changing the page settings in the menu bar.
+                    You can hide all excluded toggles by clicking the <span class="toggle-text">toggles</span> setting in the menubar. 
+                    For example, the following shows the included toggle and hides the excluded toggle in the generated template.
                 </p>
                 
                 <p class="example-text">
@@ -150,8 +160,13 @@
 
                 <h2 id="tutorial-variables">Variables</h2>
                 <p class="tutorial-text">
-                    You can type anything into variable text.
-                    It is represented in the template using braces <span class="custom-text">{ }</span>.
+                    Variable text is text that you can dynamically replace in your generated template. If you define multiple instances of a variable 
+                    in your template, you can replace all instances of the variable or selected instances of a variable in your generated template. 
+                    You can define variables in the source template using braces <span class="custom-text">{ }</span>.
+                </p>
+
+                <p class="tutorial-text">
+                    For example, consider the following example variables in a source template.
                 </p>
 
                 <p class="example-text">
@@ -159,16 +174,17 @@
                 </p>
 
                 <p class="tutorial-text">
-                    There are three ways to create a variable on the template page:<br><br>
-                    1. Select/highlight the text you want to make into a variable and click the variable button.<br>
-                    2. Type the '<span class="custom-text">{</span>' and '<span class="custom-text">}</span>' characters around the text you want to make into a custom prompt.<br>
+                    You can define a variable on the source template page in the following ways:<br><br>
+                    1. Select the text you want to define as a variable and click the variable button.<br>
+                    2. Type the '<span class="custom-text">{</span>' and '<span class="custom-text">}</span>' characters around the text 
+                    you want to convert to a variable.<br>
                     3. Click the variable button, enter the variable name, and click finish.
-                    NOTE: There is a character limit on the variable name length with the template user interface. 
-                    If you want to use a longer variable name, you must manually select and/or enter the '<span class="custom-text">{</span>' and '<span class="custom-text">}</span>' characters around the variable name.
+                    NOTE: There is a character limit on the variable name length in the template user interface. 
+                    If you want to use a longer variable name, you must use 1 or 2 above to convert the text to a variable.
                 </p>
 
                 <p class="tutorial-text">
-                    Here is what you will see first for the template from the previous example:
+                    For example, the following shows the generated template for the preceding example variables:
                 </p>
 
                 <p class="example-text">
@@ -176,9 +192,14 @@
                 </p>
 
                 <p class="tutorial-text">
-                    By default, the prompt text is shown.
-                    Click on the variable to edit it. 
-                    Variables that you are currently editing will be <span class="emphasized-text">highlighted</span>.
+                    Text Automata displays the variable name in the generated template.
+                    To replace a variable, click the variable to edit it. Text Automata <span class="emphasized-text">highlights</span>
+                    variables that you select for editing.
+                </p>
+
+                <p class="tutorial-text">
+                    For example, the following shows the variable role as <span class="emphasized-text">highlighted</span> for 
+                    editing.
                 </p>
 
                 <p class="example-text">
@@ -186,12 +207,17 @@
                 </p>
 
                 <p class="tutorial-text">
-                    By default, the prompt text is shown. 
-                    You can type anything to overwrite the prompt.
-                    You can create a new line by hitting enter.
-                    Hit the Esc key to finish editing.
-                    If you do not hit the Esc key after editing, you will not be able to edit other parts of the text.
+                    Text Automata allows you to enter any text as replacement for a variable in the generated template. You can 
+                    also use another variable name as replacement text for a variable. 
                     To copy and paste text into a variable, use the legacy generator linked at the bottom of the template page.
+                    You can create a new line by hitting enter.
+                    Hit the Esc key to finish editing variables.
+                    If you don't hit the Esc key after editing, you will not be able to edit other parts of the text.
+                </p>
+
+                <p class="tutorial-text">
+                    For example, the following shows the replacement text for the <span class="emphasized-text">role</span> 
+                    variable.
                 </p>
 
                 <p class="example-text">
@@ -199,7 +225,8 @@
                 </p>
 
                 <p class="tutorial-text">
-                    Your final text after editing both variables will look like this:
+                    The following shows replacement text for both the <span class="emphasized-text">role</span> and 
+                    <span class="emphasized-text">company</span> variables.
                 </p>
 
                 <p class="example-text">
@@ -218,13 +245,19 @@
                     The autoapply setting assigns the same value to all variables with the same name.
                 </p>
 
+                <p class="tutorial-text">
+                    For example, consider the following source template with multiple instances of the company variable and one instance 
+                    of the experience variable.
+                </p>
+
                 <p class="example-text">
                     I was excited when I saw the opportunity at <span class="custom-text">{company}</span>.
                     I believe that my experience in <span class="custom-text">{experience}</span> will allow me to thrive at <span class="custom-text">{company}</span>.
                 </p>
 
                 <p class="tutorial-text">
-                    When you select company, all variables with the name <span class="custom-text">company</span> will be <span class="emphasized-text">highlighted</span>.
+                    When you select company, Text Automata <span class="emphasized-text">highlights</span> all instances 
+                    of <span class="custom-text">company</span> variable in the generated template:
                 </p>
 
                 <p class="example-text">
@@ -243,7 +276,7 @@
 
                 <p class="tutorial-text">
                     You can turn off autoapply by clicking the autoapply button.
-                    With autoapply turned off, you can overwrite the text for the second <span class="custom-text">company</span> entry.
+                    If autoapply is disabled, you can overwrite the text for the second <span class="custom-text">company</span> entry:
                 </p>
 
                 <p class="example-text">
@@ -264,7 +297,7 @@
                 </p>
 
                 <p class="tutorial-text">
-                    If you exclude and hide a nested toggle, the variables within the nested toggle will be hidden.
+                    If you exclude and hide a nested toggle, Text Automata hides the variables within the nested toggle.
                 </p>
 
                 <h2 id="tutorial-escape-character">Escape Character</h2>
@@ -309,7 +342,7 @@
 
                 <p class="tutorial-text">
                     You can import an existing template into the template page.
-                    The preferred file format is .txt for imports but it works with other formats as well.
+                    The preferred file format is .txt for imports.
                     You can download the template and the generated text as .txt files.
                 </p>
 
