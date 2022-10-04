@@ -135,10 +135,14 @@ input.addEventListener("keydown", function(e) {
             e.preventDefault();
             const sections = splitOnSelection(text, start, end);
             input.value = sections[0] + TOGGLESTART + sections[1] + TOGGLEEND + sections[2];
+            const endOfSelection = sections[0].length + 1 + sections[1].length + 1;
+            input.setSelectionRange(endOfSelection, endOfSelection);
         } else if (e.key === CUSTOMSTART) {
             e.preventDefault();
             const sections = splitOnSelection(text, start, end);
             input.value = sections[0] + CUSTOMSTART + sections[1] + CUSTOMEND + sections[2];
+            const endOfSelection = sections[0].length + 1 + sections[1].length + 1;
+            input.setSelectionRange(endOfSelection, endOfSelection);        
         }
     }
 });
@@ -153,6 +157,9 @@ function createToggleSyntax(){
     if (start != end) {
         const sections = splitOnSelection(text, start, end);
         input.value = sections[0] + TOGGLESTART + sections[1] + TOGGLEEND + sections[2];
+        input.focus();
+        const endOfSelection = sections[0].length + 1 + sections[1].length + 1;
+        input.setSelectionRange(endOfSelection, endOfSelection);
     } else {
         console.log("invalid toggle creation");
     }
@@ -170,6 +177,9 @@ function createCustomSyntax(){
         if (end - start <= FIELDLENGTH) {
             const sections = splitOnSelection(text, start, end);
             input.value = sections[0] + CUSTOMSTART +sections[1] + CUSTOMEND + sections[2];
+            input.focus();
+            const endOfSelection = sections[0].length + 1 + sections[1].length + 1;
+            input.setSelectionRange(endOfSelection, endOfSelection);
         } else {
             console.log("invalid custom creation");
         }
@@ -207,6 +217,8 @@ function createCustomSyntax(){
             customControlPanel.remove();
             input.removeAttribute("readonly");
             input.focus();
+            const endOfSelection = text.slice(0, start).length +  1 + customNameInput.value.substring().length + 1;
+            input.setSelectionRange(endOfSelection, endOfSelection);
         });
         //Append all the buttons to the main div
         customControlPanel.appendChild(customBackButton);
