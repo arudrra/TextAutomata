@@ -1,6 +1,6 @@
 
 //Globals
-const CUSTOMFIELDLENGTH = 500;
+const CUSTOMFIELDLENGTH = 50000;
 const FIELDLENGTH = 20;
 
 //Boolean for whether or not Autosuggest is selected
