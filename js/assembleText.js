@@ -89,7 +89,7 @@ function restart (){
 
     cache = new Map();
     segmentIndex = 0;
-    segments = []
+    segments = [];
     loadSegments();
     // // document.getElementById("generated-text").replaceChildren();
     // // document.getElementById("generator-control-panel").replaceChildren();
@@ -245,7 +245,7 @@ function moveNext() {
     let end = segments.length - 1;
     //Check for a nested end pointer
     if (segments[segmentIndex].hasOwnProperty("nestedEndPointer")) {
-        end = segments[segments[segmentIndex].nestedEndPointer].nextDecision
+        end = segments[segments[segmentIndex].nestedEndPointer].nextDecision;
     //Deal with the nested case
     } else if (segments[segmentIndex].type == 3) {
         //If the nested segment is visible (make everything until the first nested decision visible)
@@ -327,7 +327,7 @@ function customDecision() {
         // ParsedText.index += 1;
         // //Advance to next decision
         moveNext();
-    })
+    });
 
     const backButton = document.createElement('button');
     backButton.className = "bar-button bottom-bar-button";
@@ -394,12 +394,12 @@ function toggleDecision() {
     //adds "hover" functionality where the toggle text disappears when hovering on the exclude button
     toggleExclude.addEventListener("mouseenter", function() {
         segments[segmentIndex].span.className = "toggle-text excluded-toggle";
-    })
+    });
     toggleExclude.addEventListener("mouseleave", function() {
         if (segments[segmentIndex].toggle) {
             segments[segmentIndex].span.className = "toggle-text";
         }
-    })
+    });
 
     const toggleInclude = document.createElement("button")
     toggleInclude.className = "bar-button";
@@ -437,7 +437,7 @@ function toggleDecision() {
         toggleInclude.remove();
         nextButton.remove();
         moveNext();
-    })
+    });
 
     toggleInterfacePanel.appendChild(backButton);
     toggleInterfacePanel.appendChild(toggleExclude);
@@ -487,7 +487,7 @@ function nestedToggleDecision() {
         });
     }
 
-    const toggleExclude = document.createElement("button")
+    const toggleExclude = document.createElement("button");
     toggleExclude.className = "bar-button";
     toggleExclude.innerText = "exclude";
     toggleExclude.addEventListener("click", function() {
@@ -497,14 +497,14 @@ function nestedToggleDecision() {
     //adds "hover" functionality where the toggle text disappears when hovering on the exclude button
     toggleExclude.addEventListener("mouseenter", function() {
         segments[segmentIndex].span.className = "nested-text excluded-toggle";
-    })
+    });
     toggleExclude.addEventListener("mouseleave", function() {
         if (segments[segmentIndex].toggle) {
             segments[segmentIndex].span.className = "nested-text";
         }
-    })
+    });
 
-    const toggleInclude = document.createElement("button")
+    const toggleInclude = document.createElement("button");
     toggleInclude.className = "bar-button";
     toggleInclude.innerText = "include";
     toggleInclude.addEventListener("click", function() {
@@ -527,6 +527,8 @@ function nestedToggleDecision() {
     nextButton.addEventListener("click", function() {
         if (!segments[segmentIndex].toggle) {
             segments[segmentIndex].span.setAttribute("hidden", "hidden");
+        } else if (segmentIndex < segments.length) {
+            makeRangeInvisible(segmentIndex+1, segments.length - 1);
         }
         //Remove the interface for toggling
         generatorControlPanel.removeChild(toggleInterfacePanel);
@@ -540,7 +542,7 @@ function nestedToggleDecision() {
         toggleInclude.remove();
         nextButton.remove();
         moveNext();
-    })
+    });
 
     toggleInterfacePanel.appendChild(backButton);
     toggleInterfacePanel.appendChild(toggleExclude);
